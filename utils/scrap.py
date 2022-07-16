@@ -2,6 +2,8 @@
 import requests
 import json
 from bs4 import BeautifulSoup
+import re
+import time
 from pprint import pprint
 
 TAB = "div.TABDIV"
@@ -16,6 +18,7 @@ def parseCourseCode(html:object)->list[str]:
     courses = html.decode().split("<br/>")
     if len(courses) == 0 and len(courses[0]) < 9:
         return []
+    courses[0] = courses[0].strip()
     courses[0] = courses[0][-9:-1] 
     if len(courses) > 2: 
         for i in range(1, len(courses)-1):
@@ -29,17 +32,20 @@ def parseCourseCode(html:object)->list[str]:
 
 def findSubject(html:object)->str:
     data_str = html.decode()
+    
     size:int = len(data_str)
     if size == 0 or size < 4: #course code has 4 characters
         return ""
     index:int = data_str.find("<br/>")
     if index < 4:
         return ""
-    
+    data_str = data_str.strip()
     subject:str = data_str[index-4:index]
-    if subject == "r>\n\xa0":
-        return ""
-    return subject
+    #i.e. "r>\n\xa0", '>\n\xa0'
+    match = re.match("[A-Z]{3,4}", subject)
+    if match:
+        return match[0]
+    return ""
 
 def parseCol(html:object)->list[str]:
     if not html:
@@ -87,7 +93,7 @@ def parseSubject(html:str, subject="")->(dict, str):
     data["enrol"]:list[str] = parseCol(cols[7])
     return (data, subject)
 
-def parseTable(html:str, div:str=TAB, subject:str = "")->(dict, str):
+def parseTable(subjects_data:str, div:str=TAB, subject:str = "")->(dict, str):
     '''
     The document that is of concern is:
     * first table has `class="TABDIV0"`
@@ -118,18 +124,21 @@ def parseTable(html:str, div:str=TAB, subject:str = "")->(dict, str):
     returns: a tuple of the course data and the last processed subject 
     '''
 
-    subjects_data:list[str] = html.select(div + " > table > tbody > tr > td > div:nth-of-type(2) > table > tbody > tr")
+    subjects_data:object = subjects_data.select(div + " > table > tbody > tr > td > div:nth-of-type(2) > table > tbody > tr")
+#    pprint(subjects_data)
     size:int = len(subjects_data)
     if size == 0 and size > 1: #failed to capture table or there's only a header
         return ({}, "") 
     subjects_data.pop(0)
     data:dict = {}
+    count = 0;
     for subject_data in subjects_data:
+        count+=1
         (tmp_data, subject) = parseSubject(subject_data, subject)
-        data[subject] = tmp_data
+        updateData(data, {subject: tmp_data})
     return (data, subject)
 
-def writeData(data, skip_subject=""):
+def writeData(data:dict, date:dict, skip_subject:str=""):
     '''
     WARNING: Deltes processed data
     '''
@@ -140,15 +149,19 @@ def writeData(data, skip_subject=""):
                 continue
             subjects.append(subject)
         #done
-    #fi
-    if len(subjects) < 0:
+    else:
+        subjects.extend(data.keys())
+    if len(subjects) == 0:
         return
     for subject in subjects:
-        with open('{}.json'.format(subject), 'w') as handler:
+        with open('{}{}_{}.json'.format(date["year"], date["sem"], subject), 'w') as handler:
+            data[subject].update(date)
             handler.write(json.dumps(data[subject], indent=2) )
-            del data[subject]
         handler.close()
+        del data[subject]
+        print("Processed {}".format(subject), flush=True)
     #done
+    assert(not subjects[0] in data)
 
 def updateData(data:dict, tmp_data:dict):
     '''
@@ -163,23 +176,49 @@ def updateData(data:dict, tmp_data:dict):
             #done
         else:
             data[subject] = tmp_data[subject]
+
+def grabDataDate(html)->dict:
+    '''
+    String to retrieve: `Source: 	Banner Course data - 2020W, as at 30-APR-2020`
+    There seems to be a typo in CU data
+    '''
+    parsed = html.select("html > body > div.TABDIV0 > table > tbody > tr > td > div:nth-of-type(3) > table > tbody > tr:nth-of-type(1) > td:nth-of-type(2)")
+    text = parsed[0].string.strip()
+    match = re.search("\d\d\d\d[F|W|S]", text)
+    if match:
+        data["year"] = match[0][0:4]
+        data["sem"] = match[0][-1]
+    #fi
+    match = re.search("\d\d-[A-Za-z]{3,4}-\d\d\d\d", text)
+    if match:
+        data['source'] = match[0]
+    return data
+
 ###############################################################################
-url = 'https://oirp.carleton.ca/course-inst/tables/2020w-course-inst_hpt.htm'
-url = "http://127.0.0.1:4000/blog/assets/test2.html"
+#url = 'https://oirp.carleton.ca/course-inst/tables/2020w-course-inst_hpt.htm'
+url = "http://127.0.0.1:4000/blog/assets/test.html"
+#url = "http://127.0.0.1:4000/blog/assets/test2.html"
 data:object = requests.get(url)
 html:object = BeautifulSoup(data.text, 'html.parser')
 data:dict = {}
 subject:str = ""
+
+date:dict = grabDataDate(html)
+
 (data, subject) = parseTable(html, TAB + "0")
 if len(data.keys()) > 1: #can dump subject to text file
-    writeData(data=data, skip_subject=subject)
-tables_data:list = html.select(TAB)
+    writeData(data=data, date=date, skip_subject=subject)
+tables_data:list = html.select("html > body > " + TAB)
+count = 0
 for table_data in tables_data:
+    count +=1
     tmp_data:dict = {}
-    (tmp_data, subject) = parseTable(html=html, subject=subject)
+    (tmp_data, subject) = parseTable(subjects_data=table_data, subject=subject)
     if len(tmp_data) == 0:
         continue
     updateData(data, tmp_data)
     if len(data.keys()) > 1: #can dump subject to text file                            
-        writeData(data=data, skip_subject=subject)
-writeData(data) #write remaining subjects
+        writeData(data=data, date=date, skip_subject=subject)
+#done
+writeData(data, date) #write remaining subjects
+print("{}COMPLETED{}".format("="*5, "="*5))
