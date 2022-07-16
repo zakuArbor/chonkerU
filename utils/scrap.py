@@ -27,11 +27,14 @@ def parseCourseCode(html:object)->list[str]:
     return courses
 
 def findSubject(html:object)->str:
-    size:int = len(html)
+    data_str = html.decode()
+    size:int = len(data_str)
     if size == 0 or size < 4: #course code has 4 characters
         return ""
-    html = html.lstrip()
-    return html[0:4]
+    index:int = data_str.find("<br/>")
+    if index < 4:
+        return "" 
+    return data_str[index-4:index]
 
 def parseCol(html:object)->list[str]:
     if not html:
@@ -48,7 +51,6 @@ def parseCol(html:object)->list[str]:
     if index >=0:
         row[-1] = row[-1][0:index]
         row[-1].strip()
-    pprint(row)
     return row
 
 def parseSubject(html:str, subject="")->(dict, str):
@@ -77,9 +79,9 @@ def parseSubject(html:str, subject="")->(dict, str):
     data["crn"]:list[str] = parseCol(cols[5])
     data["type"]:list[str] = parseCol(cols[6])
     data["enrol"]:list[str] = parseCol(cols[7])
-    print(data)
+    return (data, subject)
 
-def parseTable(html:str, div=TAB)->dict:
+def parseTable(html:str, div=TAB)->(dict, str):
     '''
     The document that is of concern is:
     * first table has `class="TABDIV0"`
@@ -107,22 +109,28 @@ def parseTable(html:str, div=TAB)->dict:
             * the first row (first <tr>) is the table header                        
             * for each n <tr> contains course information for each subject in the table:
                 * each sub <tr> represents a column (I know it's digusting)         
+    returns: a tuple of the course data and the last processed subject 
     '''
 
-    subjects:list[str] = html.select("div.TABDIV0 > table > tbody > tr > td > div:nth-of-type(2) > table > tbody > tr")
-    size:int = len(subjects)
+    subjects_data:list[str] = html.select("div.TABDIV0 > table > tbody > tr > td > div:nth-of-type(2) > table > tbody > tr")
+    size:int = len(subjects_data)
     if size == 0 and size > 1: #failed to capture table or there's only a header
-        return {} 
-    subjects.pop(0)
+        return ({}, "") 
+    subjects_data.pop(0)
     data:dict = {}
-    for subject in subjects:
-        parseSubject(subject)
-    return data
+    subject:str = ""
+    for subject_data in subjects_data:
+        (tmp_data, subject) = parseSubject(subject_data)
+        data[subject] = tmp_data
+    return (data, subject)
 
 
 ###############################################################################
 url = 'https://oirp.carleton.ca/course-inst/tables/2020w-course-inst_hpt.htm'
 url = "http://127.0.0.1:4000/blog/assets/test2.html"
-data = requests.get(url)
-html = BeautifulSoup(data.text, 'html.parser')
-parseTable(html, "div0")
+data:object = requests.get(url)
+html:object = BeautifulSoup(data.text, 'html.parser')
+data:dict = {}
+subject:str = ""
+(data, subject) = parseTable(html, "div0")
+pprint(data)
