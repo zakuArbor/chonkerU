@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import requests
+import json
 from bs4 import BeautifulSoup
 from pprint import pprint
 
@@ -124,7 +125,22 @@ def parseTable(html:str, div=TAB)->(dict, str):
         data[subject] = tmp_data
     return (data, subject)
 
-
+def writeData(data, skip_subject=""):
+    subjects = []
+    if len(skip_subject) > 0:
+        for subject in data.keys():
+            if subject == skip_subject:
+                continue
+            subjects.append(subject)
+        #done
+    #fi
+    if len(subjects) < 0:
+        return
+    for subject in subjects:
+        with open('{}.json'.format(subject), 'w') as handler:
+            handler.write(json.dumps(data[subject], indent=2) )
+        handler.close()
+    #done
 ###############################################################################
 url = 'https://oirp.carleton.ca/course-inst/tables/2020w-course-inst_hpt.htm'
 url = "http://127.0.0.1:4000/blog/assets/test2.html"
@@ -133,4 +149,6 @@ html:object = BeautifulSoup(data.text, 'html.parser')
 data:dict = {}
 subject:str = ""
 (data, subject) = parseTable(html, "div0")
+if len(data.keys()) > 1: #can dump subject to text file
+    writeData(data=data, skip_subject=subject)
 pprint(data)
