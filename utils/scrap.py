@@ -4,7 +4,7 @@ import json
 from bs4 import BeautifulSoup
 from pprint import pprint
 
-TAB = "TABDIV"
+TAB = "div.TABDIV"
 
 def parseCourseCode(html:object)->list[str]:
     '''
@@ -34,8 +34,12 @@ def findSubject(html:object)->str:
         return ""
     index:int = data_str.find("<br/>")
     if index < 4:
-        return "" 
-    return data_str[index-4:index]
+        return ""
+    
+    subject:str = data_str[index-4:index]
+    if subject == "r>\n\xa0":
+        return ""
+    return subject
 
 def parseCol(html:object)->list[str]:
     if not html:
@@ -73,8 +77,9 @@ def parseSubject(html:str, subject="")->(dict, str):
 #    pprint(html)
     data = {}
     cols:list[str] = html.select("tr > td")
-    if len(subject) == 0:
-        subject = findSubject(cols[0])
+    tmp_subject = findSubject(cols[0])
+    if len(tmp_subject) != 0:
+        subject = tmp_subject #must be processing a new subject
     data["courses"]:list[str] = parseCourseCode(cols[1])
     data["insutrctor"]:list[str] = parseCol(cols[3])
     data["crn"]:list[str] = parseCol(cols[5])
@@ -82,7 +87,7 @@ def parseSubject(html:str, subject="")->(dict, str):
     data["enrol"]:list[str] = parseCol(cols[7])
     return (data, subject)
 
-def parseTable(html:str, div=TAB)->(dict, str):
+def parseTable(html:str, div:str=TAB, subject:str = "")->(dict, str):
     '''
     The document that is of concern is:
     * first table has `class="TABDIV0"`
@@ -113,19 +118,21 @@ def parseTable(html:str, div=TAB)->(dict, str):
     returns: a tuple of the course data and the last processed subject 
     '''
 
-    subjects_data:list[str] = html.select("div.TABDIV0 > table > tbody > tr > td > div:nth-of-type(2) > table > tbody > tr")
+    subjects_data:list[str] = html.select(div + " > table > tbody > tr > td > div:nth-of-type(2) > table > tbody > tr")
     size:int = len(subjects_data)
     if size == 0 and size > 1: #failed to capture table or there's only a header
         return ({}, "") 
     subjects_data.pop(0)
     data:dict = {}
-    subject:str = ""
     for subject_data in subjects_data:
-        (tmp_data, subject) = parseSubject(subject_data)
+        (tmp_data, subject) = parseSubject(subject_data, subject)
         data[subject] = tmp_data
     return (data, subject)
 
 def writeData(data, skip_subject=""):
+    '''
+    WARNING: Deltes processed data
+    '''
     subjects = []
     if len(skip_subject) > 0:
         for subject in data.keys():
@@ -139,8 +146,23 @@ def writeData(data, skip_subject=""):
     for subject in subjects:
         with open('{}.json'.format(subject), 'w') as handler:
             handler.write(json.dumps(data[subject], indent=2) )
+            del data[subject]
         handler.close()
     #done
+
+def updateData(data:dict, tmp_data:dict):
+    '''
+    Update the dictionary with the new dictionary without deleting any entries (i.e. cannot use dict.update())
+    Order of the list matters a lot because each index in each list corresponds to the same course
+    '''
+    subjects:list[str] = tmp_data.keys()
+    for subject in subjects:
+        if subject in data:
+            for key in data[subject].keys():
+                data[subject][key].extend(tmp_data[subject][key])
+            #done
+        else:
+            data[subject] = tmp_data[subject]
 ###############################################################################
 url = 'https://oirp.carleton.ca/course-inst/tables/2020w-course-inst_hpt.htm'
 url = "http://127.0.0.1:4000/blog/assets/test2.html"
@@ -148,7 +170,16 @@ data:object = requests.get(url)
 html:object = BeautifulSoup(data.text, 'html.parser')
 data:dict = {}
 subject:str = ""
-(data, subject) = parseTable(html, "div0")
+(data, subject) = parseTable(html, TAB + "0")
 if len(data.keys()) > 1: #can dump subject to text file
     writeData(data=data, skip_subject=subject)
-pprint(data)
+tables_data:list = html.select(TAB)
+for table_data in tables_data:
+    tmp_data:dict = {}
+    (tmp_data, subject) = parseTable(html=html, subject=subject)
+    if len(tmp_data) == 0:
+        continue
+    updateData(data, tmp_data)
+    if len(data.keys()) > 1: #can dump subject to text file                            
+        writeData(data=data, skip_subject=subject)
+writeData(data) #write remaining subjects
