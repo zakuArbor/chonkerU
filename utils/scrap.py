@@ -80,7 +80,6 @@ def parseSubject(html:str, subject="")->(dict, str):
 
     returns a dictionary and the subject
     '''
-#    pprint(html)
     data = {}
     cols:list[str] = html.select("tr > td")
     tmp_subject = findSubject(cols[0])
@@ -124,12 +123,10 @@ def parseTable(subjects_data:str, div:str=TAB, subject:str = "")->(dict, str):
     returns: a tuple of the course data and the last processed subject 
     '''
 
-    subjects_data:object = subjects_data.select(div + " > table > tbody > tr > td > div:nth-of-type(2) > table > tbody > tr")
-#    pprint(subjects_data)
+    subjects_data:object = subjects_data.select(div + " > table > tbody > tr > td > div:nth-of-type(2) > table > tbody > tr") #browser adds tbody
     size:int = len(subjects_data)
-    if size == 0 and size > 1: #failed to capture table or there's only a header
+    if size == 0 and size > 1: #failed to capture table
         return ({}, "") 
-    subjects_data.pop(0)
     data:dict = {}
     count = 0;
     for subject_data in subjects_data:
@@ -182,7 +179,7 @@ def grabDataDate(html)->dict:
     String to retrieve: `Source: 	Banner Course data - 2020W, as at 30-APR-2020`
     There seems to be a typo in CU data
     '''
-    parsed = html.select("html > body > div.TABDIV0 > table > tbody > tr > td > div:nth-of-type(3) > table > tbody > tr:nth-of-type(1) > td:nth-of-type(2)")
+    parsed = html.select("html > body > div.TABDIV0 > table > tbody > tr > td > div:nth-of-type(3) > table > tbody > tr:nth-of-type(1) > td:nth-of-type(2)") #browser adds tbody
     text = parsed[0].string.strip()
     match = re.search("\d\d\d\d[F|W|S]", text)
     if match:
@@ -192,19 +189,20 @@ def grabDataDate(html)->dict:
     match = re.search("\d\d-[A-Za-z]{3,4}-\d\d\d\d", text)
     if match:
         data['source'] = match[0]
+
     return data
 
 ###############################################################################
 #url = 'https://oirp.carleton.ca/course-inst/tables/2020w-course-inst_hpt.htm'
-url = "http://127.0.0.1:4000/blog/assets/test.html"
+#url = "http://127.0.0.1:4000/blog/assets/test.html"
 #url = "http://127.0.0.1:4000/blog/assets/test2.html"
+url = "https://oirp.carleton.ca/course-inst/tables/2020s-course-inst_hpt.htm"
 data:object = requests.get(url)
-html:object = BeautifulSoup(data.text, 'html.parser')
+html:object = BeautifulSoup(data.text, "html5lib")
 data:dict = {}
 subject:str = ""
 
 date:dict = grabDataDate(html)
-
 (data, subject) = parseTable(html, TAB + "0")
 if len(data.keys()) > 1: #can dump subject to text file
     writeData(data=data, date=date, skip_subject=subject)
