@@ -37,12 +37,14 @@ use strict;
 use warnings;
 use Getopt::Long;
 use JSON 'decode_json';
+use JSON 'encode_json';
 use Data::Dumper;
 
 my $verbose = 0;
 my $subject = 0;
 my $help    = "";
 my $data_dir= "data/";
+my $dest_dir= "../data/";
 
 my $PROG;
 ($PROG = $0) =~ s/.*[\/\\]//g;
@@ -91,17 +93,18 @@ sub get_files {
 =head2 parse_files
 @param subject: the subject being parsed
 @param files_ref:  a reference to all the files to parse 
-@return: a hash of the contents of the file
+@return: a tuple of two hash of the contents of the file: course and by prof
 =cut
 ################################################################################
 sub parse_files {
   my ($subject, $files_ref) = @_;
-  my %hash;
+  my %course_hash;
+  my %prof_hash;
   for (@$files_ref) {
     my $file = $data_dir . $subject . "/" . $_;
-    parse_file($file, \%hash);
+    parse_file($file, \%course_hash, \%prof_hash);
   }
-  return \%hash;
+  return (\%course_hash, \%prof_hash);
 }
 
 ################################################################################
@@ -111,7 +114,7 @@ sub parse_files {
 =cut        
 ################################################################################
 sub parse_file {
-  my ($file, $hash_ref) = @_;
+  my ($file, $course_ref, $prof_ref) = @_;
   my $json_str = do {                                                         
     open(my $fh, "<:encoding(UTF-8)", $file) or die("Cannot open '${file}': $!\n");
     local $/; #slurp mode i.e. dump content into a string                     
@@ -121,8 +124,6 @@ sub parse_file {
   my $content = decode_json($json_str);
   #  print Dumper($content);
   my $courses = $content->{"courses"};
-  #  print (Dumper($courses));
-  #  print(Dumper($courses));
   
   for my $i (0 .. $#{$courses}) {
     my $course = ${courses}->[$i];
@@ -137,10 +138,16 @@ sub parse_file {
     if (not defined $data) {
       next;
     }
-    if (exists $courses->[$course]) {
-      #print Dumper($courses->[$course]);
-      #      push(@{$courses}->[$course], $data);  
+
+    my $prof = $data->{"prof"};
+    if (not exists $prof_ref->{$prof}) {
+      $prof_ref->{$prof} = qw();
     }
+    if (not exists $course_ref->{$course}) {
+      $course_ref->{$course} = qw();
+    }
+    push(@{$course_ref->{$course}}, $data);
+    push(@{$prof_ref->{$prof}}, $data);
   }
 }
 
@@ -163,7 +170,8 @@ sub get_course_data {
   
   my %course = (
     'crn' => ${$content}->{"crn"}[$i],
-    'prof' => ${$content}->{"prof"}[$i],
+    'prof' => ${$content}->{"prof"}[$i], #redundant for prof data
+    'course'=> ${$content}->{"course"}[$i], #redundant for course data
     'type' => ${$content}->{"type"}[$i],
     'enrol' => ${$content}->{"enrol"}[$i],
     'year' => ${$content}->{"year"},
@@ -175,11 +183,28 @@ sub get_course_data {
   if (not $course{'enrol'} =~ /\d+/) {
     $course{'enrol'} = 0;
   }
-  die();
+  if (not substr($course{"prof"}, 1) =~ /\w/) {
+    return undef;
+  }
   return \%course;
-
 }
 
+################################################################################
+=head2 write2json
+@param subject: a string 
+@param type: a string either 'course' or 'prof'
+@param content: a reference to a hash
+=cut                                                                            
+################################################################################
+sub write2json {
+  my ($subject, $type, $hash) = @_;
+  $subject = lc $subject;
+  my $json = encode_json $hash;
+  my $file = $dest_dir . $subject . '_' . $type . ".json";
+  open(my $fh, ">:encoding(UTF-8)", $file) or die("Cannot open '${file}': $!\n");
+  print $fh $json;
+  close($fh);
+}
 ################################################################################
 # MAIN
 ################################################################################
@@ -200,4 +225,6 @@ if (length($subject) > 0 and length($subject) !=4) {
 $subject = uc $subject;
 
 my @files = get_files($subject);
-my $courses_ref = parse_files($subject, \@files);
+my ($courses_ref, $prof_ref) = parse_files($subject, \@files);
+write2json($subject, 'course', $courses_ref);
+write2json($subject, 'prof', $prof_ref);
