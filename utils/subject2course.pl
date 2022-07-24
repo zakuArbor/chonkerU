@@ -225,6 +225,7 @@ sub writeCoursesList {
     print $key . "\n";
     push(@courses, $key);
   }
+  @courses = sort @courses;
   my %data;
   $data{"code"} = \@courses;
 
