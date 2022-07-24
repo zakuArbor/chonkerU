@@ -86,7 +86,7 @@ def parseSubject(html:str, subject="")->(dict, str):
     if len(tmp_subject) != 0:
         subject = tmp_subject #must be processing a new subject
     data["courses"]:list[str] = parseCourseCode(cols[1])
-    data["insutrctor"]:list[str] = parseCol(cols[3])
+    data["prof"]:list[str] = parseCol(cols[3])
     data["crn"]:list[str] = parseCol(cols[5])
     data["type"]:list[str] = parseCol(cols[6])
     data["enrol"]:list[str] = parseCol(cols[7])
@@ -137,6 +137,7 @@ def parseTable(subjects_data:str, div:str=TAB, subject:str = "")->(dict, str):
 
 def writeData(data:dict, date:dict, skip_subject:str=""):
     '''
+    writes course data by subject into a JSON file
     WARNING: Deltes processed data
     '''
     subjects = []
@@ -151,7 +152,7 @@ def writeData(data:dict, date:dict, skip_subject:str=""):
     if len(subjects) == 0:
         return
     for subject in subjects:
-        with open('{}{}_{}.json'.format(date["year"], date["sem"], subject), 'w') as handler:
+        with open('data/{}{}_{}.json'.format(date["year"], date["sem"], subject), 'w') as handler:
             data[subject].update(date)
             handler.write(json.dumps(data[subject], indent=2) )
         handler.close()
@@ -196,7 +197,7 @@ def grabDataDate(html)->dict:
 #url = 'https://oirp.carleton.ca/course-inst/tables/2020w-course-inst_hpt.htm'
 #url = "http://127.0.0.1:4000/blog/assets/test.html"
 #url = "http://127.0.0.1:4000/blog/assets/test2.html"
-url = "https://oirp.carleton.ca/course-inst/tables/2020s-course-inst_hpt.htm"
+url = "https://oirp.carleton.ca/course-inst/tables/2018f-course-inst_hpt.htm"
 data:object = requests.get(url)
 html:object = BeautifulSoup(data.text, "html5lib")
 data:dict = {}
