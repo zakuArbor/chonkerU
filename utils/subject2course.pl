@@ -126,7 +126,7 @@ sub parse_file {
   my $courses = $content->{"courses"};
   
   for my $i (0 .. $#{$courses}) {
-    my $course = ${courses}->[$i];
+    my $course = substr(${courses}->[$i], 0, 8);
     my $level = substr($course, 4, 1);
 
     #ignoring 0000 and 5000+ level courses
@@ -134,6 +134,7 @@ sub parse_file {
       print("Ignoring ${course}\n");
       next;
     }
+    
     my $data = get_course_data(\$content, $i);
     if (not defined $data) {
       next;
@@ -171,7 +172,7 @@ sub get_course_data {
   my %course = (
     'crn' => ${$content}->{"crn"}[$i],
     'prof' => ${$content}->{"prof"}[$i], #redundant for prof data
-    'course'=> ${$content}->{"course"}[$i], #redundant for course data
+    'course'=> ${$content}->{"courses"}[$i], #redundant for course data
     'type' => ${$content}->{"type"}[$i],
     'enrol' => ${$content}->{"enrol"}[$i],
     'year' => ${$content}->{"year"},
@@ -205,6 +206,35 @@ sub write2json {
   print $fh $json;
   close($fh);
 }
+
+################################################################################
+=head2 writeCoursesList 
+@param subject: a string
+@param hash: data
+=cut
+################################################################################
+sub writeCoursesList {
+  my ($subject, $hash) = @_;
+  $subject = lc $subject;
+
+  my @courses;
+  print("Testing\n");
+  print(Dumper( %{$hash}));
+
+  foreach my $key (keys %{$hash}) {
+    print $key . "\n";
+    push(@courses, $key);
+  }
+  my %data;
+  $data{"code"} = \@courses;
+
+  my $json = encode_json \%data;
+  my $file = $dest_dir . $subject . '_' . "courses" . ".json";
+  open(my $fh, ">:encoding(UTF-8)", $file) or die("Cannot open '${file}': $!\n");
+  print $fh $json;
+  close($fh);
+}
+
 ################################################################################
 # MAIN
 ################################################################################
@@ -228,3 +258,5 @@ my @files = get_files($subject);
 my ($courses_ref, $prof_ref) = parse_files($subject, \@files);
 write2json($subject, 'course', $courses_ref);
 write2json($subject, 'prof', $prof_ref);
+
+writeCoursesList($subject, $courses_ref);
