@@ -39,6 +39,8 @@ use Getopt::Long;
 use JSON 'decode_json';
 use JSON 'encode_json';
 use Data::Dumper;
+#use DateTime;
+use Date::Parse;
 
 my $verbose = 0;
 my $subject = 0;
@@ -177,7 +179,8 @@ sub get_course_data {
     'enrol' => ${$content}->{"enrol"}[$i],
     'year' => ${$content}->{"year"},
     'sem' => ${$content}->{"sem"},
-    'source'=> ${$content}->{"source"}
+    'source'=> ${$content}->{"source"},
+    'epoch'=> str2time(${$content}->{"source"})
   );
  
   print(Dumper(%course)); 
@@ -218,16 +221,19 @@ sub writeCoursesList {
   $subject = lc $subject;
 
   my @courses;
-  print("Testing\n");
-  print(Dumper( %{$hash}));
-
-  foreach my $key (keys %{$hash}) {
-    print $key . "\n";
-    push(@courses, $key);
-  }
-  @courses = sort @courses;
+  
   my %data;
-  $data{"code"} = \@courses;
+
+  foreach my $key (sort keys %{$hash}) {
+    #print($hash->{$key}[0]{"course"});
+    my %course = ('code'=>$key, 'name'=>'TBD');
+    push(@courses, \%course);
+  }
+
+  $data{"courses"} = \@courses;
+  $data{"total"} = scalar @courses;
+
+  print(Dumper(%data));
 
   my $json = encode_json \%data;
   my $file = $dest_dir . $subject . '_' . "courses" . ".json";

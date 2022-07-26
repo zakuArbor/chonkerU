@@ -18,28 +18,24 @@ const LinkList = ({ url, homepageUrl }) => (
 const getRowItems = (rows) =>
   rows.map((row) => ({
     ...row,
-    key: row.id,
-    stars: row.stargazers.totalCount,
-    issueCount: row.issues.totalCount,
-    createdAt: new Date(row.createdAt).toLocaleDateString(),
-    updatedAt: new Date(row.updatedAt).toLocaleDateString(),
-    links: <LinkList url={row.url} homepageUrl={row.homepageUrl} />,
+    key: row.code,
+    id: row.code,
+    course_code: row.code,
+    course_name: row.name,
+    //updatedAt: new Date(row.updatedAt).toLocaleDateString(),
+    //links: <LinkList url={row.url} homepageUrl={row.homepageUrl} />,
   }));
 
 
 const headers = [
   {
-    key: "course-code",
+    key: "course_code",
     header: "Course Code",
   },
   {
-    key: "course-name",
+    key: "course_name",
     header: "Course Name",
-  },
-  {
-    key: "updatedAt",
-    header: "Updated At",
-  },
+  } 
 ];
 
 const CoursesPage = () => {
@@ -64,8 +60,8 @@ const CoursesPage = () => {
       .then((res) => {
         console.log("test");
         setLoading(false);
-        setTotalItems(res["code"].length);
-        //getRowItems(repositories.nodes);
+        setTotalItems(res["total"]);
+        setRows(getRowItems(res['courses']));
       });
   };
   useEffect(() => {
