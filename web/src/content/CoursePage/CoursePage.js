@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from 'react-router-dom'
 import { Link, DataTableSkeleton, Pagination } from "@carbon/react";
-import CoursesTable from "./CoursesTable";
+import CoursesTable from "./CourseTable";
 
 const LinkList = ({ url, homepageUrl }) => (
   <ul style={{ display: "flex" }}>
@@ -20,7 +21,7 @@ const getRowItems = (rows) =>
     ...row,
     key: row.code,
     id: row.code,
-    course_code: <Link href={"/course/" + row.code} state={{'code': row.code}}>{row.code}</Link>,
+    course_code: row.code,
     course_name: row.name,
     //updatedAt: new Date(row.updatedAt).toLocaleDateString(),
     //links: <LinkList url={row.url} homepageUrl={row.homepageUrl} />,
@@ -38,7 +39,8 @@ const headers = [
   } 
 ];
 
-const CoursesPage = () => {
+const CoursesPage = (course) => {
+  const location = useLocation();
   const [totalItems, setTotalItems] = useState(0);
   const [firstRowIndex, setFirstRowIndex] = useState(0);
   const [currentPageSize, setCurrentPageSize] = useState(10);
@@ -47,7 +49,7 @@ const CoursesPage = () => {
   const [error, setError] = useState(false);
 
   const getData = () => {
-    fetch("math_courses.json", {
+    fetch("course/math_courses.json", {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -65,8 +67,9 @@ const CoursesPage = () => {
       });
   };
   useEffect(() => {
-    getData();
-  }, []);
+    const {code} = location.state;
+    getData(code);
+  }, [location]);
 
   return (
     <div className="bx--grid bx--grid--full-width bx--grid--no-gutter repo-page">

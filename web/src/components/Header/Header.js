@@ -42,7 +42,7 @@ const CUHeader = () => (
           <SideNavItems>
             <HeaderSideNavItems>
               <HeaderMenuItem element={Link} to="/courses">Courses</HeaderMenuItem>
-              <HeaderMenuItem element={Link} to="/professors">Professors</HeaderMenuItem>
+              <HeaderMenuItem href="/professors">Professors</HeaderMenuItem>
             </HeaderSideNavItems>
           </SideNavItems>
         </SideNav>
