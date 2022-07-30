@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Link, DataTableSkeleton, Pagination } from "@carbon/react";
+import { Link } from 'react-router-dom';
+import { DataTableSkeleton, Pagination } from "@carbon/react";
 import CoursesTable from "./CoursesTable";
-import { gen_link } from "../utility";
 
 const LinkList = ({ url, homepageUrl }) => (
   <ul style={{ display: "flex" }}>
@@ -21,10 +21,8 @@ const getRowItems = (rows) =>
     ...row,
     key: row.code,
     id: row.code,
-    course_code: <Link href={"course/" + row.code} state={{'code': row.code}}>{row.code}</Link>,
+    course_code: <Link to={"/course/" + row.code} state={{'code': row.code}}>{row.code}</Link>,
     course_name: row.name,
-    //updatedAt: new Date(row.updatedAt).toLocaleDateString(),
-    //links: <LinkList url={row.url} homepageUrl={row.homepageUrl} />,
   }));
 
 

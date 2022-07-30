@@ -9,28 +9,7 @@ from pprint import pprint
 import unicodedata
 
 base_url:str = "https://calendar.carleton.ca/undergrad/courses/";
-
-def parseCourseCode(html:object)->list[str]:
-    '''
-    count number of courses and strip section
-    course codes are: 8 characters long
-        * 4 character for department
-        * 4 characters for course number
-    '''
-    courses = html.decode().split("<br/>")
-    if len(courses) == 0 and len(courses[0]) < 9:
-        return []
-    courses[0] = courses[0].strip()
-    courses[0] = courses[0][-9:-1] 
-    if len(courses) > 2: 
-        for i in range(1, len(courses)-1):
-            if len(courses) < 9:
-                continue
-            courses[i] = courses[i][:-1]
-        #END
-    #endif
-    courses[-1] = courses[-1][:8]
-    return courses
+info_url:str = "https://calendar.carleton.ca/search/?=";
 
 
 def writeData(data:dict, subject:str=""):
@@ -60,6 +39,18 @@ def grabDataDate(html)->dict:
 
     return data
 
+def retrieveCourseName(code:str)->str:
+    '''
+    Retrieve defunt courses such as MATH1002
+    https://calendar.carleton.ca/search/?=MATH%201052
+    %20 for whitespace
+    '''
+    data:object = requests.get(url+code)
+    html:object = BeautifulSoup(data.text, "html5lib")
+    pprint(html);
+    exit(1)
+
+
 def getCourses(courses_html)->object:
     '''
     Return an object where each key is a course_code and its value is a course object where each object is: {
@@ -80,6 +71,7 @@ def getCourses(courses_html)->object:
         temp = temp[0]
         temp1 = temp.select(".courseblockcode")
         code = temp1[0].text.replace(u'\xa0', '')
+        temp_code:str = temp1[0].text.replace(u'\xa0', '%20')
         if (code[4] == '0'):
             continue;
         #fi
@@ -94,6 +86,9 @@ def getCourses(courses_html)->object:
         index:int = line.find("<")
         if index >= 0:
             course["name"] = line[:index]
+        else:
+            course["name"] = retrieveCourseName(temp_code)
+            break
         #fi
         if (len(temp) > 2):
             temp = temp[2:]
@@ -109,7 +104,7 @@ def getCourses(courses_html)->object:
 ###############################################################################
 #url = 'https://oirp.carleton.ca/course-inst/tables/2020w-course-inst_hpt.htm'
 #url = "http://127.0.0.1:4000/blog/assets/test.html"
-#url = "http://127.0.0.1:4000/blog/assets/math.html"
+url = "http://127.0.0.1:4000/blog/assets/math.html"
 
 parser = argparse.ArgumentParser(description='Scrap all course description and names given a subject')
 parser.add_argument('--subject',type=str, default='MATH',
@@ -117,11 +112,12 @@ parser.add_argument('--subject',type=str, default='MATH',
 args = parser.parse_args()
 subject = args.subject.upper()
 
-data:object = requests.get(base_url+subject)
-#data:object = requests.get(url)
+#data:object = requests.get(base_url+subject)
+data:object = requests.get(url)
 html:object = BeautifulSoup(data.text, "html5lib")
 data:dict = {}
 
 courses_html = html.select(".courseblock");
 courses:object = getCourses(courses_html)
+pprint(courses);
 writeData(courses, subject)

@@ -24,6 +24,7 @@ Note: default parses only math
 =over
 
 =item *JSON::Parse 
+=item *Web::Scraper
 
 =back
 
@@ -38,7 +39,13 @@ use warnings;
 use Getopt::Long;
 use JSON 'decode_json';
 use JSON 'encode_json';
+#use Web::Scraper;
+#use Encode;
+#use HTML::TreeBuilder;
 use Data::Dumper;
+#use LWP::Simple;
+use LWP::UserAgent;
+use Mojo::DOM;
 
 #use DateTime;
 use Date::Parse;
@@ -48,6 +55,7 @@ my $subject  = 0;
 my $help     = "";
 my $data_dir = "data/";
 my $dest_dir = "../data/";
+my $course_url = 'https://www3.carleton.ca/calendars/ugrad/0910/courses/';
 
 my $PROG;
 ( $PROG = $0 ) =~ s/.*[\/\\]//g;
@@ -98,17 +106,18 @@ sub get_files {
 =head2 parse_files
 @param subject: the subject being parsed
 @param files_ref:  a reference to all the files to parse 
+@param names_ref: a reference to an object that contains all the course information provided by academic calendar
 @return: a tuple of two hash of the contents of the file: course and by prof
 =cut
 
 ################################################################################
 sub parse_files {
-    my ( $subject, $files_ref ) = @_;
+    my ( $subject, $files_ref, $names_ref ) = @_;
     my %course_hash;
     my %prof_hash;
     for (@$files_ref) {
         my $file = $data_dir . $subject . "/" . $_;
-        parse_file( $file, \%course_hash, \%prof_hash );
+        parse_file( $file, \%course_hash, \%prof_hash , $names_ref);
     }
     return ( \%course_hash, \%prof_hash );
 }
@@ -118,11 +127,12 @@ sub parse_files {
 =head2 parse_file
 @param file: the file to parse
 @param hash_ref: the hash reference where parsed data is stored
+@param names_ref: a reference to an object that contains all the course information provided by academic calendar
 =cut        
 
 ################################################################################
 sub parse_file {
-    my ( $file, $course_ref, $prof_ref ) = @_;
+    my ( $file, $course_ref, $prof_ref, $names_ref) = @_;
     my $json_str = do {
         open( my $fh, "<:encoding(UTF-8)", $file )
           or die("Cannot open '${file}': $!\n");
@@ -158,11 +168,20 @@ sub parse_file {
             $prof_ref->{$prof}->{$course}              = {};
             $prof_ref->{$prof}->{$course}->{'latest'}  = 0;
             $prof_ref->{$prof}->{$course}->{'history'} = qw();
+            if (exists $names_ref->{$course}) {
+              $prof_ref->{$prof}->{$course}->{'name'} = $names_ref->{$course}->{'name'};
+            }
         }
         if ( not exists $course_ref->{$course} ) {
             $course_ref->{$course} = {};
             $course_ref->{$course}->{'latest'} = 0;
             $course_ref->{$course}->{'history'} = qw();
+            if (exists $names_ref->{$course}) {
+              $course_ref->{$course}->{'info'} = {};
+              $course_ref->{$course}->{'info'}{'name'} = $names_ref->{$course}->{'name'};
+              $course_ref->{$course}->{'info'}{'credit'} = $names_ref->{$course}->{'credit'};
+              $course_ref->{$course}->{'info'}{'desc'} = $names_ref->{$course}->{'desc'};
+            }
         }
         if (   $course_ref->{$course}->{'latest'} == 0
             || $data->{'epoch'} > $course_ref->{$course}->{'latest'} )
@@ -244,6 +263,7 @@ sub write2json {
 =head2 writeCoursesList 
 @param subject: a string
 @param hash: data
+@return: a list of courses that did not have a name (needs further processing)
 =cut
 
 ################################################################################
@@ -252,13 +272,21 @@ sub writeCoursesList {
     $subject = lc $subject;
 
     my @courses;
+    my @bad_courses = qw();
 
     my %data;
+
+    print(Dumper($hash));
 
     foreach my $key ( sort keys %{$hash} ) {
 
         #print($hash->{$key}[0]{"course"});
-        my %course = ( 'code' => $key, 'name' => 'TBD' );
+        my $name = $hash->{$key}->{'info'}->{'name'};
+        if (defined $hash->{$key}->{'info'}->{'name'}) {
+          $name = "TBD";
+          push(@bad_courses, $key);
+        }
+        my %course = ( 'code' => $key, 'name' => $hash->{$key}->{'info'}->{'name'} );
         push( @courses, \%course );
     }
 
@@ -271,6 +299,7 @@ sub writeCoursesList {
       or die("Cannot open '${file}': $!\n");
     print $fh $json;
     close($fh);
+    return \@bad_courses;
 }
 
 ################################################################################
@@ -298,7 +327,6 @@ sub getProfTeachCount {
             );
         }
     }
-    print( Dumper(@profs) );
     return \@profs;
 }
 
@@ -313,7 +341,6 @@ sub getAvgEnrollment {
     my %data = ();
 
     foreach my $course ( @{$arr_ref} ) {
-        print(Dumper($course));
         my $key = $course->{'year'} . '-' . $course->{'sem'};
         if (not exists $data{$key}) {
           $data{$key} = 0;
@@ -328,7 +355,6 @@ sub getAvgEnrollment {
 }
 
 ################################################################################
-
 =head2 writeCourseApi
 @param subject: a string
 @param hash: data
@@ -354,6 +380,46 @@ sub writeCourseApi {
     }
 }
 
+##############
+#curl 'https://calendar.carleton.ca/ribbit/index.cgi?page=getcourse.rjs&code=MATH%201052' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0' -H 'Accept: */*' -H 'Accept-Language: en-CA,en-US;q=0.7,en;q=0.3' -H 'Accept-Encoding: gzip, deflate, br' -H 'X-Requested-With: XMLHttpRequest' -H 'Connection: keep-alive' -H 'Referer: https://calendar.carleton.ca/undergrad/courses/MATH/' 
+#
+sub fixMissingName {
+  my ($subject, $course_hash) = @_;
+  my @bad_courses = qw();
+  foreach my $course (keys %{$course_hash}) {
+    if (not exists $course_hash->{$course}->{'info'}) {
+      push(@bad_courses, $course);
+    }
+  }
+  foreach my $course (@bad_courses) {
+    my $code_num = substr($course, length($subject));
+    my $url = $course_url . $subject . "/" . $code_num . ".html";
+    #my $scrapper = {
+    #  process '.course' => scrapper {
+    #    process "h3" => raw_code => 'TEXT',
+    #    process "h4" => name => 'TEXT',
+    #    process "" => desc => 'TEXT',
+    #  }
+    #}
+    #my $res = $scraper->scrape( URI->new($url) );
+    my $ua = LWP::UserAgent->new(timeout => 10);
+    $ua->env_proxy;
+    
+    my $response = $ua->get($url);
+    
+    if (! $response->is_success) {
+        continue
+    }
+#    print(Dumper($response));
+    #my $root = HTML::TreeBuilder->new_from_content($response->{'_content'});
+    my $dom = Mojo::DOM->new($response->{'_content'});
+    print(Dumper($dom->find('div.course')->content));
+#    print(Dumper($dom));
+    
+    die();
+  }
+}
+
 ################################################################################
 # MAIN
 ################################################################################
@@ -373,10 +439,22 @@ if ( length($subject) > 0 and length($subject) != 4 ) {
 
 $subject = uc $subject;
 
+my $file = $data_dir . $subject . '/' . $subject.".json";
+my $json_str = do {
+  open( my $fh, "<:encoding(UTF-8)", $file)
+    or die("Cannot open '${file}': $!\n");
+  local $/;    #slurp mode i.e. dump content into a string
+  <$fh>;
+};
+close($file);
+my $course_names = decode_json($json_str);
+
 my @files = get_files($subject);
-my ( $courses_ref, $prof_ref ) = parse_files( $subject, \@files );
+my ( $courses_ref, $prof_ref ) = parse_files( $subject, \@files, $course_names);
+#fixMissingName($subject, $courses_ref);
+
+writeCoursesList( $subject, $courses_ref );
 write2json( $subject, 'course', $courses_ref );
 write2json( $subject, 'prof',   $prof_ref );
 
-writeCoursesList( $subject, $courses_ref );
 writeCourseApi( $subject, $courses_ref, $prof_ref );

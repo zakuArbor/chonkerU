@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import {
   Link,
   DataTableSkeleton,
@@ -63,6 +64,7 @@ const getRowItems = (rows) =>
   }));
 
 const CoursePage = () => {
+  const { code } = useParams();
   const [totalItems, setTotalItems] = useState(0);
   const [firstRowIndex, setFirstRowIndex] = useState(0);
   const [currentPageSize, setCurrentPageSize] = useState(10);
@@ -72,8 +74,8 @@ const CoursePage = () => {
   const [data, setData] = useState({ isLoaded: false });
   //  const [profBarData, setProfBarData] = useState({});
 
-  const getData = (path) => {
-    fetch(path + ".json", {
+  const getData = (code) => {
+    fetch("course/" + code + ".json", {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -93,23 +95,25 @@ const CoursePage = () => {
         setData({ isLoaded: true, ...res });
         setTotalItems(res["history"].length);
         setRows(getRowItems(res["history"]));
+        setError(false);
         //setProfBarData({ isLoaded: true, data: getProfBarData(res.profs) });
         setLoading(false);
       });
   };
   useEffect(() => {
     const path = window.location.pathname;
-    getData(path);
-  }, []);
+    getData(code);
+  }, [code]);
 
   return (
     <div className="bx--grid bx--grid--full-width bx--grid--no-gutter course-page">
       <div className="bx--row repo-page__r1">
-        <h1 className="course_heading">MATH1004 - Calculus for Engineering or Physics</h1>
+        <h1 className="course_heading">{code} - {"info" in data ? data.info.name : "TBD" } - [{"info" in data ? data.info.credit : "?"} Credits] </h1>
       </div>
       <div className="bx--row course-page__r2">
-        <p><h4 className="source"><span>Lastest Source:</span> {new Date(data.latest*1000).toDateString()}</h4></p>
-        <p><h4 className="avg"><span>Average:</span> {Math.ceil(data.enrol_avg)} Students Per Semester</h4></p> 
+        <h4 className="source"><span>Latest Source:</span> {new Date(data.latest*1000).toDateString()}</h4><br/>
+        <h4 className="avg"><span>Average:</span> {Math.ceil(data.enrol_avg)} Students Per Semester</h4> <br/>
+        <p className="desc"><b className="label">Description:</b> {"info" in data ? data.info.desc : "No Description Available"}</p>
       </div>
       <div className="bx--row course-page__r3">
         <div className="bx--col-lg-16">
