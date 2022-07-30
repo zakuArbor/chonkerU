@@ -16,7 +16,6 @@ import {
 import { Link } from 'react-router-dom';
 import { Switcher, Notification, UserAvatar } from '@carbon/react/icons';
 
-
 const CUHeader = () => (
   <HeaderContainer
     render={({ isSideNavExpanded, onClickSideNavExpand }) => (
@@ -27,12 +26,12 @@ const CUHeader = () => (
           onClick={onClickSideNavExpand}
           isActive={isSideNavExpanded}
         />
-        <HeaderName element={Link} to="/" prefix="zakuarbor">
+        <HeaderName element={Link} to={"/"} prefix="zakuarbor">
           CU-Visualizer
         </HeaderName>
         <HeaderNavigation aria-label="Carbon Tutorial">
-          <HeaderMenuItem element={Link} to="/courses">Courses</HeaderMenuItem>
-          <HeaderMenuItem element={Link} to="/professors">Professors</HeaderMenuItem>
+          <HeaderMenuItem element={Link} to={"/courses"}>Courses</HeaderMenuItem>
+          <HeaderMenuItem element={Link} to={"professors"}>Professors</HeaderMenuItem>
         </HeaderNavigation>
         <SideNav
           aria-label="Side navigation"
@@ -41,8 +40,8 @@ const CUHeader = () => (
         >
           <SideNavItems>
             <HeaderSideNavItems>
-              <HeaderMenuItem element={Link} to="/courses">Courses</HeaderMenuItem>
-              <HeaderMenuItem href="/professors">Professors</HeaderMenuItem>
+              <HeaderMenuItem element={Link} to={"/courses"}>Courses</HeaderMenuItem>
+              <HeaderMenuItem href={"/professors"}>Professors</HeaderMenuItem>
             </HeaderSideNavItems>
           </SideNavItems>
         </SideNav>

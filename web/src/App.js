@@ -27,9 +27,9 @@ class App extends Component {
         <Header />
         <Content>
           <Routes>
-            <Route exact path="/" element={<LandingPage/>} />
-            <Route path="/courses" element={<CoursesPage/>} />
-            <Route path="/course/:code" element={<CoursePage/>} />
+            <Route exact path={"/"} element={<LandingPage/>} />
+            <Route path={"/courses"} element={<CoursesPage/>} />
+            <Route path={"/course/:code"} element={<CoursePage/>} />
           </Routes>
         </Content>
       </>

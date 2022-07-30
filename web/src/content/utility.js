@@ -10,4 +10,9 @@ let semester_sort = (x, y) => {
   }
   return 0;
 };
-export { semester_sort };
+
+let gen_link = (link) => {
+  return "cu-visualizer".concat(link === "/" ? "" : link);
+};
+
+export { semester_sort, gen_link };
