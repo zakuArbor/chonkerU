@@ -95,7 +95,6 @@ def getCourses(courses_html)->object:
         if index >= 0:
             course["name"] = line[:index]
         #fi
-        print(temp)
         if (len(temp) > 2):
             temp = temp[2:]
 
@@ -110,16 +109,16 @@ def getCourses(courses_html)->object:
 ###############################################################################
 #url = 'https://oirp.carleton.ca/course-inst/tables/2020w-course-inst_hpt.htm'
 #url = "http://127.0.0.1:4000/blog/assets/test.html"
-url = "http://127.0.0.1:4000/blog/assets/math.html"
+#url = "http://127.0.0.1:4000/blog/assets/math.html"
 
 parser = argparse.ArgumentParser(description='Scrap all course description and names given a subject')
 parser.add_argument('--subject',type=str, default='MATH',
                     help='the subject to parse')
 args = parser.parse_args()
-subject = args.subject
+subject = args.subject.upper()
 
-#data:object = requests.get(base_url+subject)
-data:object = requests.get(url)
+data:object = requests.get(base_url+subject)
+#data:object = requests.get(url)
 html:object = BeautifulSoup(data.text, "html5lib")
 data:dict = {}
 
