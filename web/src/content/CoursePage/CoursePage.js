@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from 'react-router-dom'
-import { Link, DataTableSkeleton, Pagination } from "@carbon/react";
-import CoursesTable from "./CourseTable";
+import {
+  Link,
+  DataTableSkeleton,
+  Pagination,
+  InlineNotification,
+} from "@carbon/react";
+import CourseTable from "./CourseTable";
+import CourseGraphs from "./CoursePageGraphs";
+import { semester_sort } from "../utility";
+import Test from "./Test";
+
 
 const LinkList = ({ url, homepageUrl }) => (
   <ul style={{ display: "flex" }}>
@@ -16,94 +24,135 @@ const LinkList = ({ url, homepageUrl }) => (
     )}
   </ul>
 );
+
+const headers = [
+  {
+    key: "prof",
+    header: "Professor",
+  },
+  {
+    key: "enrollment",
+    header: "Enrollment",
+  },
+  {
+    key: "semester",
+    header: "Semester",
+  },
+  {
+    key: "year",
+    header: "Year",
+  },
+  {
+    key: "type",
+    header: "Type",
+  },
+];
+
 const getRowItems = (rows) =>
   rows.map((row) => ({
     ...row,
-    key: row.code,
-    id: row.code,
-    course_code: row.code,
-    course_name: row.name,
+    key: row.crn + row.sem,
+    id: row.crn + row.sem,
+    prof: row.prof,
+    enrollment: row.enrol,
+    semester: row.sem,
+    year: row.year,
+    type: row.type,
     //updatedAt: new Date(row.updatedAt).toLocaleDateString(),
     //links: <LinkList url={row.url} homepageUrl={row.homepageUrl} />,
   }));
 
-
-const headers = [
-  {
-    key: "course_code",
-    header: "Course Code",
-  },
-  {
-    key: "course_name",
-    header: "Course Name",
-  } 
-];
-
-const CoursesPage = (course) => {
-  const location = useLocation();
+const CoursePage = () => {
   const [totalItems, setTotalItems] = useState(0);
   const [firstRowIndex, setFirstRowIndex] = useState(0);
   const [currentPageSize, setCurrentPageSize] = useState(10);
   const [loading, setLoading] = useState(true);
   const [rows, setRows] = useState([]);
   const [error, setError] = useState(false);
+  const [data, setData] = useState({ isLoaded: false });
+  //  const [profBarData, setProfBarData] = useState({});
 
-  const getData = () => {
-    fetch("course/math_courses.json", {
+  const getData = (path) => {
+    fetch(path + ".json", {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
     })
-      .then((response) => {
-        console.log(response);
-        return response.json();
+      .then((res) => {
+        console.log(res);
+        if (res.status != 200) {
+          setError(true);
+          setLoading(false);
+        }
+        return res.json();
       })
       .then((res) => {
-        console.log("test");
+        console.log(res);
+        res.history = res.history.sort(semester_sort);
+        setData({ isLoaded: true, ...res });
+        setTotalItems(res["history"].length);
+        setRows(getRowItems(res["history"]));
+        //setProfBarData({ isLoaded: true, data: getProfBarData(res.profs) });
         setLoading(false);
-        setTotalItems(res["total"]);
-        setRows(getRowItems(res['courses']));
       });
   };
   useEffect(() => {
-    const {code} = location.state;
-    getData(code);
-  }, [location]);
+    const path = window.location.pathname;
+    getData(path);
+  }, []);
 
   return (
-    <div className="bx--grid bx--grid--full-width bx--grid--no-gutter repo-page">
+    <div className="bx--grid bx--grid--full-width bx--grid--no-gutter course-page">
       <div className="bx--row repo-page__r1">
+        <h1 className="course_heading">MATH1004 - Calculus for Engineering or Physics</h1>
+      </div>
+      <div className="bx--row course-page__r2">
+        <p><h4 className="source"><span>Lastest Source:</span> {new Date(data.latest*1000).toDateString()}</h4></p>
+        <p><h4 className="avg"><span>Average:</span> {Math.ceil(data.enrol_avg)} Students Per Semester</h4></p> 
+      </div>
+      <div className="bx--row course-page__r3">
         <div className="bx--col-lg-16">
-          {loading ? 
+          {loading ? (
             <DataTableSkeleton
               columnCount={headers.length + 1}
               rowCount={10}
               headers={headers}
             />
-            : error ? (
-            <></>
-          ) : (
+          ) : error ? (
             <>
-            <CoursesTable
-              headers={headers}
-              rows={rows.slice(firstRowIndex, firstRowIndex + currentPageSize)}
-            />
-            <Pagination
-              totalItems={totalItems}
-              backwardText="Previous page"
-              forwardText="Next page"
-              pageSize={currentPageSize}
-              pageSizes={[5, 10, 15, 25]}
-              itemsPerPageText="Items per page"
-              onChange={({ page, pageSize }) => {
-                if (pageSize !== currentPageSize) {
-                  setCurrentPageSize(pageSize);
-                }
-                setFirstRowIndex(pageSize * (page - 1));
-              }}
-            />
-          </>
+              <InlineNotification
+                title="Error"
+                subtitle="Failed to retrieve Data"
+                hideCloseButton={true}
+              />
+            </>
+          ) : (
+            <div className="course">
+              {console.log(data)}
+              <CourseGraphs data={data} />
+              <CourseTable
+                headers={headers}
+                rows={rows.slice(
+                  firstRowIndex,
+                  firstRowIndex + currentPageSize
+                )}
+              />
+              <Pagination
+                totalItems={totalItems}
+                backwardText="Previous page"
+                forwardText="Next page"
+                pageSize={currentPageSize}
+                pageSizes={[5, 10, 15, 25]}
+                itemsPerPageText="Items per page"
+                onChange={({ page, pageSize }) => {
+                  if (pageSize !== currentPageSize) {
+                    setCurrentPageSize(pageSize);
+                  }
+                  setFirstRowIndex(pageSize * (page - 1));
+                }}
+              />
+            </div>
           )}
         </div>
       </div>
@@ -111,4 +160,4 @@ const CoursesPage = (course) => {
   );
 };
 
-export default CoursesPage;
+export default CoursePage;

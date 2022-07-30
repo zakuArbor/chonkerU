@@ -64,7 +64,7 @@ const CoursesTable = ({rows, headers}) => {
                 <TableExpandHeader />
                 {headers.map((header) => (
                   //need to override default sorting algorithm because usually backend deals with it but we do everything in front end unfortunately
-                  <TableHeader enableExpand={true}  {...getHeaderProps({ header }) } isSortable={true}>
+                  <TableHeader {...getHeaderProps({ header }) } isSortable={true}>
                     {header.header}
                   </TableHeader>
                 ))}

@@ -4,3 +4,24 @@
   padding-top: $spacing-05;
   padding-bottom: $spacing-05;
 }
+
+.course_heading {
+  font-weight: bold;
+}
+
+.graphs {
+  display: block;
+  padding: 10px;
+}
+
+.bar {
+  height: 20vh;
+}
+
+.line {
+  height: 20vh;
+}
+
+.source span, .avg span {
+  font-weight: bold;
+}

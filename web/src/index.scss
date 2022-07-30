@@ -3,6 +3,7 @@
 @use './components/Header/header';
 @use './content/LandingPage/landing-page';
 @use './content/CoursesPage/courses-page';
+@use './content/CoursePage/course-page';
 
 .cds--content {
   margin-top: 3rem;

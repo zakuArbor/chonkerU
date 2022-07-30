@@ -53,12 +53,12 @@ const CoursesPage = () => {
         Accept: "application/json",
       },
     })
-      .then((response) => {
-        console.log(response);
-        return response.json();
+      .then((res) => {
+        console.log(res)
+        return res.json();
       })
       .then((res) => {
-        console.log("test");
+        console.log(res);
         setLoading(false);
         setTotalItems(res["total"]);
         setRows(getRowItems(res['courses']));
