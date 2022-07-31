@@ -1,4 +1,7 @@
 # CU-VISUALIZER
+**Carbon Design System:**
+* https://charts.carbondesignsystem.com/?path=/story/*
+* https://react.carbondesignsystem.com/?path=/story/getting-started-welcome--welcome
 
 **Public Data Sources:**
 * https://oirp.carleton.ca/university_stats/html/university_stats.htm
