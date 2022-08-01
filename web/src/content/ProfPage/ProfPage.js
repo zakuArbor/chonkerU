@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
+  Link,
   DataTableSkeleton,
   Pagination,
   InlineNotification,
 } from "@carbon/react";
-import CourseTable from "./CourseTable";
-import CourseGraphs from "./CoursePageGraphs";
+import ProfTable from "./ProfTable";
+import ProfGraphs from "./ProfPageGraphs";
 import { semester_sort } from "../utility";
-import MD5 from "crypto-js/md5";
 import Test from "./Test";
 
 
@@ -54,7 +54,7 @@ const getRowItems = (rows) =>
     ...row,
     key: row.crn + row.sem,
     id: row.crn + row.sem,
-    prof: <Link to={"/prof/" + MD5(row.prof).toString()} state={{'code': row.code}}>{row.prof}</Link>,
+    prof: row.prof,
     enrollment: row.enrol,
     semester: row.sem,
     year: row.year,
@@ -63,7 +63,7 @@ const getRowItems = (rows) =>
     //links: <LinkList url={row.url} homepageUrl={row.homepageUrl} />,
   }));
 
-const CoursePage = () => {
+const ProfPage = () => {
   const { code } = useParams();
   const [totalItems, setTotalItems] = useState(0);
   const [firstRowIndex, setFirstRowIndex] = useState(0);
@@ -134,8 +134,8 @@ const CoursePage = () => {
           ) : (
             <div className="course">
               {console.log(data)}
-              <CourseGraphs data={data} />
-              <CourseTable
+              <ProfGraphs data={data} />
+              <ProfTable
                 headers={headers}
                 rows={rows.slice(
                   firstRowIndex,
@@ -164,4 +164,4 @@ const CoursePage = () => {
   );
 };
 
-export default CoursePage;
+export default ProfPage;

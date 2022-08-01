@@ -1,0 +1,21 @@
+@use '@carbon/react/scss/spacing' as *;
+
+.repo-page__r1 {
+  padding-top: $spacing-05;
+  padding-bottom: $spacing-05;
+}
+
+.course_heading {
+  font-weight: bold;
+}
+
+.graphs {
+  display: block;
+  padding: 10px;
+}
+
+
+.source span, .avg span, .label {
+  font-weight: bold;
+}
+

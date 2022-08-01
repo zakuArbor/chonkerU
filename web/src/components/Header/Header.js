@@ -31,7 +31,7 @@ const CUHeader = () => (
         </HeaderName>
         <HeaderNavigation aria-label="Carbon Tutorial">
           <HeaderMenuItem element={Link} to={"/courses"}>Courses</HeaderMenuItem>
-          <HeaderMenuItem element={Link} to={"professors"}>Professors</HeaderMenuItem>
+          <HeaderMenuItem element={Link} to={"profs"}>Professors</HeaderMenuItem>
         </HeaderNavigation>
         <SideNav
           aria-label="Side navigation"
@@ -41,7 +41,7 @@ const CUHeader = () => (
           <SideNavItems>
             <HeaderSideNavItems>
               <HeaderMenuItem element={Link} to={"/courses"}>Courses</HeaderMenuItem>
-              <HeaderMenuItem href={"/professors"}>Professors</HeaderMenuItem>
+              <HeaderMenuItem href={"/profs"}>Professors</HeaderMenuItem>
             </HeaderSideNavItems>
           </SideNavItems>
         </SideNav>
