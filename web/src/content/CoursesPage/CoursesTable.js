@@ -24,6 +24,10 @@ const action = (param) => {
 }
 
 const CoursesTable = ({rows, headers}) => {
+    const getRowDesc = (code) => {
+      let desc = rows.find(item => item.code == code).desc;
+      return typeof(desc) !== 'null' ? desc : "No Description Available";
+    }
     return (
     <DataTable
       rows={rows}
@@ -32,6 +36,7 @@ const CoursesTable = ({rows, headers}) => {
         rows,
         headers,
         getHeaderProps,
+        getExpandHeaderProps,
         getRowProps,
         getTableProps,
         getToolbarProps,
@@ -61,7 +66,7 @@ const CoursesTable = ({rows, headers}) => {
           <Table {...getTableProps()}>
             <TableHead>
               <TableRow>
-                <TableExpandHeader />
+                <TableExpandHeader enableExpando={true} {...getExpandHeaderProps()}/>
                 {headers.map((header) => (
                   //need to override default sorting algorithm because usually backend deals with it but we do everything in front end unfortunately
                   <TableHeader {...getHeaderProps({ header }) } isSortable={true}>
@@ -71,15 +76,16 @@ const CoursesTable = ({rows, headers}) => {
               </TableRow>
             </TableHead>
             <TableBody>
+              {console.log(rows)}
               {rows.map((row) => (
                 <React.Fragment key={row.id}>
-                  <TableExpandRow {...getRowProps({ row })}>
+                  <TableExpandRow expandHeader="expand" {...getRowProps({ row })}>
                     {row.cells.map((cell) => (
                       <TableCell key={cell.id}>{cell.value}</TableCell>
                     ))}
                   </TableExpandRow>
                   <TableExpandedRow colSpan={headers.length + 1}>
-                    <p>Row description</p>
+                    <p className={'desc'}>{getRowDesc(row.id)}</p>
                   </TableExpandedRow>
                 </React.Fragment>
               ))}

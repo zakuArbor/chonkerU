@@ -286,7 +286,7 @@ sub writeCoursesList {
           $name = "TBD";
           push(@bad_courses, $key);
         }
-        my %course = ( 'code' => $key, 'name' => $hash->{$key}->{'info'}->{'name'} );
+        my %course = ( 'code' => $key, 'name' => $hash->{$key}->{'info'}->{'name'}, 'desc' => $hash->{$key}->{'info'}->{'desc'} );
         push( @courses, \%course );
     }
 

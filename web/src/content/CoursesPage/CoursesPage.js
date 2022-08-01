@@ -23,6 +23,7 @@ const getRowItems = (rows) =>
     id: row.code,
     course_code: <Link to={"/course/" + row.code} state={{'code': row.code}}>{row.code}</Link>,
     course_name: row.name,
+    course_desc: row.desc,
   }));
 
 

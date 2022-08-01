@@ -128,7 +128,7 @@ const profBarOption = {
       "scaleType": "labels"
     }
   },
-  "height": "400px"
+  "height": "600px"
 }
 
 const studentLineOption = {
