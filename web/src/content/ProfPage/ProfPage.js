@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import {
-  Link,
   DataTableSkeleton,
+  SkeletonText,
   Pagination,
   InlineNotification,
 } from "@carbon/react";
@@ -11,25 +11,10 @@ import ProfGraphs from "./ProfPageGraphs";
 import { semester_sort } from "../utility";
 import Test from "./Test";
 
-
-const LinkList = ({ url, homepageUrl }) => (
-  <ul style={{ display: "flex" }}>
-    <li>
-      <Link href={url}>GitHub</Link>
-    </li>
-    {homepageUrl && (
-      <li>
-        <span>&nbsp;|&nbsp;</span>
-        <Link href={homepageUrl}>Homepage</Link>
-      </li>
-    )}
-  </ul>
-);
-
 const headers = [
   {
-    key: "prof",
-    header: "Professor",
+    key: "course_name",
+    header: "Course Name",
   },
   {
     key: "enrollment",
@@ -49,33 +34,46 @@ const headers = [
   },
 ];
 
-const getRowItems = (rows) =>
+const parseData = (data) => {
+  let obj = { rows: [], courses: {} };
+  for (const course in data.courses) {
+    console.log(data.courses[course].history);
+    const rows = getRowItems(
+      data.courses[course].history,
+      data.courses[course].name
+    );
+    console.log(rows);
+    obj.rows = obj.rows.concat(rows);
+    obj.courses[course] = rows.length;
+  }
+  return obj;
+};
+
+const getRowItems = (rows, course_name) =>
   rows.map((row) => ({
     ...row,
     key: row.crn + row.sem,
     id: row.crn + row.sem,
-    prof: row.prof,
+    course_name: <Link to={"/course/" + row.course}>{course_name}</Link>,
     enrollment: row.enrol,
     semester: row.sem,
     year: row.year,
     type: row.type,
-    //updatedAt: new Date(row.updatedAt).toLocaleDateString(),
-    //links: <LinkList url={row.url} homepageUrl={row.homepageUrl} />,
   }));
 
 const ProfPage = () => {
-  const { code } = useParams();
+  const { prof } = useParams();
   const [totalItems, setTotalItems] = useState(0);
   const [firstRowIndex, setFirstRowIndex] = useState(0);
   const [currentPageSize, setCurrentPageSize] = useState(10);
   const [loading, setLoading] = useState(true);
   const [rows, setRows] = useState([]);
   const [error, setError] = useState(false);
-  const [data, setData] = useState({ isLoaded: false });
-  //  const [profBarData, setProfBarData] = useState({});
+  const [graphData, setGraphData] = useState({ isLoaded: false });
+  const [profData, setProfData] = useState({ isLoaded: false });
 
-  const getData = (code) => {
-    fetch("course/" + code + ".json", {
+  const getData = (prof) => {
+    fetch("prof/" + prof + ".json", {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -91,30 +89,45 @@ const ProfPage = () => {
       })
       .then((res) => {
         console.log(res);
-        res.history = res.history.sort(semester_sort);
-        setData({ isLoaded: true, ...res });
-        setTotalItems(res["history"].length);
-        setRows(getRowItems(res["history"]));
+        const data = parseData(res);
+        data.rows = data.rows.sort(semester_sort).reverse(); //want latest semester first when displaying in a table
+        console.log(data);
+        setRows(data.rows);
+        setTotalItems(data.rows.length);
         setError(false);
-        //setProfBarData({ isLoaded: true, data: getProfBarData(res.profs) });
+        setProfData({ isLoaded: true, latest: res.latest, name: res.prof });
+        setGraphData({ isLoaded: true, bar: data.courses, scatter: res.stats });
         setLoading(false);
       });
   };
   useEffect(() => {
-    const path = window.location.pathname;
-    getData(code);
-  }, [code]);
+    getData(prof);
+  }, [prof]);
 
   return (
     <div className="bx--grid bx--grid--full-width bx--grid--no-gutter course-page">
-      <div className="bx--row repo-page__r1">
-        <h1 className="course_heading">{code} - {"info" in data ? data.info.name : "TBD" } - [{"info" in data ? data.info.credit : "?"} Credits] </h1>
-      </div>
-      <div className="bx--row course-page__r2">
-        <h4 className="source"><span>Latest Source:</span> {new Date(data.latest*1000).toDateString()}</h4><br/>
-        <h4 className="avg"><span>Average:</span> {Math.ceil(data.enrol_avg)} Students Per Semester</h4> <br/>
-        <p className="desc"><b className="label">Description:</b> {"info" in data ? data.info.desc : "No Description Available"}</p>
-      </div>
+      {profData.isLoaded ? (
+        <>
+          <div className="bx--row repo-page__r1">
+            <h1 className="course_heading">{profData.name}</h1>
+          </div>
+          <div className="bx--row course-page__r2">
+            <h4 className="source">
+              <span>Latest Source:</span>{" "}
+              {new Date(profData.latest * 1000).toDateString()}
+            </h4>
+            <br />
+            <h4 className="website">
+              <span>Website:</span> Not Implemented
+            </h4>
+            <br />
+          </div>
+        </>
+      ) : error ? (
+        <></>
+      ) : (
+        <SkeletonText />
+      )}
       <div className="bx--row course-page__r3">
         <div className="bx--col-lg-16">
           {loading ? (
@@ -133,8 +146,7 @@ const ProfPage = () => {
             </>
           ) : (
             <div className="course">
-              {console.log(data)}
-              <ProfGraphs data={data} />
+              <ProfGraphs data={graphData} />
               <ProfTable
                 headers={headers}
                 rows={rows.slice(

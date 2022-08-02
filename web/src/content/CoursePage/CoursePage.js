@@ -11,21 +11,6 @@ import { semester_sort } from "../utility";
 import MD5 from "crypto-js/md5";
 import Test from "./Test";
 
-
-const LinkList = ({ url, homepageUrl }) => (
-  <ul style={{ display: "flex" }}>
-    <li>
-      <Link href={url}>GitHub</Link>
-    </li>
-    {homepageUrl && (
-      <li>
-        <span>&nbsp;|&nbsp;</span>
-        <Link href={homepageUrl}>Homepage</Link>
-      </li>
-    )}
-  </ul>
-);
-
 const headers = [
   {
     key: "prof",
@@ -58,9 +43,7 @@ const getRowItems = (rows) =>
     enrollment: row.enrol,
     semester: row.sem,
     year: row.year,
-    type: row.type,
-    //updatedAt: new Date(row.updatedAt).toLocaleDateString(),
-    //links: <LinkList url={row.url} homepageUrl={row.homepageUrl} />,
+    type: row.type, 
   }));
 
 const CoursePage = () => {
@@ -72,7 +55,6 @@ const CoursePage = () => {
   const [rows, setRows] = useState([]);
   const [error, setError] = useState(false);
   const [data, setData] = useState({ isLoaded: false });
-  //  const [profBarData, setProfBarData] = useState({});
 
   const getData = (code) => {
     fetch("course/" + code + ".json", {
@@ -94,7 +76,7 @@ const CoursePage = () => {
         res.history = res.history.sort(semester_sort);
         setData({ isLoaded: true, ...res });
         setTotalItems(res["history"].length);
-        setRows(getRowItems(res["history"]));
+        setRows(getRowItems(res["history"]).sort(semester_sort).reverse()); //want to display latest semester first when displaying in a table
         setError(false);
         //setProfBarData({ isLoaded: true, data: getProfBarData(res.profs) });
         setLoading(false);

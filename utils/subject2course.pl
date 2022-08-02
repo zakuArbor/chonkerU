@@ -39,6 +39,7 @@ use warnings;
 use Getopt::Long;
 use JSON 'decode_json';
 use JSON 'encode_json';
+use Digest::MD5 qw(md5 md5_hex md5_base64);
 #use Web::Scraper;
 #use Encode;
 #use HTML::TreeBuilder;
@@ -161,6 +162,9 @@ sub parse_file {
         }
 
         my $prof = $data->{"prof"};
+        if ($prof =~/MATH/) {
+            die($prof);
+        }
         if ( not exists $prof_ref->{$prof} ) {
             $prof_ref->{$prof} = {};
         }
@@ -188,10 +192,10 @@ sub parse_file {
         {
             $course_ref->{$course}->{'latest'} = $data->{'epoch'};
         }
-        if (   $prof_ref->{$course}->{'latest'} == 0
-            || $data->{'epoch'} > $prof_ref->{$course}->{'latest'} )
+        if (   $prof_ref->{$prof}->{$course}->{'latest'} == 0
+            || $data->{'epoch'} > $prof_ref->{$prof}->{$course}->{'latest'} )
         {
-            $prof_ref->{$course}->{'latest'} = $data->{'epoch'};
+            $prof_ref->{$prof}->{$course}->{'latest'} = $data->{'epoch'};
         }
         push( @{ $course_ref->{$course}->{'history'} }, $data );
         push( @{ $prof_ref->{$prof}->{$course}->{'history'}},       $data );
@@ -304,6 +308,43 @@ sub writeCoursesList {
 
 ################################################################################
 
+=head2 writeProfsList 
+@param subject: a string
+@param hash: data
+=cut
+
+################################################################################
+sub writeProfsList {
+    my ( $hash ) = @_;
+
+    my @profs;
+   
+    my %data;
+
+    print(Dumper($hash));
+
+    foreach my $key ( sort keys %{$hash} ) {
+        if ($key =~ /MATH/) {
+            die($key);
+        }
+        my %prof = ( 'prof' => $key, 'num' => scalar keys %{$hash->{$key}} );
+        push( @profs, \%prof);
+    }
+
+    $data{"prof"} = \@profs;
+    $data{"total"}   = scalar @profs;
+
+    my $json = encode_json \%data;
+    my $file = $dest_dir . 'profs' . ".json";
+    open( my $fh, ">:encoding(UTF-8)", $file )
+      or die("Cannot open '${file}': $!\n");
+    print $fh $json;
+    close($fh);
+}
+
+
+################################################################################
+
 =head2 getProfTeachCount
 @desc  Count amount of times each prof taught a course
 @param course: a string
@@ -380,6 +421,64 @@ sub writeCourseApi {
     }
 }
 
+################################################################################
+=head2 writeProfApi
+@param subject: a string
+@param hash: data
+=cut
+
+################################################################################
+sub writeProfApi {
+    my ( $course_hash, $prof_hash ) = @_;
+    
+    foreach my $prof ( keys %{$prof_hash} ) {
+        print("Professor $prof\n");
+        my %data = ();
+        #print(Dumper($prof_hash));
+        my $md5 = Digest::MD5->new;
+        $md5->add(utf8::is_utf8($prof) ? Encode::encode_utf8($prof) : $prof);
+        my $key = $md5->hexdigest;
+#        print(Dumper($prof_hash->{$prof}));
+        $data{"courses"} = $prof_hash->{$prof};
+        $data{"prof"} = $prof;
+        ($data{"stats"}, $data{"latest"}) = getProfStudentEnrollment($prof_hash->{$prof}, $prof);
+#        $course_hash->{$course}{'profs'} =
+#          getProfTeachCount( $course, $prof_hash );
+#        $course_hash->{$course}{'enrol_avg'} = getAvgEnrollment($course_hash->{$course}->{'history'});
+        my $json = encode_json \%data;
+        my $file = $dest_dir . "prof/" . $key . ".json";
+        open( my $fh, ">:encoding(UTF-8)", $file )
+          or die("Cannot open '${file}': $!\n");
+        print $fh $json;
+        close($fh);
+    }
+}
+
+################################################################################
+=head2 getProfStudentEnrollment
+@param hash (object): a hash containing courses as the key and a list of course entries as the values
+@return: a hash where the keys are the semesters and the values are the number of students taught in that particular semester
+=cut
+################################################################################
+sub getProfStudentEnrollment {
+    my ($ref, $prof) = @_;
+    my %sem = ();
+    my $latest = -1;
+    foreach my $course_code ( keys %{$ref} ) {
+        foreach my $course (@{$ref->{$course_code}->{"history"}}) {
+            my $key = $course->{'year'} . '-' . $course->{'sem'};
+            if (not exists $sem{$key}) {
+                $sem{$key} = 0;
+            }
+            $sem{$key} += $course->{'enrol'};
+            if ($latest < 0 || exists $ref->{$course_code} && exists $ref->{$course_code}->{'latest'} && $ref->{$course_code}->{'latest'} > $latest) {
+                $latest = $ref->{$course_code}->{'latest'};
+            }
+        }
+    }
+    return (\%sem, $latest);
+}
+
 ##############
 #curl 'https://calendar.carleton.ca/ribbit/index.cgi?page=getcourse.rjs&code=MATH%201052' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0' -H 'Accept: */*' -H 'Accept-Language: en-CA,en-US;q=0.7,en;q=0.3' -H 'Accept-Encoding: gzip, deflate, br' -H 'X-Requested-With: XMLHttpRequest' -H 'Connection: keep-alive' -H 'Referer: https://calendar.carleton.ca/undergrad/courses/MATH/' 
 #
@@ -452,9 +551,10 @@ my $course_names = decode_json($json_str);
 my @files = get_files($subject);
 my ( $courses_ref, $prof_ref ) = parse_files( $subject, \@files, $course_names);
 #fixMissingName($subject, $courses_ref);
-
 writeCoursesList( $subject, $courses_ref );
 write2json( $subject, 'course', $courses_ref );
 write2json( $subject, 'prof',   $prof_ref );
 
 writeCourseApi( $subject, $courses_ref, $prof_ref );
+writeProfsList($prof_ref);
+writeProfApi($courses_ref, $prof_ref);

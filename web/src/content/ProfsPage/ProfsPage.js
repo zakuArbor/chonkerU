@@ -11,7 +11,7 @@ const getRowItems = (rows) =>
     ...row,
     key: hash,
     id: hash,
-    prof: <Link to={"/course/" + hash} state={{'code': row.prof}}>{row.prof}</Link>,
+    prof: <Link to={"/prof/" + hash} state={{'code': row.prof}}>{row.prof}</Link>,
     num: row.num,
   }});
 

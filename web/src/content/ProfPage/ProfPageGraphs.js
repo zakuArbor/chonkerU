@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ProgressBar, InlineNotification } from "@carbon/react";
 import ProfLineGraph from "./ProfStudentLineGraph";
 import ProfCourseBarGraph from "./ProfCourseBarGraph";
+import { semester_sort } from "../utility";
 
 const getEmptyData = (length) => {
   return {
@@ -34,109 +35,53 @@ const getEmptyData = (length) => {
   };
 };
 
-const getProfBarData = (profs) => {
-  /*chartJS Code
-  let data = getEmptyData(profs.length);
-  for (let i = 0; i < profs.length; i++) {
-    data.datasets[0].data.push(profs[i].count);
-    data.labels.push(profs[i]["prof"]);
-  }*/
+const getBarData = (dataObj) => {
+  const courses = Object.keys(dataObj).sort();
   let data = [];
-  for (let i = 0; i < profs.length; i++) {
+  for (let i = 0; i < courses.length; i++) {
     data.push({
-      'group': profs[i].prof,
-      'value': profs[i].count,
-    });
+      'group': courses[i],
+      'value': dataObj[courses[i]],
+    })  
   }
-
   return data;
 };
-/*
-const getStudentLineData = (courses) => {
-  let data = getEmptyData(courses.length);
-  let sem = {};
-  for (let i = 0; i < courses.length; i++) {
-    let key = courses[i].year + "-" + courses[i].sem;
-    if (!(key in sem)) {
-      sem[key] = 0;
-    }
-    sem[key] += parseInt(courses[i].enrol);
-  }
-  console.log("test");
-  console.log(sem);
 
-  for (const key in sem) {
-    data.datasets[0].data.push(sem[key]);
-    data.labels.push(key);
-  }
-  console.log(data);
-  return data;
-};*/
-const getStudentLineData = (courses) => {
+const getLineData = (dataObj) => {
   let data = []
-  let sem = {};
-  for (let i = 0; i < courses.length; i++) {
-    let key = courses[i].year + "-" + courses[i].sem;
-    if (!(key in sem)) {
-      sem[key] = 0;
-    }
-    sem[key] += parseInt(courses[i].enrol);
-  }
-
-  for (const key in sem) {
+  let semesters = Object.keys(dataObj).sort(semester_sort);
+  for (let i = 0; i < semesters.length; i++) {
     data.push({
-      "group": "main",
-      "key": key,
-      "value": sem[key],
-    });
+      'sem': semesters[i],
+      'value': dataObj[semesters[i]],
+    })
   }
   console.log(data);
   return data;
 }
 
-/*const profBarOption = {
-  plugins: {
-    title: {
-      display: true,
-      text: "Number of Times A Prof Taught the Prof",
-    },
-    legend: {
-      display: false,
-    },
-  },
-  scales: {
-    y: {
-      ticks: {
-        beginAtZero: true,
-        stepSize: 1,
-      },
-    },
-  },
-  maintainAspectRatio: false, //to resize using width or height
-};*/
-
-const profBarOption = {
+const barOption = {
   "title": "# of Times Taught",
   "axes": {
     "left": {
       "mapsTo": "value",
-      "title": "# of Semesters"
+      "title": "# of Times"
     },
     "bottom": {
-      "title": "Professor",
+      "title": "Course",
       "mapsTo": "group",
       "scaleType": "labels"
     }
   },
-  "height": "400px"
+  "height": "600px"
 }
 
-const studentLineOption = {
-	"title": "# of Students Enrolled in the Prof",
+const lineOption = {
+	"title": "# of Students Enrolled in Each Semester",
 	"axes": {
 		"bottom": {
 			"title": "Semester-Year",
-			"mapsTo": "key",
+			"mapsTo": "sem",
 			"scaleType": "labels"
 		},
 		"left": {
@@ -154,40 +99,19 @@ const studentLineOption = {
   }
 };
 
-/*
-const StudentLineOption = {
-  plugins: {
-    title: {
-      display: true,
-      text: "Number of Students Enrolled in the course",
-    },
-    subtitle: {
-      display: true,
-      text: "Average Number: ",
-    },
-    legend: {
-      display: false,
-    },
-  },
-  maintainAspectRatio: false, //to resize using width or height
-};*/
-
-const ProfGraphs = ({ data: { history, profs, isLoaded } }) => {
+const ProfGraphs = ({ data: { bar, scatter, isLoaded } }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [profBarData, setProfBarData] = useState({});
-  const [studentLineData, setStudentLineData] = useState({});
+  const [barData, setBarData] = useState({});
+  const [lineData, setLineData] = useState({});
 
   useEffect(() => {
-    console.log(profs);
-    console.log(isLoaded);
     if (isLoaded) {
-      console.log(profs);
-      setProfBarData({ isLoaded: true, data: getProfBarData(profs) });
-      setStudentLineData({ isLoaded: true, data: getStudentLineData(history) });
+      setBarData({ isLoaded: true, data: getBarData(bar) });
+      setLineData({ isLoaded: true, data: getLineData(scatter) });
       setLoading(false);
     }
-  }, [profs, history, isLoaded]);
+  }, [bar, scatter, isLoaded]);
 
   return (
     <div className="bx--grid bx--grid--full-width bx--grid--no-gutter graphs">
@@ -208,12 +132,12 @@ const ProfGraphs = ({ data: { history, profs, isLoaded } }) => {
           ) : (
             <div className="graphs">
               <ProfCourseBarGraph
-                data={profBarData.data}
-                options={profBarOption}
+                data={barData.data}
+                options={barOption}
               />
               <ProfLineGraph
-                data={studentLineData.data}
-                options={studentLineOption}
+                data={lineData.data}
+                options={lineOption}
               />
             </div>
           )}
