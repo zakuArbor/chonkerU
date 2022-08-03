@@ -25,8 +25,12 @@ const action = (param) => {
 
 const CoursesTable = ({rows, headers}) => {
     const getRowDesc = (code) => {
-      let desc = rows.find(item => item.code == code).desc;
-      return typeof(desc) !== 'null' ? desc : "No Description Available";
+      console.log(rows);
+      let row = rows.find(item => item.code == code);
+      if (row === undefined || !('desc' in row)) {
+        return "No Description Available";
+      }
+      return row.desc;
     }
     return (
     <DataTable
