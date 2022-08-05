@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ProgressBar, InlineNotification } from "@carbon/react";
+import { ProgressBar, InlineNotification, AccordionItem } from "@carbon/react";
 import CourseLineGraph from "./CourseStudentLineGraph";
 import CourseProfBarGraph from "./CourseProfBarGraph";
 
@@ -207,14 +207,18 @@ const CourseGraphs = ({ data: { history, profs, isLoaded } }) => {
             </>
           ) : (
             <div className="graphs">
+              <AccordionItem title = "Figure 1: Number of Times Each Professor Taught the Course" open>
               <CourseProfBarGraph
                 data={profBarData.data}
                 options={profBarOption}
               />
+              </AccordionItem>
+              <AccordionItem title = "Figure 2: Enrollment By Semester" open>
               <CourseLineGraph
                 data={studentLineData.data}
                 options={studentLineOption}
               />
+              </AccordionItem>
             </div>
           )}
         </div>

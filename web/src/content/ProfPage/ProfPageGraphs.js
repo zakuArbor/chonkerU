@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ProgressBar, InlineNotification } from "@carbon/react";
+import { ProgressBar, InlineNotification, AccordionItem } from "@carbon/react";
 import ProfLineGraph from "./ProfStudentLineGraph";
 import ProfCourseBarGraph from "./ProfCourseBarGraph";
 import { semester_sort } from "../utility";
@@ -40,63 +40,63 @@ const getBarData = (dataObj) => {
   let data = [];
   for (let i = 0; i < courses.length; i++) {
     data.push({
-      'group': courses[i],
-      'value': dataObj[courses[i]],
-    })  
+      group: courses[i],
+      value: dataObj[courses[i]],
+    });
   }
   return data;
 };
 
 const getLineData = (dataObj) => {
-  let data = []
+  let data = [];
   let semesters = Object.keys(dataObj).sort(semester_sort);
   for (let i = 0; i < semesters.length; i++) {
     data.push({
-      'sem': semesters[i],
-      'value': dataObj[semesters[i]],
-    })
+      sem: semesters[i],
+      value: dataObj[semesters[i]],
+    });
   }
   console.log(data);
   return data;
-}
+};
 
 const barOption = {
-  "title": "# of Times Taught",
-  "axes": {
-    "left": {
-      "mapsTo": "value",
-      "title": "# of Times"
+  title: "# of Times Taught",
+  axes: {
+    left: {
+      mapsTo: "value",
+      title: "# of Times",
     },
-    "bottom": {
-      "title": "Course",
-      "mapsTo": "group",
-      "scaleType": "labels"
-    }
+    bottom: {
+      title: "Course",
+      mapsTo: "group",
+      scaleType: "labels",
+    },
   },
-  "height": "600px"
-}
+  height: "600px",
+};
 
 const lineOption = {
-	"title": "# of Students Enrolled in Each Semester",
-	"axes": {
-		"bottom": {
-			"title": "Semester-Year",
-			"mapsTo": "sem",
-			"scaleType": "labels"
-		},
-		"left": {
-			"mapsTo": "value",
-			"title": "#of Students",
-			"scaleType": "linear"
-		}
-	},
-  "height": "400px",
-  "points": {
-    "radius": 5,
+  title: "# of Students Enrolled in Each Semester",
+  axes: {
+    bottom: {
+      title: "Semester-Year",
+      mapsTo: "sem",
+      scaleType: "labels",
+    },
+    left: {
+      mapsTo: "value",
+      title: "#of Students",
+      scaleType: "linear",
+    },
   },
-  "legend": {
-    "enabled": false,
-  }
+  height: "400px",
+  points: {
+    radius: 5,
+  },
+  legend: {
+    enabled: false,
+  },
 };
 
 const ProfGraphs = ({ data: { bar, scatter, isLoaded } }) => {
@@ -115,34 +115,28 @@ const ProfGraphs = ({ data: { bar, scatter, isLoaded } }) => {
 
   return (
     <div className="bx--grid bx--grid--full-width bx--grid--no-gutter graphs">
-      <div className="bx--row graphs-page__r1">
-        <div className="bx--col-lg-16">
-          {loading ? (
-            <>
-              <ProgressBar label="Generating Charts" />
-            </>
-          ) : error ? (
-            <>
-              <InlineNotification
-                title="Error"
-                subtitle="Failed to retrieve Data"
-                hideCloseButton={true}
-              />
-            </>
-          ) : (
-            <div className="graphs">
-              <ProfCourseBarGraph
-                data={barData.data}
-                options={barOption}
-              />
-              <ProfLineGraph
-                data={lineData.data}
-                options={lineOption}
-              />
-            </div>
-          )}
+      {loading ? (
+        <>
+          <ProgressBar label="Generating Charts" />
+        </>
+      ) : error ? (
+        <>
+          <InlineNotification
+            title="Error"
+            subtitle="Failed to retrieve Data"
+            hideCloseButton={true}
+          />
+        </>
+      ) : (
+        <div className="graphs">
+          <AccordionItem title="Figure 1: Number of Times Taught Each Course" open>
+          <ProfCourseBarGraph data={barData.data} options={barOption} />
+          </AccordionItem>
+          <AccordionItem title="Figure 2: Number of Students Taught In Each Semester" open>
+          <ProfLineGraph data={lineData.data} options={lineOption} />
+          </AccordionItem>
         </div>
-      </div>
+      )}
     </div>
   );
 };

@@ -4,6 +4,8 @@ import {
   DataTableSkeleton,
   Pagination,
   InlineNotification,
+  Accordion,
+  AccordionItem,
 } from "@carbon/react";
 import CourseTable from "./CourseTable";
 import CourseGraphs from "./CoursePageGraphs";
@@ -39,11 +41,15 @@ const getRowItems = (rows) =>
     ...row,
     key: row.crn + row.sem,
     id: row.crn + row.sem,
-    prof: <Link to={"/prof/" + MD5(row.prof).toString()} state={{'code': row.code}}>{row.prof}</Link>,
+    prof: (
+      <Link to={"/prof/" + MD5(row.prof).toString()} state={{ code: row.code }}>
+        {row.prof}
+      </Link>
+    ),
     enrollment: row.enrol,
     semester: row.sem,
     year: row.year,
-    type: row.type, 
+    type: row.type,
   }));
 
 const CoursePage = () => {
@@ -90,58 +96,73 @@ const CoursePage = () => {
   return (
     <div className="bx--grid bx--grid--full-width bx--grid--no-gutter course-page">
       <div className="bx--row repo-page__r1">
-        <h1 className="course_heading">{code} - {"info" in data ? data.info.name : "TBD" } - [{"info" in data ? data.info.credit : "?"} Credits] </h1>
+        <h1 className="course_heading">
+          {code} - {"info" in data ? data.info.name : "TBD"} - [
+          {"info" in data ? data.info.credit : "?"} Credits]{" "}
+        </h1>
       </div>
       <div className="bx--row course-page__r2">
-        <h4 className="source"><span>Latest Source:</span> {new Date(data.latest*1000).toDateString()}</h4><br/>
-        <h4 className="avg"><span>Average:</span> {Math.ceil(data.enrol_avg)} Students Per Semester</h4> <br/>
-        <p className="desc"><b className="label">Description:</b> {"info" in data ? data.info.desc : "No Description Available"}</p>
+        <h4 className="source">
+          <span>Latest Source:</span>{" "}
+          {new Date(data.latest * 1000).toDateString()}
+        </h4>
+        <br />
+        <h4 className="avg">
+          <span>Average:</span> {Math.ceil(data.enrol_avg)} Students Per
+          Semester
+        </h4>{" "}
+        <br />
       </div>
-      <div className="bx--row course-page__r3">
-        <div className="bx--col-lg-16">
-          {loading ? (
-            <DataTableSkeleton
-              columnCount={headers.length + 1}
-              rowCount={10}
-              headers={headers}
-            />
-          ) : error ? (
-            <>
-              <InlineNotification
-                title="Error"
-                subtitle="Failed to retrieve Data"
-                hideCloseButton={true}
-              />
-            </>
-          ) : (
-            <div className="course">
-              {console.log(data)}
-              <CourseGraphs data={data} />
-              <CourseTable
+      <Accordion align={'start'}>
+        <AccordionItem title={"Description"} open>
+        <p className="desc">
+          {"info" in data ? data.info.desc : "No Description Available"}
+        </p>
+        </AccordionItem>
+            {loading ? (
+              <DataTableSkeleton
+                columnCount={headers.length + 1}
+                rowCount={10}
                 headers={headers}
-                rows={rows.slice(
-                  firstRowIndex,
-                  firstRowIndex + currentPageSize
-                )}
               />
-              <Pagination
-                totalItems={totalItems}
-                backwardText="Previous page"
-                forwardText="Next page"
-                pageSize={currentPageSize}
-                pageSizes={[5, 10, 15, 25]}
-                itemsPerPageText="Items per page"
-                onChange={({ page, pageSize }) => {
-                  if (pageSize !== currentPageSize) {
-                    setCurrentPageSize(pageSize);
-                  }
-                  setFirstRowIndex(pageSize * (page - 1));
-                }}
-              />
-            </div>
-          )}
-        </div>
-      </div>
+            ) : error ? (
+              <>
+                <InlineNotification
+                  title="Error"
+                  subtitle="Failed to retrieve Data"
+                  hideCloseButton={true}
+                />
+              </>
+            ) : (
+              <>
+                <CourseGraphs data={data} />
+                
+              <AccordionItem title={"Data Table"} open>
+                <CourseTable
+                  headers={headers}
+                  rows={rows.slice(
+                    firstRowIndex,
+                    firstRowIndex + currentPageSize
+                  )}
+                />
+                <Pagination
+                  totalItems={totalItems}
+                  backwardText="Previous page"
+                  forwardText="Next page"
+                  pageSize={currentPageSize}
+                  pageSizes={[5, 10, 15, 25]}
+                  itemsPerPageText="Items per page"
+                  onChange={({ page, pageSize }) => {
+                    if (pageSize !== currentPageSize) {
+                      setCurrentPageSize(pageSize);
+                    }
+                    setFirstRowIndex(pageSize * (page - 1));
+                  }}
+                />
+                </AccordionItem>
+                </>
+            )}
+      </Accordion>
     </div>
   );
 };

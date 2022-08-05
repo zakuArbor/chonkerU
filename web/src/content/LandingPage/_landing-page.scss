@@ -13,7 +13,7 @@
 }
 
 .landing-page__banner {
-//  padding-top: $spacing-05;
+  padding-top: $spacing-05;
   padding-bottom: $spacing-07 * 1;
 }
 
@@ -26,8 +26,8 @@
 }
 
 .landing-page__tab-content {
-//  padding-top: $layout-05;
-//  padding-bottom: $layout-05;
+  padding-top: $spacing-05;
+  padding-bottom: $spacing-05;
 }
 
 .landing-page__subheading {
@@ -45,4 +45,8 @@
 
 .landing-page__label {
 //  @include carbon--type-style('heading-01');
+}
+
+.b {
+  font-weight: bold;
 }

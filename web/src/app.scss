@@ -3,3 +3,33 @@
   $theme: themes.$g100,
 );
 @use '@carbon/react';*/
+
+.cds--accordion__title {
+  font-weight: bold;
+  font-size: large;
+}
+
+.cds--accordion__heading {
+  background-color: #d7d7d7;
+}
+
+.cds--accordion__content > p {
+  font-size: medium;
+}
+
+@media (min-width: 640px) {
+  .cds--accordion__content {
+  padding-right: 0%; //override default
+}
+}
+
+@media (max-width: 400px) {
+  .cds--content {
+    padding: 10px;
+  }
+
+  .cds--accordion__content {
+    padding: 0px;
+    margin: 0 !important;
+  }
+}

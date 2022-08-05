@@ -5,6 +5,8 @@ import {
   SkeletonText,
   Pagination,
   InlineNotification,
+  Accordion,
+  AccordionItem
 } from "@carbon/react";
 import ProfTable from "./ProfTable";
 import ProfGraphs from "./ProfPageGraphs";
@@ -124,12 +126,17 @@ const ProfPage = () => {
           </div>
         </>
       ) : error ? (
-        <></>
+        <>
+          <InlineNotification
+            title="Error"
+            subtitle="Failed to retrieve Data"
+            hideCloseButton={true}
+          />
+        </>
       ) : (
         <SkeletonText />
       )}
-      <div className="bx--row course-page__r3">
-        <div className="bx--col-lg-16">
+        <Accordion>
           {loading ? (
             <DataTableSkeleton
               columnCount={headers.length + 1}
@@ -147,6 +154,7 @@ const ProfPage = () => {
           ) : (
             <div className="course">
               <ProfGraphs data={graphData} />
+              <AccordionItem title={"Data Table"} open>
               <ProfTable
                 headers={headers}
                 rows={rows.slice(
@@ -159,7 +167,7 @@ const ProfPage = () => {
                 backwardText="Previous page"
                 forwardText="Next page"
                 pageSize={currentPageSize}
-                pageSizes={[5, 10, 15, 25]}
+                pageSizes={[10, 15, 25, 50, 100]}
                 itemsPerPageText="Items per page"
                 onChange={({ page, pageSize }) => {
                   if (pageSize !== currentPageSize) {
@@ -168,10 +176,10 @@ const ProfPage = () => {
                   setFirstRowIndex(pageSize * (page - 1));
                 }}
               />
+              </AccordionItem>
             </div>
           )}
-        </div>
-      </div>
+          </Accordion>
     </div>
   );
 };
