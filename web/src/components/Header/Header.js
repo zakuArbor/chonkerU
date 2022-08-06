@@ -37,6 +37,7 @@ const CUHeader = () => (
           aria-label="Side navigation"
           expanded={isSideNavExpanded}
           onOverlayClick={onClickSideNavExpand}
+          isPersistent={false}
         >
           <SideNavItems>
             <HeaderSideNavItems isActive={true}>
