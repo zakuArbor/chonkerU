@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+from email.mime import base
 import requests
 import json
 from bs4 import BeautifulSoup
@@ -47,7 +48,7 @@ def retrieveCourseName(code:str)->str:
     '''
     data:object = requests.get(url+code)
     html:object = BeautifulSoup(data.text, "html5lib")
-    pprint(html);
+    #pprint(html);
     exit(1)
 
 
@@ -82,8 +83,24 @@ def getCourses(courses_html)->object:
         #fi
 
         temp = course_html.decode().split("<br/>")
-        line = temp[1].strip("\n")
-        index:int = line.find("<")
+        print("===================================")
+        #print(course_html.get_text().strip().replace(u'\xa0', u'').split('\n'))
+        #print("===================================")
+
+#        line = temp[1].strip("\n")
+        temp = course_html.get_text().strip().replace(u'\xa0', u'').split('\n');
+        print(temp)
+        # Sample list
+        # ['MATH4905 [0.5 credit]', 'Honours Project (Honours)', 'Consists of a written report on some approved topic or topics in the field of mathematics, together with a short lecture on the report.', 'Includes: Experiential Learning ActivityPrerequisite(s): B.Math.(Honours) students only.']
+        if len(temp) > 3:
+            course["name"] = temp[1]
+            print("desc: " + temp[2])
+            course["desc"] = temp[2]
+        if len(temp) >= 4:
+            course['additional'] = ". ".join(temp[4:])
+        print("===================================")
+        '''
+        index:int = line.find(" ")
         if index >= 0:
             course["name"] = line[:index]
         else:
@@ -96,6 +113,7 @@ def getCourses(courses_html)->object:
         line = temp[0].replace('\n', '')
         line = course["desc"] = line
         line = course["additional"] = temp[1]
+        '''
         courses[code] = course
     #done
     return courses
@@ -104,13 +122,15 @@ def getCourses(courses_html)->object:
 ###############################################################################
 #url = 'https://oirp.carleton.ca/course-inst/tables/2020w-course-inst_hpt.htm'
 #url = "http://127.0.0.1:4000/blog/assets/test.html"
-url = "http://127.0.0.1:4000/blog/assets/math.html"
+#url = "http://127.0.0.1:4000/blog/assets/math.html"
 
 parser = argparse.ArgumentParser(description='Scrap all course description and names given a subject')
 parser.add_argument('--subject',type=str, default='MATH',
                     help='the subject to parse')
 args = parser.parse_args()
 subject = args.subject.upper()
+
+url = base_url + subject
 
 #data:object = requests.get(base_url+subject)
 data:object = requests.get(url)
@@ -119,5 +139,5 @@ data:dict = {}
 
 courses_html = html.select(".courseblock");
 courses:object = getCourses(courses_html)
-pprint(courses);
+#pprint(courses);
 writeData(courses, subject)
