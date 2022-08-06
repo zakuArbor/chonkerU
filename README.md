@@ -1,5 +1,9 @@
 # CU-VISUALIZER
 
+### Status: Abandoned
+
+CarletonU data makes no sense at all. After looking at some of the data, it made no sense. Fall term and winter term data are mixed in between causing faulty data reporting.
+
 ### Main Features
 * View data from 2018 to 2022 data on course enrolment and the number of times a prof taught the course
 * Only Math and Maybe Physics course will be displayed
