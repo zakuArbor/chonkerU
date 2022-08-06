@@ -12,7 +12,7 @@ import {
   Column,
   Link,
 } from "@carbon/react";
-import { LogoGithub } from "@carbon/icons-react";
+import { LogoGithub, ChartRelationship } from "@carbon/icons-react";
 
 const LandingPage = () => {
   return (
@@ -32,7 +32,7 @@ const LandingPage = () => {
         <Tabs defaultSelectedIndex={0}>
           <TabList className="tabs-group" aria-label="Tab navigation">
             <Tab>About</Tab>
-            <Tab>Usage</Tab>
+            <Tab className='start'>Exp. Features</Tab>
             <Tab>Source</Tab>
           </TabList>
           <TabPanels>
@@ -55,6 +55,8 @@ const LandingPage = () => {
                     it been offered and more!
                   </p>
                   <Button className="learn-btn">Learn more</Button>
+
+                    
                 </Column>
                 <Column md={4} lg={{ span: 8, offset: 7 }} sm={4}>
                   <img
@@ -73,8 +75,9 @@ const LandingPage = () => {
                   sm={4}
                   className="landing-page__tab-content"
                 >
-                  Rapidly build beautiful and accessible experiences. The Carbon
-                  kit contains all resources you need to get started.
+                The project is still under development phases but there are a few things that are far from the roadmap that I wanted to work on and things I want to experiment on.
+                <br/><br/>
+                <Button className="exp-btn" renderIcon={ChartRelationship} href={"#/test/progression"}>Degree Progrssion</Button>
                 </Column>
               </Grid>
             </TabPanel>
@@ -86,60 +89,76 @@ const LandingPage = () => {
                   sm={4}
                   className="landing-page__tab-content"
                 >
-                  <Link
-                    href={"https://github.com/zakuArbor/cu-visualizer"}
-                    alt={"Link to Github Repository"}
-                    size={"lg"}
-                    renderIcon={LogoGithub}
-                  >
-                    Github
-                  </Link>
+                  <p>
+                    <Button
+                      className={"repo-btn"}
+                      renderIcon={LogoGithub}
+                      iconDescription="Github Repository"
+                      href={"https://github.com/zakuArbor/cu-visualizer"}
+                    >
+                      Github
+                    </Button>
+                  </p>
+                  <ul className="tech">
+                    <li>
+                      Built using Reactjs with{" "}
+                      <a
+                        href="https://carbondesignsystem.com/"
+                        alt="IBM Carbon Website"
+                      >
+                        IBM Carbon Design
+                      </a>{" "}
+                      UX Library
+                    </li>
+                    <li>
+                      Hosted via GithubPages meaning no Database (I'm being
+                      cheap).{" "}
+                    </li>
+                    <li>
+                      All data queries comes from pre-generated JSON files using
+                      Perl.
+                    </li>
+                    <li>
+                      {" "}
+                      All data presented are publically accessible data via{" "}
+                      <a
+                        href="https://oirp.carleton.ca/main/"
+                        alt="Institute Research and Planning Website"
+                      >
+                        OIRP
+                      </a>
+                      , CarletonU's Institutional Research and Planning
+                      division.
+                    </li>
+                    <li>
+                      Data was scrapped using{" "}
+                      <a
+                        href="https://www.crummy.com/software/BeautifulSoup/"
+                        alt="BeautifulSoup's homepage"
+                      >
+                        BeautifulSoup
+                      </a>
+                      , a Python Library for webscrapping.
+                    </li>
+                    <li>
+                      Sorting and filtering is done on the front-end because
+                      there's no database involved.
+                    </li>
+                  </ul>
                   <br />
                   <p>
-                    Built using Reactjs with{" "}
-                    <a
-                      href="https://carbondesignsystem.com/"
-                      alt="IBM Carbon Website"
-                    >
-                      IBM Carbon Design
-                    </a>{" "}
-                    UX Library
+                    <b className="b">Warning:</b> Data may not be accurate as
+                    the data scrapper is not written very well
                   </p>
                   <p>
-                    Hosted via GithubPages meaning no Database (I'm being
-                    cheap).{" "}
+                    <b className="b">Warning:</b> Code is ugly. Website and JSON
+                    files could be cleaned up to minimize resource consumption.
+                    I am just lazy.
                   </p>
-                  <p>
-                    All data queries comes from pre-generated JSON files using
-                    Perl.
+                  <br />
+                  <p className="creator-label">
+                    Built by a Math student at CarletonU
                   </p>
-                  <p>
-                    {" "}
-                    All data presented are publically accessible data via{" "}
-                    <a
-                      href="https://oirp.carleton.ca/main/"
-                      alt="Institute Research and Planning Website"
-                    >
-                      OIRP
-                    </a>
-                    , CarletonU's Institutional Research and Planning division.
-                  </p>
-                  <p>
-                    Data was scrapped using{" "}
-                    <a
-                      href="https://www.crummy.com/software/BeautifulSoup/"
-                      alt="BeautifulSoup's homepage"
-                    >
-                      BeautifulSoup
-                    </a>
-                    , a Python Library for webscrapping.
-                  </p>
-                  <p>Sorting and filtering is done on the front-end because there's no database involved.</p>
-                  <br/>
-                  <p><b className="b">Warning:</b> Data may not be accurate as the data scrapper is not written very well</p>
-                  <p><b className="b">Warning:</b> Code is ugly. Website and JSON files could be cleaned up to minimize resource consumption. I am just lazy.</p>
-                  <br/>
-                  <p>Built by a Math student at CarletonU</p>
                 </Column>
               </Grid>
             </TabPanel>

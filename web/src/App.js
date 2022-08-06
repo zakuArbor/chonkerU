@@ -8,6 +8,7 @@ import CoursesPage from './content/CoursesPage';
 import CoursePage from './content/CoursePage';
 import ProfPage from './content/ProfPage';
 import ProfsPage from './content/ProfsPage';
+import Progression from './content/exp/Progression';
 
 
 /*
@@ -35,6 +36,7 @@ class App extends Component {
             <Route path={"/course/:code"} element={<CoursePage/>} />
             <Route path={"/profs"} element={<ProfsPage/>} />
             <Route path={"/prof/:prof"} element={<ProfPage/>} />
+            <Route path={"/test/progression"} element={<Progression/>}/>
           </Routes>
         </Content>
       </>

@@ -16,3 +16,7 @@
   //fix needed to keep the subgrid from scrolling horizontally
   margin-right: 1rem;
 }
+
+.cds--tabs, .cds--tabs__nav-link {
+  max-width: default !important;
+}
