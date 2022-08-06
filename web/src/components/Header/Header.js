@@ -36,12 +36,12 @@ const CUHeader = () => (
         <SideNav
           aria-label="Side navigation"
           expanded={isSideNavExpanded}
-          isPersistent={false}
+          onOverlayClick={onClickSideNavExpand}
         >
           <SideNavItems>
-            <HeaderSideNavItems>
+            <HeaderSideNavItems isActive={true}>
               <HeaderMenuItem element={Link} to={"/courses"}>Courses</HeaderMenuItem>
-              <HeaderMenuItem href={"/profs"}>Professors</HeaderMenuItem>
+              <HeaderMenuItem element={Link} to={"/profs"}>Professors</HeaderMenuItem>
             </HeaderSideNavItems>
           </SideNavItems>
         </SideNav>
