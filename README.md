@@ -2,6 +2,7 @@
 
 ### Main Features
 * View data from 2018 to 2022 data on course enrolment and the number of times a prof taught the course
+* Only Math and Maybe Physics course will be displayed
 
 ### Optional Features
 A list of features that are not actively worked on and probably won't be worked on (have higher priorities such as studying ...)
