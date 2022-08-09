@@ -4,6 +4,13 @@
 
 CarletonU data makes no sense at all. After looking at some of the data, it made no sense. Fall term and winter term data are mixed in between causing faulty data reporting.
 
+**Update (Aug 9 2022):** I talked with OIRP and my teacher and confirmed the data isn't accurate. OIRP reached back and here's some highlights
+> These tables are not meant to be a statistical record of courses or enrolments
+and
+> For the labels of fall and winter on the title of the overall table, this indicates when the data was captured, not necessarily that the data is only for the fall or winter terms.  Again, this is as designed for their intended purpose.
+
+Therefore the project will be abandoned as no real statistical data can be gathered from this
+
 ### Main Features
 * View data from 2018 to 2022 data on course enrolment and the number of times a prof taught the course
 * Only Math and Maybe Physics course will be displayed
