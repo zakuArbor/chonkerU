@@ -25,7 +25,6 @@ const action = (param) => {
 
 const CoursesTable = ({rows, headers}) => {
     const getRowDesc = (code) => {
-      console.log(rows);
       let row = rows.find(item => item.code == code);
       if (row === undefined || !('desc' in row)) {
         return "No Description Available";
@@ -53,7 +52,7 @@ const CoursesTable = ({rows, headers}) => {
           <TableToolbar {...getToolbarProps()} aria-label="data table toolbar">
           <TableToolbarContent>
             <TableToolbarSearch onChange={onInputChange} />
-            <TableToolbarMenu light>
+            <TableToolbarMenu>
               <TableToolbarAction onClick={action('Action 1 Click')}>
                 Action 1
               </TableToolbarAction>
@@ -70,7 +69,7 @@ const CoursesTable = ({rows, headers}) => {
           <Table {...getTableProps()}>
             <TableHead>
               <TableRow>
-                <TableExpandHeader enableExpando={true} {...getExpandHeaderProps()}/>
+                <TableExpandHeader enableToggle={true} {...getExpandHeaderProps()}/>
                 {headers.map((header) => (
                   //need to override default sorting algorithm because usually backend deals with it but we do everything in front end unfortunately
                   <TableHeader {...getHeaderProps({ header }) } isSortable={true}>
@@ -80,7 +79,6 @@ const CoursesTable = ({rows, headers}) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {console.log(rows)}
               {rows.map((row) => (
                 <React.Fragment key={row.id}>
                   <TableExpandRow expandHeader="expand" {...getRowProps({ row })}>

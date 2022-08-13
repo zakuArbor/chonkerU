@@ -61,17 +61,23 @@ const CoursesPage = () => {
       },
     })
       .then((res) => {
-        console.log(res);
+        if (!res.ok) {
+          throw new Error(res.status);
+        }
         return res.json();
       })
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         setLoading(false);
         setTotalItems(res["total"]);
         setRows(getRowItems(res["courses"]));
+      })
+      .catch((err) => {
+        setError(true);
       });
   };
   useEffect(() => {
+    console.log("CoursesPage useEffect fired");
     getData();
   }, []);
 
