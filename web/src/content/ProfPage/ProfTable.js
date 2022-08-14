@@ -41,7 +41,7 @@ const CourseTable = ({ rows, headers }) => {
           <TableToolbar {...getToolbarProps()} aria-label="data table toolbar">
             <TableToolbarContent>
               <TableToolbarSearch onChange={onInputChange} />
-              <TableToolbarMenu light>
+              <TableToolbarMenu>
                 <TableToolbarAction onClick={action("Action 1 Click")}>
                   Action 1
                 </TableToolbarAction>

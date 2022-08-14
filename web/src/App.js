@@ -9,6 +9,7 @@ import CoursePage from './content/CoursePage';
 import ProfPage from './content/ProfPage';
 import ProfsPage from './content/ProfsPage';
 import ProgressionPage from './content/exp/ProgressionPage';
+import {ActionableNotification} from '@carbon/react';
 
 
 /*
@@ -29,6 +30,15 @@ class App extends Component {
     return (
       <>
         <Header />
+        <div><ActionableNotification
+          title="Warning"
+          subtitle="Data Presented are not accurate as data presented by OIRP collects data in a weird way to fit their own use case. This is for a fictitious University. Chonker University happens to have huge resemblance to CarletonU."
+          hideCloseButton
+          inline={true}
+          className={"warning"}
+          actionButtonLabel="Learn More"
+          onActionButtonClick={()=> console.log("action clicked")}
+        /></div>
         <Content>
           <Routes>
             <Route exact path={"/"} element={<LandingPage/>} />

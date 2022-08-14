@@ -71,20 +71,24 @@ const CoursePage = () => {
     })
       .then((res) => {
         console.log(res);
-        if (res.status != 200) {
-          setError(true);
-          setLoading(false);
+        if (!res.ok) {
+          throw new Error(res.status);
         }
         return res.json();
       })
       .then((res) => {
-        console.log(res);
+        console.log("CoursePage: useEffect fired");
+        //console.log(res);
         res.history = res.history.sort(semester_sort);
         setData({ isLoaded: true, ...res });
         setTotalItems(res["history"].length);
         setRows(getRowItems(res["history"]).sort(semester_sort).reverse()); //want to display latest semester first when displaying in a table
         setError(false);
         //setProfBarData({ isLoaded: true, data: getProfBarData(res.profs) });
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(true);
         setLoading(false);
       });
   };
@@ -113,55 +117,64 @@ const CoursePage = () => {
         </h4>{" "}
         <br />
       </div>
-      <Accordion align={'start'}>
+      <Accordion align={"start"}>
         <AccordionItem title={"Description"} open>
-        <p className="desc">
-          {"info" in data ? data.info.desc : "No Description Available"}
-        </p>
+          <p className="desc">
+            {"info" in data ? data.info.desc : "No Description Available"}
+          </p>
         </AccordionItem>
-            {loading ? (
-              <DataTableSkeleton
-                columnCount={headers.length + 1}
-                rowCount={10}
+        {loading ? (
+          <DataTableSkeleton
+            columnCount={headers.length + 1}
+            rowCount={10}
+            headers={headers}
+          />
+        ) : error ? (
+          <>
+            <InlineNotification
+              title="Error"
+              subtitle="Failed to retrieve Data"
+              hideCloseButton={true}
+            />
+          </>
+        ) : (
+          <>
+            <CourseGraphs
+              data={data}
+              isYearCredit={
+                "info" in data &&
+                data.info.credit !== undefined &&
+                data.info.credit[0] !== "0"
+                  ? true
+                  : false
+              }
+            />
+
+            <AccordionItem title={"Data Table"} open>
+              <CourseTable
                 headers={headers}
+                rows={rows.slice(
+                  firstRowIndex,
+                  firstRowIndex + currentPageSize
+                )}
               />
-            ) : error ? (
-              <>
-                <InlineNotification
-                  title="Error"
-                  subtitle="Failed to retrieve Data"
-                  hideCloseButton={true}
-                />
-              </>
-            ) : (
-              <>
-                <CourseGraphs data={data} />
-                
-              <AccordionItem title={"Data Table"} open>
-                <CourseTable
-                  headers={headers}
-                  rows={rows.slice(
-                    firstRowIndex,
-                    firstRowIndex + currentPageSize
-                  )}
-                />
-                <Pagination
-                  totalItems={totalItems}
-                  backwardText="Previous page"
-                  forwardText="Next page"
-                  pageSize={currentPageSize}
-                  pageSizes={[5, 10, 15, 25]}
-                  itemsPerPageText="Items per page"
-                  onChange={({ page, pageSize }) => {
-                    if (pageSize !== currentPageSize) {
-                      setCurrentPageSize(pageSize);
-                    }
-                    setFirstRowIndex(pageSize * (page - 1));
-                  }}
-                />
-                </AccordionItem>
-                </>
-            )}
+              <Pagination
+                totalItems={totalItems}
+                backwardText="Previous page"
+                forwardText="Next page"
+                pageSize={currentPageSize}
+                pageSizes={[5, 10, 15, 25]}
+                itemsPerPageText="Items per page"
+                onChange={({ page, pageSize }) => {
+                  if (pageSize !== currentPageSize) {
+                    setCurrentPageSize(pageSize);
+                  }
+                  setFirstRowIndex(pageSize * (page - 1));
+                }}
+              />
+            </AccordionItem>
+          </>
+        )}
       </Accordion>
     </div>
   );

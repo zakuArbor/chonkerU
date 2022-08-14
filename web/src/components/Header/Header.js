@@ -27,11 +27,13 @@ const CUHeader = () => (
           isActive={isSideNavExpanded}
         />
         <HeaderName element={Link} to={"/"} prefix="zakuarbor">
-          CU-Visualizer
+          ChonkerU
         </HeaderName>
         <HeaderNavigation aria-label="Carbon Tutorial">
           <HeaderMenuItem element={Link} to={"/courses"}>Courses</HeaderMenuItem>
           <HeaderMenuItem element={Link} to={"profs"}>Professors</HeaderMenuItem>
+          <HeaderMenuItem element={Link} to={"progression"}>Programs</HeaderMenuItem>
+          <HeaderMenuItem element={Link} to={"test/progression"}>Progression</HeaderMenuItem>
         </HeaderNavigation>
         <SideNav
           aria-label="Side navigation"
