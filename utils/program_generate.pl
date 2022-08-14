@@ -103,7 +103,7 @@ sub parse_json {
         parse_prog($prog, $programs_ref->{$prog},\%progs_hash, \%prog_hash);
         #print(Dumper($programs_ref->{$prog}));
     }
-    print(Dumper(%progs_hash));
+    print(Dumper(%prog_hash));
     return ( \%progs_hash, \%prog_hash );
 }
 
@@ -120,53 +120,43 @@ sub parse_json {
 sub parse_prog {
     my ($prog, $hashref, $progs_hashref, $prog_hashref) = @_;
 #    print(Dumper($hashref));
+    my $md5 = Digest::MD5->new;
+    $md5->add($prog);
+    my $key = $md5->hexdigest;
+    $prog_hashref->{$key} = $hashref;
+    $prog_hashref->{$key}{"program_name"} = $prog;
     my $data = {
         "program" => $prog,
         "credits" => $hashref->{'credits'},
         "included_credits" => $hashref->{"included"}{'credits'},
-        "discluded_credits" => $hashref->{"not-included"}{'credits'}
+        "discluded_credits" => $hashref->{"not-included"}{'credits'},
+        "id" => $key
     };
     push(@{$progs_hashref->{"programs"}}, $data);
 }
 
 ################################################################################
 
-=head2 get_course_data
-@param content: a reference to the subject data
-@param index: 
-@return: a reference to course data
+=head2 get_basic_prog_data
+@param prog: the name of the program
+@param hashref: the object containing a program's information@param content: a reference to the subject data
+@return: a reference to basic prog data
 =cut
 
 ################################################################################
-sub get_course_data {
-    my ( $content, $i ) = @_;
-
-    if ( not ${$content}->{"courses"}[$i] =~ /[A-Z]{4}\d{4}/ ) {
-        return undef;
-    }
-    if ( ${$content}->{"prof"}[$i] eq '\u00a0' ) {
-        return undef;
-    }
-
-    my %course = (
-        'crn'    => ${$content}->{"crn"}[$i],
-        'prof'   => ${$content}->{"prof"}[$i],       #redundant for prof data
-        'course' => ${$content}->{"courses"}[$i],    #redundant for course data
-        'type'   => ${$content}->{"type"}[$i],
-        'enrol'  => ${$content}->{"enrol"}[$i],
-        'year'   => ${$content}->{"year"},
-        'sem'    => ${$content}->{"sem"},
-        'source' => ${$content}->{"source"},
-        'epoch'  => str2time( ${$content}->{"source"} )
-    );
-
-    if ( not $course{'enrol'} =~ /\d+/ ) {
-        $course{'enrol'} = 0;
-    }
-    if ( not substr( $course{"prof"}, 1 ) =~ /\w/ ) {
-        return undef;
-    }
-    return \%course;
+sub get_basic_prog_data {
+    my ( $prog, $hashref ) = @_;
+    my $md5 = Digest::MD5->new;
+    $md5->add($prog);
+    my $key = $md5->hexdigest;
+    my $data = {
+        "program" => $prog,
+        "credits" => $hashref->{'credits'},
+        "included_credits" => $hashref->{"included"}{'credits'},
+        "discluded_credits" => $hashref->{"not-included"}{'credits'},
+        "id" => $key
+    };
+    return \$data;
 }
 
 ################################################################################
@@ -233,24 +223,18 @@ sub writeCoursesList {
 }
 
 ################################################################################
-=head2 writeCourseApi
+=head2 writeProgramApi
 @param subject: a string
 @param hash: data
 =cut
 
 ################################################################################
-sub writeCourseApi {
-    my ( $subject, $course_hash, $prof_hash ) = @_;
-    $subject = lc $subject;
-
-    my @courses;
-
-    foreach my $course ( keys %{$course_hash} ) {
-        $course_hash->{$course}{'profs'} =
-          getProfTeachCount( $course, $prof_hash );
-        $course_hash->{$course}{'enrol_avg'} = getAvgEnrollment($course_hash->{$course}->{'history'});
-        my $json = encode_json $course_hash->{$course};
-        my $file = $dest_dir . $course . ".json";
+sub writeProgApi {
+    my ( $hash ) = @_;
+    
+    foreach my $prog ( keys %{$hash} ) {
+        my $json = encode_json $hash->{$prog};
+        my $file = $dest_dir . $prog . ".json";
         open( my $fh, ">:encoding(UTF-8)", $file )
           or die("Cannot open '${file}': $!\n");
         print $fh $json;
@@ -338,4 +322,5 @@ my $programs = decode_json($json_str);
 
 my ($progs_hashref, $prog_hashref) = parse_json($programs);
 print(Dumper($progs_hashref));
-write2json('programs-list', $progs_hashref)
+write2json('programs-list', $progs_hashref);
+writeProgApi($prog_hashref);

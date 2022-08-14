@@ -1,38 +1,55 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { DataTableSkeleton, Pagination, InlineNotification } from "@carbon/react";
+import {
+  DataTableSkeleton,
+  Pagination,
+  InlineNotification,
+} from "@carbon/react";
 import TableComp from "../../components/Table";
-import MD5 from "crypto-js/md5";
 
+const LinkList = ({ url, homepageUrl }) => (
+  <ul style={{ display: "flex" }}>
+    <li>
+      <Link href={url}>GitHub</Link>
+    </li>
+    {homepageUrl && (
+      <li>
+        <span>&nbsp;|&nbsp;</span>
+        <Link href={homepageUrl}>Homepage</Link>
+      </li>
+    )}
+  </ul>
+);
 const getRowItems = (rows) =>
-  rows.map((row) => {
-    const hash = MD5(row.prof).toString();
-    return {
-      ...row,
-      key: hash,
-      id: hash,
-      prof: (
-        <Link to={"/prof/" + hash} state={{ code: row.prof }}>
-          {row.prof}
-        </Link>
-      ),
-      num: row.num,
-      link: "/prof/" + hash,
-    };
-  });
+  rows.map((row) => ({
+    ...row,
+    id: row.id,
+    program: (
+      <Link to={"/program/" + row.id} state={{ code: row.code }}>
+        {row.program}
+      </Link>
+    ),
+    included: row.included_credits,
+    discluded: row.discluded_credits,
+    link: "/program/" + row.id,
+  }));
 
 const headers = [
   {
-    key: "prof",
-    header: "Professor",
+    key: "program",
+    header: "Program",
   },
   {
-    key: "num",
-    header: "# of Courses Collected",
+    key: "included",
+    header: "Major Credits",
   },
+  {
+    key: "discluded",
+    header: "Non-major Credits"
+  }
 ];
 
-const ProfsPage = () => {
+const ProgramsPage = () => {
   const [totalItems, setTotalItems] = useState(0);
   const [firstRowIndex, setFirstRowIndex] = useState(0);
   const [currentPageSize, setCurrentPageSize] = useState(15);
@@ -41,27 +58,31 @@ const ProfsPage = () => {
   const [error, setError] = useState(false);
 
   const getData = () => {
-    fetch("profs.json", {
+    fetch("programs-list.json", {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
     })
       .then((res) => {
-        if (res.status != 200) {
-          setError(true);
-          setLoading(false);
+        if (!res.ok) {
+          throw new Error(res.status);
         }
         return res.json();
       })
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         setLoading(false);
-        setTotalItems(res["total"]);
-        setRows(getRowItems(res["prof"]));
+        setTotalItems(res["programs"].length);
+        setRows(getRowItems(res["programs"]));
+      })
+      .catch((err) => {
+        console.log(err);
+        setError(true);
       });
   };
   useEffect(() => {
+    console.log("ProgramsPage useEffect fired");
     getData();
   }, []);
 
@@ -91,7 +112,7 @@ const ProfsPage = () => {
                   firstRowIndex,
                   firstRowIndex + currentPageSize
                 )}
-                title={"List of Professors"}
+                title={"List of Programs"}
                 desc={""}
               />
               <Pagination
@@ -116,4 +137,4 @@ const ProfsPage = () => {
   );
 };
 
-export default ProfsPage;
+export default ProgramsPage;
