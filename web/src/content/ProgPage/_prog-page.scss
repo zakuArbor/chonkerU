@@ -54,12 +54,15 @@
 
 
 @media only screen and (min-width: 600px) {
-  .req-layer {
+  .req-accord {
     width: 80%;
     margin: auto;
   }
+  .req-layer {
+    width: 90%;
+    margin: auto;
+  }
 }
-
 
 .course-item {
   padding: 0.5em;

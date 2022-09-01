@@ -112,7 +112,7 @@ const ProgPage = () => {
           </>
         ) : (
           <div className="requirements">
-            <Accordion>
+            <Accordion className={"req-accord"}>
               <ProgReqSec data={progData.data.included} included={true}/> 
               <ProgReqSec data={progData.data["not-included"]} included={false}/>
             </Accordion>

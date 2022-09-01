@@ -41,7 +41,7 @@ const ProgReqSec = ({ data, included }) => {
           key={data.credits + "-" + included}
           open
         >
-          <Layer className={"req-layer-"} key={included}>
+          <Layer className={"req-layer"} key={included}>
             {data.items.map((item, index) => {
               return (
                 <Layer
