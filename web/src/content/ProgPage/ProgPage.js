@@ -8,8 +8,15 @@ import {
   Accordion,
   AccordionItem,
   AccordionSkeleton,
+  ExpandableTile,
+  Table,
+  TableRow,
+  TableBody,
+  TableCell,
+  Tile,
+  Layer,
 } from "@carbon/react";
-import { semester_sort } from "../utility";
+import ProgReqSec from "./ProgReqSec";
 
 const ProgPage = () => {
   const { prog } = useParams();
@@ -30,15 +37,14 @@ const ProgPage = () => {
       },
     })
       .then((res) => {
-        console.log(res);
         if (!res.ok) {
           throw new Error(res.status);
         }
         return res.json();
       })
       .then((res) => {
+        setProgData({ isLoaded: true, data: res });
         console.log(res);
-        setProgData({isLoaded: true, data: res})
         setLoading(false);
       })
       .catch((err) => {
@@ -46,6 +52,7 @@ const ProgPage = () => {
         setLoading(false);
       });
   };
+
   useEffect(() => {
     console.log("progPage: useEffect fired");
     getData(prog);
@@ -56,12 +63,29 @@ const ProgPage = () => {
       {progData.isLoaded ? (
         <>
           <div className="bx--row repo-page__r1">
-            <h1 className="prog_heading">{progData.data.program_name} ({progData.data.credits.toFixed(1)} Credits)</h1>
+            <h1 className="prog_heading">
+              {progData.data.program_name} ({progData.data.credits.toFixed(1)}{" "}
+              Credits)
+            </h1>
           </div>
           <div className="bx--row course-page__r2">
-            <h4><span className="label">Credits Included in the Major:</span> {progData.data.included.credits.toFixed(1)}</h4>
-            <h4><span className="label">Credits NOT Included in the Major:</span> {progData.data['not-included'].credits.toFixed(1)}</h4>
-            <h4><span className="label">Credits NOT Included in the Major:</span> <a href = "https://calendar.carleton.ca/undergrad/undergradprograms/mathematicsandstatistics/" alt = "link to math academic calendar">https://calendar.carleton.ca/undergrad/undergradprograms/mathematicsandstatistics/</a></h4>
+            <h4>
+              <span className="label">Credits Included in the Major:</span>{" "}
+              {progData.data.included.credits.toFixed(1)}
+            </h4>
+            <h4>
+              <span className="label">Credits NOT Included in the Major:</span>{" "}
+              {progData.data["not-included"].credits.toFixed(1)}
+            </h4>
+            <h4>
+              <span className="label">Credits NOT Included in the Major:</span>{" "}
+              <a
+                href="https://calendar.carleton.ca/undergrad/undergradprograms/mathematicsandstatistics/"
+                alt="link to math academic calendar"
+              >
+                https://calendar.carleton.ca/undergrad/undergradprograms/mathematicsandstatistics/
+              </a>
+            </h4>
           </div>
         </>
       ) : error ? (
@@ -75,9 +99,9 @@ const ProgPage = () => {
       ) : (
         <SkeletonText />
       )}
-      <Accordion>
+      <>
         {!progData.isLoaded ? (
-          <AccordionSkeleton/>
+          <AccordionSkeleton />
         ) : error ? (
           <>
             <InlineNotification
@@ -88,21 +112,14 @@ const ProgPage = () => {
           </>
         ) : (
           <div className="requirements">
-            <AccordionItem title={"Program Requirements"} open>
-              <Accordion>
-                {
-                progData.data.included.items.forEach((item, index) => {
-                  console.log(item);
-                  return <AccordionItem title={(index + 1) + ". " + item.credits.toFixed(1) + " credits in:" } open>
-                    <p>Lorem Ipsum</p>
-                    </AccordionItem>
-                })
-                }
-              </Accordion>
-            </AccordionItem>
+            <Accordion>
+              <ProgReqSec data={progData.data.included} included={true}/> 
+              <ProgReqSec data={progData.data["not-included"]} included={false}/>
+            </Accordion>
           </div>
         )}
-      </Accordion>
+
+      </>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-@use '@carbon/react/scss/spacing' as *;
+@use '@carbon/react/scss/spacing'as *;
 
 .repo-page__r1 {
   padding-top: $spacing-05;
@@ -15,7 +15,56 @@
 }
 
 
-.source span, .avg span, .label, .website {
+.source span,
+.avg span,
+.label,
+.website {
   font-weight: bold;
 }
 
+.requirements {
+  font-size: large;
+}
+
+.req-label {
+  font-size: large;
+  font-weight: bold;
+}
+
+.req-table {
+  width: 100%;
+}
+
+.td-code {
+  width: 40%;
+}
+
+.td-name {
+  width: 60%;
+}
+
+.req-table>td {
+  text-align: left;
+}
+
+.req-box {
+  border-bottom-width: 1px;
+  border-bottom-style: inset;
+}
+
+
+@media only screen and (min-width: 600px) {
+  .req-layer {
+    width: 80%;
+    margin: auto;
+  }
+}
+
+
+.course-item {
+  padding: 0.5em;
+  border-top-style: dashed;
+  border-bottom-style: dashed;
+  border-width: thin;
+  letter-spacing: 1px;
+}

@@ -42,3 +42,9 @@ or
     "req": str
 }
 ```
+
+**VSCode Search and Replace:**
+```
+(MATH|STAT)\s+(\d{4})\s\[(\d\.\d)\]\s(([\w\(]+\s?)+[\w\)]+)
+{"course_code": "\1\2", "course_name": "\4", "credit": \3},
+```

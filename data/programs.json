@@ -132,27 +132,16 @@
       "credits": 8.5,
       "items": [
         {
-          "credits": 4.0,
-          "included": false,
-          "courses": [
-            {
-              "credits": 1.0,
-              "req": "Natural Science Electives"
-            },
-            {
-              "credits": 3.0,
-              "req": "Natural Science, or Approved Arts and Social Sciences electives"
-            }
-          ]
+          "credits": 1.0,
+          "req": "Natural Science Electives"
+        },
+        {
+          "credits": 3.0,
+          "req": "Natural Science, or Approved Arts and Social Sciences electives"
         },
         {
           "credits": 4.5,
-          "courses": [
-            {
-              "credits": 4.5,
-              "req": "Free Electives"
-            }
-          ]
+          "req": "Free Electives"
         }
       ]
     }
