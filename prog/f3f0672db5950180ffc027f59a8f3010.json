@@ -1,1 +1,148 @@
-{"included":{"items":[{"courses":[{"credit":0.5,"course_name":"Calculus and Introductory Analysis I","course_code":"MATH1052"},{"course_code":"MATH1152","credit":0.5,"course_name":"Introductory Algebra I"},{"credit":0.5,"course_name":"Introduction to Mathematical Reasoning","course_code":"MATH1800"},{"credit":0.5,"course_code":"MATH2052","course_name":"Calculus and Introductory Analysis II"},{"course_code":"MATH2152","credit":0.5,"course_name":"Introductory Algebra II"}],"credits":2.5},{"credits":3.5,"courses":[{"course_code":"MATH2000","credit":1,"course_name":"Multivariable Calculus and Fundamentals of Analysis"},{"course_code":"MATH2100","credit":1,"course_name":"Algebra"},{"course_code":"MATH2454","credit":0.5,"course_name":"Ordinary Differential Equations (Honours)"},{"credit":0.5,"course_code":"STAT2559","course_name":"Basics of Statistical Modeling (Honours)"},{"credit":0.5,"course_name":"Introduction to Probability with Applications (Honours)","course_code":"STAT2655"}]},{"courses":[{"course_code":"MATH3001","credit":0.5,"course_name":"Real Analysis I (Honours)"},{"course_code":"MATH3057","credit":0.5,"course_name":"Functions of a Complex Variable (Honours)"},{"credit":0.5,"course_code":"MATH3106","course_name":"Introduction to Group Theory (Honours)"},{"credit":0.5,"course_name":"Rings and Fields (Honours)","course_code":"MATH3158"}],"credits":2},{"credits":0.5,"courses":[{"course_code":"MATH3002","credit":0.5,"course_name":"Real Analysis II (Honours)"},{"credit":0.5,"course_name":"Advanced Differential Calculus (Honours)","course_code":"MATH3003"},{"credit":0.5,"course_name":"Ordinary Differential Equations (Honours)","course_code":"MATH3008"}]},{"req":"3000-level Honours Sequence","credits":1},{"req":"MATH or STAT at the 4000-level or higher","credits":1.5},{"courses":[{"course_code":"MATH4905","course_name":"Honours Project (Honours)"}],"credits":0.5}],"credits":11.5},"not-included":{"items":[{"credits":4,"courses":[{"req":"Natural Science Electives","credits":1},{"req":"Natural Science, or Approved Arts and Social Sciences electives","credits":3}],"included":false},{"courses":[{"credits":4.5,"req":"Free Electives"}],"credits":4.5}],"credits":8.5},"credits":20,"program_name":"Mathematics B. Math. Honours"}
+{
+    "included": {
+        "items": [
+            {
+                "courses": [
+                    {
+                        "credit": 0.5,
+                        "course_name": "Calculus and Introductory Analysis I",
+                        "course_code": "MATH1052"
+                    },
+                    {
+                        "course_code": "MATH1152",
+                        "credit": 0.5,
+                        "course_name": "Introductory Algebra I"
+                    },
+                    {
+                        "credit": 0.5,
+                        "course_name": "Introduction to Mathematical Reasoning",
+                        "course_code": "MATH1800"
+                    },
+                    {
+                        "credit": 0.5,
+                        "course_code": "MATH2052",
+                        "course_name": "Calculus and Introductory Analysis II"
+                    },
+                    {
+                        "course_code": "MATH2152",
+                        "credit": 0.5,
+                        "course_name": "Introductory Algebra II"
+                    }
+                ],
+                "credits": 2.5
+            },
+            {
+                "credits": 3.5,
+                "courses": [
+                    {
+                        "course_code": "MATH2000",
+                        "credit": 1,
+                        "course_name": "Multivariable Calculus and Fundamentals of Analysis"
+                    },
+                    {
+                        "course_code": "MATH2100",
+                        "credit": 1,
+                        "course_name": "Algebra"
+                    },
+                    {
+                        "course_code": "MATH2454",
+                        "credit": 0.5,
+                        "course_name": "Ordinary Differential Equations (Honours)"
+                    },
+                    {
+                        "credit": 0.5,
+                        "course_code": "STAT2559",
+                        "course_name": "Basics of Statistical Modeling (Honours)"
+                    },
+                    {
+                        "credit": 0.5,
+                        "course_name": "Introduction to Probability with Applications (Honours)",
+                        "course_code": "STAT2655"
+                    }
+                ]
+            },
+            {
+                "courses": [
+                    {
+                        "course_code": "MATH3001",
+                        "credit": 0.5,
+                        "course_name": "Real Analysis I (Honours)"
+                    },
+                    {
+                        "course_code": "MATH3057",
+                        "credit": 0.5,
+                        "course_name": "Functions of a Complex Variable (Honours)"
+                    },
+                    {
+                        "credit": 0.5,
+                        "course_code": "MATH3106",
+                        "course_name": "Introduction to Group Theory (Honours)"
+                    },
+                    {
+                        "credit": 0.5,
+                        "course_name": "Rings and Fields (Honours)",
+                        "course_code": "MATH3158"
+                    }
+                ],
+                "credits": 2
+            },
+            {
+                "credits": 0.5,
+                "courses": [
+                    {
+                        "course_code": "MATH3002",
+                        "credit": 0.5,
+                        "course_name": "Real Analysis II (Honours)"
+                    },
+                    {
+                        "credit": 0.5,
+                        "course_name": "Advanced Differential Calculus (Honours)",
+                        "course_code": "MATH3003"
+                    },
+                    {
+                        "credit": 0.5,
+                        "course_name": "Ordinary Differential Equations (Honours)",
+                        "course_code": "MATH3008"
+                    }
+                ]
+            },
+            {
+                "req": "3000-level Honours Sequence",
+                "credits": 1
+            },
+            {
+                "req": "MATH or STAT at the 4000-level or higher",
+                "credits": 1.5
+            },
+            {
+                "courses": [
+                    {
+                        "course_code": "MATH4905",
+                        "course_name": "Honours Project (Honours)"
+                    }
+                ],
+                "credits": 0.5
+            }
+        ],
+        "credits": 11.5
+    },
+    "not-included": {
+        "items": [
+            {
+                "req": "Natural Science Electives",
+                "credits": 1
+            },
+            {
+                "req": "Natural Science, or Approved Arts and Social Sciences electives",
+                "credits": 3
+            },
+            {
+                "credits": 4.5,
+                "req": "Free Electives"
+            }
+        ],
+        "credits": 8.5
+    },
+    "credits": 20,
+    "program_name": "Mathematics B. Math. Honours"
+}
