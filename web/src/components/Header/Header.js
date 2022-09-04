@@ -45,6 +45,8 @@ const CUHeader = () => (
             <HeaderSideNavItems isActive={true}>
               <HeaderMenuItem element={Link} to={"/courses"}>Courses</HeaderMenuItem>
               <HeaderMenuItem element={Link} to={"/profs"}>Professors</HeaderMenuItem>
+              <HeaderMenuItem element={Link} to={"programs"}>Programs</HeaderMenuItem>
+              <HeaderMenuItem element={Link} to={"test/progression"}>Progression</HeaderMenuItem>
             </HeaderSideNavItems>
           </SideNavItems>
         </SideNav>
