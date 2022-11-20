@@ -10,7 +10,7 @@ import {
 } from "@carbon/react";
 import ProfTable from "./ProfTable";
 import ProfGraphs from "./ProfPageGraphs";
-import { semester_sort as semester_sort } from "../utility";
+import { semester_sort2 as semester_sort } from "../utility";
 import Test from "./Test";
 
 const headers = [
