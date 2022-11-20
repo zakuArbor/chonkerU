@@ -34,3 +34,8 @@ A list of features that are not actively worked on and probably won't be worked 
     * course information and description
 ## Dependencies
 * **html5lib:** `pip3 install html5lib`
+* Mojo Dependecies:
+	* **Dumpvalue:** `sudo dnf install 'perl(Dumpvalue)'`
+	* **ExtUtils::Manifest** `sudo dnf install 'perl(ExtUtils::Manifest)'`
+	* **ExtUtils::MakeMaker:** `sudo dnf install 'perl(ExtUtils::MakeMaker)'`
+	* `curl -L https://cpanmin.us | perl - -M https://cpan.metacpan.org -n Mojolicious`
