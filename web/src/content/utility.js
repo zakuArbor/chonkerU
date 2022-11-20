@@ -11,6 +11,62 @@ let semester_sort = (x, y) => {
   return 0;
 };
 
+let term_sort = (term1, term2) => {
+  if (term1 == "W") {
+    return 1;
+  }
+  if (term1 == "S") {
+    if (term2 == "F") {
+      return 1;
+    }
+    if (term2 == "W") {
+      return -1;
+    }
+  }
+  return 0;
+}
+
+/*
+Sorts courses if given YYYY-T strings
+*/
+let semester_sort3 = (x, y) => {
+  if (x.length < 6 && y.length < 6) {
+    return 0;
+  }
+
+  const year1 = x.substr(0,4);
+  const year2 = y.substr(0,4);
+  
+  const term1 = x[5];
+  const term2 = y[5];
+
+  if (year1 < year2) {
+    return -1;
+  }
+  if (year1 > year2) {
+    return 1;
+  }
+
+  return term_sort(term1, term2);
+};
+
+/*
+Sorts courses by semester and year 
+*/
+let semester_sort2 = (x, y) => {
+  const year1 = parseInt(x.year);
+  const year2 = parseInt(y.year);
+
+  if (year1 < year2) {
+    return -1;
+  }
+  else if (year1 > year2) {
+    return 1;
+  }
+
+  return term_sort(x.sem, y.sem);
+};
+
 /*
 Returns the semester grouping given a semester
 Input: length 6: YYYY-T (i.e. 2019-F)
@@ -38,4 +94,4 @@ let group_sem = (sem) => {
   }
   return "Summer '" + year;
 };
-export { semester_sort, group_sem };
+export { semester_sort, semester_sort2, semester_sort3, group_sem };

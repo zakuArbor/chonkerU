@@ -9,7 +9,7 @@ import {
 } from "@carbon/react";
 import CourseTable from "./CourseTable";
 import CourseGraphs from "./CoursePageGraphs";
-import { semester_sort } from "../utility";
+import { semester_sort2 as semester_sort } from "../utility";
 import MD5 from "crypto-js/md5";
 import Test from "./Test";
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ProgressBar, InlineNotification, AccordionItem } from "@carbon/react";
 import ProfLineGraph from "./ProfStudentLineGraph";
 import ProfCourseBarGraph from "./ProfCourseBarGraph";
-import { semester_sort } from "../utility";
+import { semester_sort3 as semester_sort } from "../utility";
 
 const getEmptyData = (length) => {
   return {
