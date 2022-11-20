@@ -197,27 +197,29 @@ def grabDataDate(html)->dict:
 #url = 'https://oirp.carleton.ca/course-inst/tables/2020w-course-inst_hpt.htm'
 #url = "http://127.0.0.1:4000/blog/assets/test.html"
 #url = "http://127.0.0.1:4000/blog/assets/test2.html"
-url = "https://oirp.carleton.ca/course-inst/tables/2018f-course-inst_hpt.htm"
-data:object = requests.get(url)
-html:object = BeautifulSoup(data.text, "html5lib")
-data:dict = {}
-subject:str = ""
+for year in range(2006,2023):
+    #url = "https://oirp.carleton.ca/course-inst/tables/2018f-course-inst_hpt.htm"
+    url = "https://oirp.carleton.ca/course-inst/tables/" + str(year) + "f-course-inst_hpt.htm"
+    data:object = requests.get(url)
+    html:object = BeautifulSoup(data.text, "html5lib")
+    data:dict = {}
+    subject:str = "MATH"
 
-date:dict = grabDataDate(html)
-(data, subject) = parseTable(html, TAB + "0")
-if len(data.keys()) > 1: #can dump subject to text file
-    writeData(data=data, date=date, skip_subject=subject)
-tables_data:list = html.select("html > body > " + TAB)
-count = 0
-for table_data in tables_data:
-    count +=1
-    tmp_data:dict = {}
-    (tmp_data, subject) = parseTable(subjects_data=table_data, subject=subject)
-    if len(tmp_data) == 0:
-        continue
-    updateData(data, tmp_data)
-    if len(data.keys()) > 1: #can dump subject to text file                            
+    date:dict = grabDataDate(html)
+    (data, subject) = parseTable(html, TAB + "0")
+    if len(data.keys()) > 1: #can dump subject to text file
         writeData(data=data, date=date, skip_subject=subject)
-#done
-writeData(data, date) #write remaining subjects
-print("{}COMPLETED{}".format("="*5, "="*5))
+    tables_data:list = html.select("html > body > " + TAB)
+    count = 0
+    for table_data in tables_data:
+        count +=1
+        tmp_data:dict = {}
+        (tmp_data, subject) = parseTable(subjects_data=table_data, subject=subject)
+        if len(tmp_data) == 0:
+            continue
+        updateData(data, tmp_data)
+        if len(data.keys()) > 1: #can dump subject to text file                            
+            writeData(data=data, date=date, skip_subject=subject)
+    #done
+    writeData(data, date) #write remaining subjects
+    print("{}COMPLETED{}".format("="*5, "="*5))
