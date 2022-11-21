@@ -1,5 +1,5 @@
 {
-  "homepage": "http://zakuarbor.github.io/chonkeru",
+  "homepage": "http://zakuarbor.github.io/chonkerU",
   "name": "chonkerU",
   "version": "0.1.0",
   "private": true,
@@ -20,7 +20,8 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.3.0",
     "react-scripts": "^5.0.1",
-    "sass": "^1.51.0"
+    "sass": "^1.51.0",
+    "nth-check": ">=2.0.1"
   },
   "scripts": {
     "predeploy": "npm run build",
