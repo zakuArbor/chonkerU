@@ -1,4 +1,4 @@
-# CU-VISUALIZER
+# ChonkerU
 
 ### Status: Abandoned
 
