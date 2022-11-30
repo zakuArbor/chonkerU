@@ -28,6 +28,7 @@ A list of features that are not actively worked on and probably won't be worked 
 **Public Data Sources:**
 * https://oirp.carleton.ca/university_stats/html/university_stats.htm
 * https://oirp.carleton.ca/specialized_reports/html/specialized_reports.htm
+* https://booking.carleton.ca/index.php?p=RoomSearch&r=1
 * https://oirp.carleton.ca/course-inst/notes/MATH0005A.html
     * course room capacity
 * https://calendar.carleton.ca/search/?P=BIT%201000
