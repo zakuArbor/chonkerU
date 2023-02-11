@@ -78,7 +78,7 @@ const ProgPage = () => {
               {progData.data["not-included"].credits.toFixed(1)}
             </h4>
             <h4>
-              <span className="label">Credits NOT Included in the Major:</span>{" "}
+              <span className="label">Source:</span>{" "}
               <a
                 href="https://calendar.carleton.ca/undergrad/undergradprograms/mathematicsandstatistics/"
                 alt="link to math academic calendar"
