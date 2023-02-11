@@ -9,6 +9,8 @@ import {
   AccordionItem,
   AccordionSkeleton,
   ExpandableTile,
+  TileAboveTheFoldContent,
+  TileBelowTheFoldContent,
   Table,
   TableRow,
   TableBody,
@@ -47,57 +49,63 @@ const ProgReqSec = ({ data, included }) => {
                 <Layer
                   key={"req-layer-" + index + "-" + included}
                   as="section"
-                  level={index % 2 == 0 ? 0 : 0}
+                  level={index % 2 == 1 ? 2 : 2}
                 >
-                  <ExpandableTile key={"req-tile-" + index} className="req-box">
                     {"courses" in item ? (
-                      <>
-                        <b className="req-label">
-                          {"<" +
-                            (index + 1) +
-                            "> " +
-                            item.credits.toFixed(1) +
-                            " credits in:"}
-                        </b>
-                        <Table
-                          size="lg"
-                          useZebraStyles={true}
-                          useStaticWidth={true}
-                          className="req-table"
-                          key={"data-table-" + included}
-                        >
-                          <TableBody key={"tbody-" + included}>
-                            {item.courses.map((row, index) => (
-                              <TableRow key={index}>
-                                {
-                                  <>
-                                    <TableCell
-                                      key={"course_code"}
-                                      className="td-code"
-                                    >
-                                      <Link to={"/course/" + row.course_code}>
-                                        {row["course_code"] +
-                                          " [" +
-                                          ("credit" in row
-                                            ? row["credit"].toFixed(1)
-                                            : "0.5") +
-                                          "]"}
-                                      </Link>
-                                    </TableCell>
-                                    <TableCell
-                                      key={"course_name"}
-                                      className="td-name"
-                                    >
-                                      {row["course_name"]}
-                                    </TableCell>
-                                  </>
-                                }
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </>
+                      <div>
+                      <ExpandableTile id={"exp-tile-" + index + "-" + included} className="tile" expanded={true} tileCollapsedIconText="Interact to Expand tile"
+                      tileExpandedIconText="Interact to Collapse tile">
+                        <TileAboveTheFoldContent>
+                          <b className="req-label">
+                            {"<" +
+                              (index + 1) +
+                              "> " +
+                              item.credits.toFixed(1) +
+                              " credits in:"}
+                          </b>
+                        </TileAboveTheFoldContent>
+                        <TileBelowTheFoldContent>
+                          <Table
+                            size="lg"
+                            useZebraStyles={true}
+                            useStaticWidth={true}
+                            className="req-table"
+                            key={"data-table-" + included}
+                          >
+                            <TableBody key={"tbody-" + included}>
+                              {item.courses.map((row, index) => (
+                                <TableRow key={index}>
+                                  {
+                                    <>
+                                      <TableCell
+                                        key={"course_code"}
+                                        className="td-code"
+                                      >
+                                        <Link to={"/course/" + row.course_code}>
+                                          {row["course_code"] +
+                                            " [" +
+                                            ("credit" in row
+                                              ? row["credit"].toFixed(1)
+                                              : "0.5") +
+                                            "]"}
+                                        </Link>
+                                      </TableCell>
+                                      <TableCell
+                                        key={"course_name"}
+                                        className="td-name"
+                                      >
+                                        {row["course_name"]}
+                                      </TableCell>
+                                    </>
+                                  }
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </TileBelowTheFoldContent>
+                      </ExpandableTile></div>
                     ) : (
+                      <Tile className={"tile"}>
                       <b className="req-label">
                         {"<" +
                           (index + 1) +
@@ -106,8 +114,8 @@ const ProgReqSec = ({ data, included }) => {
                           " credits from/in " +
                           item.req}
                       </b>
+                      </Tile>
                     )}
-                  </ExpandableTile>
                 </Layer>
               );
             })}

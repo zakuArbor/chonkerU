@@ -27,8 +27,9 @@
 }
 
 .req-label {
-  font-size: large;
+  font-size: x-large;
   font-weight: bold;
+
 }
 
 .req-table {
@@ -70,4 +71,10 @@
   border-bottom-style: dashed;
   border-width: thin;
   letter-spacing: 1px;
+}
+
+.tile {
+  border: 1px solid black;
+  border-left: 0px;
+  border-right: 0px;
 }
