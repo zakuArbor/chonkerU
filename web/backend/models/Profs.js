@@ -1,10 +1,12 @@
 const mongoose = require('mongoose');
 
 const ProfsSchema = new mongoose.Schema({
-  name: {
+  prof: {
     type: String,
     required: true
   },
-});
+},
+{collection: 'prof'}
+);
 
-module.exports = mongoose.model('profs', ProfsSchema);
+module.exports = mongoose.model('prof', ProfsSchema);

@@ -12,9 +12,12 @@ connectDB();
 app.use(express.json());
 
 // Define Routes
-app.use('/api/users', require('./routes/api/profs'));
+app.use('/api/profs', require('./routes/api/profs'));
 app.use('/api/auth', require('./routes/api/course'));
 app.use('/api/profile', require('./routes/api/prof'));
+app.get('/', (req, res) => {
+	console.log("hello world");
+});
 
 const PORT = process.env.PORT || 5000;
 

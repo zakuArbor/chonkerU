@@ -1,19 +1,21 @@
 const mongoose = require('mongoose');
 const config = require('config');
 const db = config.get('db');
-const {db: {host, user, password} } = config
+const {db: {host, user, password, dbName} } = config
 
 const connectDB = async () => {
-  const connectionString = `mongodb+srv://${user}:${password}@${host}/?retryWrites=true&w=majority`;
+  const connectionString = `mongodb+srv://${user}:${password}@${host}/${dbName}?retryWrites=true&w=majority`;
   try {
     await mongoose.connect(connectionString, {
       useNewUrlParser: true,
       useCreateIndex: true,
       useFindAndModify: false,
-      useUnifiedTopology: true
+      useUnifiedTopology: true,
     });
 
     console.log('MongoDB Connected...');
+    console.log(connectionString);
+    console.log(mongoose.connection.readyState);
   } catch (err) {
     console.log(connectionString);
     console.error(err.message);

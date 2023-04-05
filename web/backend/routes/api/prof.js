@@ -3,7 +3,7 @@ const router = express.Router();
 const { check, validationResult } = require('express-validator');
 const auth = require('../../middleware/auth');
 
-const Prof = require('../../models/Prof');
+const Prof = require('../../models/Profs');
 const checkObjectId = require('../../middleware/checkObjectId');
 
 // @route    GET api/profs
