@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { DataTableSkeleton, Pagination, InlineNotification } from "@carbon/react";
-import TableComp from "../../components/Table";
+import TableFilter from "../../components/TableFilter";
 import MD5 from "crypto-js/md5";
 
 const getRowItems = (rows) =>
@@ -16,7 +16,7 @@ const getRowItems = (rows) =>
           {row.prof}
         </Link>
       ),
-      num: row.num,
+      num: row.num_taught,
       link: "/prof/" + hash,
     };
   });
@@ -34,35 +34,49 @@ const headers = [
 
 const ProfsPage = () => {
   const [totalItems, setTotalItems] = useState(0);
+  const [cacheTotalItems, setCacheTotalItems] = useState(0);
   const [firstRowIndex, setFirstRowIndex] = useState(0);
   const [currentPageSize, setCurrentPageSize] = useState(15);
   const [loading, setLoading] = useState(true);
   const [rows, setRows] = useState([]);
+  const [cacheRows, setCacheRows] = useState([]);
   const [error, setError] = useState(false);
 
-  const getData = () => {
-    fetch("profs.json", {
+  const filterProf = (query) => {
+    console.log(query.target.value)
+    return getData('/' + query.target.value);
+  }
+
+  const getData = (query) => {
+    //fetch("profs.json", {
+    fetch("http://68.233.123.145/api/profs"+query, {
+      mode: "cors",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
+        'Access-Control-Allow-Origin': '*',
       },
     })
       .then((res) => {
+        console.log("http://68.233.123.145/api/profs" + query)
         if (res.status != 200) {
           setError(true);
           setLoading(false);
         }
+        console.log(res);
         return res.json();
       })
       .then((res) => {
         console.log(res);
         setLoading(false);
-        setTotalItems(res["total"]);
-        setRows(getRowItems(res["prof"]));
+        setTotalItems(res["payload"].length);
+        setCacheTotalItems(totalItems);
+        setRows(getRowItems(res["payload"]));
+        setCacheRows(rows);
       });
   };
   useEffect(() => {
-    getData();
+    getData('');
   }, []);
 
   return (
@@ -85,7 +99,7 @@ const ProfsPage = () => {
             </>
           ) : (
             <>
-              <TableComp
+              <TableFilter
                 headers={headers}
                 rows={rows.slice(
                   firstRowIndex,
@@ -93,6 +107,7 @@ const ProfsPage = () => {
                 )}
                 title={"List of Professors"}
                 desc={""}
+                onInputChange={filterProf}
               />
               <Pagination
                 totalItems={totalItems}
