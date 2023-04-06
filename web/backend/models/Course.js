@@ -2,51 +2,18 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const CourseSchema = new Schema({
-  user: {
-    type: Schema.Types.ObjectId
-  },
-  text: {
+  code: {
     type: String,
     required: true
+  },
+  desc: {
+    type: String
   },
   name: {
     type: String
   },
-  avatar: {
-    type: String
-  },
-  likes: [
-    {
-      user: {
-        type: Schema.Types.ObjectId
-      }
-    }
-  ],
-  comments: [
-    {
-      user: {
-        type: Schema.Types.ObjectId
-      },
-      text: {
-        type: String,
-        required: true
-      },
-      name: {
-        type: String
-      },
-      avatar: {
-        type: String
-      },
-      date: {
-        type: Date,
-        default: Date.now
-      }
-    }
-  ],
-  date: {
-    type: Date,
-    default: Date.now
-  }
-});
-
+},
+	{collection: 'course'}
+);
+CourseSchema.index({code: 'text', name: 'text', desc: 'text', code: 'number'});
 module.exports = mongoose.model('course', CourseSchema);
