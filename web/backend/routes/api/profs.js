@@ -13,25 +13,25 @@ router.get('/', auth, async (req, res) => {
   console.log("on profs");
   try {
     const profs = await Profs.find().sort();
-    res.json(profs);
+    res.json({'payload': profs});
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
   }
 });
 
-// @route    GET api/profs/:id
+// @route    GET api/profs/:query
 // @desc     Get post by ID
 // @access   Private
-router.get('/:id', auth, checkObjectId('id'), async (req, res) => {
+router.get('/:query', auth, async (req, res) => {
   try {
-    const prof = await Profs.findById(req.params.id);
+    const prof = await Profs.find({"prof": { '$regex' : req.params.query, '$options' : 'i' }});
 
     if (!prof) {
       return res.status(404).json({ msg: 'Post not found' });
     }
 
-    res.json(prof);
+    res.json({'payload': prof});
   } catch (err) {
     console.error(err.message);
 
