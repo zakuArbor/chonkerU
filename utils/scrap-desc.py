@@ -7,6 +7,7 @@ import re
 import argparse
 import time
 from pprint import pprint
+import db
 import unicodedata
 
 base_url:str = "https://calendar.carleton.ca/undergrad/courses/";
@@ -87,7 +88,6 @@ def getCourses(courses_html)->object:
         if len(temp) >= 3:
             course["name"] = temp[1]
             course["desc"] = temp[2]
-            course["additional"] = ""
         if len(temp) >= 4:
             course['additional'] = ". ".join(temp[4:])
         pprint(course)
@@ -110,6 +110,20 @@ def getCourses(courses_html)->object:
     #done
     return courses
 
+def writeDataDB(courses:dict):
+    (conn, cur) = db.db_connect()
+    insert_query = "INSERT INTO courses (course_code, course_name, course_desc, course_credit, additional) VALUES (%s, %s, %s, %s, %s)"
+    
+    values = []
+    pprint("---------------------------")
+    for code in courses:
+        course = courses[code]
+        values.append((course['code'], course['name'], course['desc'], course['credit'], course['additional']))
+    pprint(values) 
+    cur.executemany(insert_query, values)
+    conn.commit()
+    db.db_close(conn, cur)
+
 
 ###############################################################################
 
@@ -126,3 +140,4 @@ data:dict = {}
 courses_html = html.select(".courseblock");
 courses:object = getCourses(courses_html)
 writeData(courses, subject)
+#writeDataDB(courses)
