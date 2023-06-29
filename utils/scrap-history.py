@@ -9,6 +9,7 @@ import psycopg2
 import os
 from dotenv import load_dotenv
 import utils
+import db
 import scrap_utils
 #load_dotenv()
 
@@ -141,9 +142,12 @@ def updateData(data:dict, tmp_data:dict):
     if not tmp_data:
         return
     for i in range(len(tmp_data['courses'])):
-        if tmp_data['prof'][i] == '\xa0':
+        if tmp_data['prof'][i] == '\xa0' or tmp_data['enrol'][i] == '\xa0':
             continue
         course:str = tmp_data['courses'][i]
+        if course[4] == '5' or course[4] == '6':
+            continue #cannot process graduate course descriptions yet
+
         course_record:dict = {}
         course_record['term'] = tmp_data['term'][i]
         course_record['prof'] = tmp_data['prof'][i]
@@ -155,7 +159,44 @@ def updateData(data:dict, tmp_data:dict):
         else:
             data[course] = [course_record]
 
+def writeCourseRecord(records:list[dict], code:str, conn:object, cur:object, prof_hash:dict):
+    course_id = db.get_courseId(code, conn, cur)
+    if course_id < 0:
+        print(code + "records failed to be inserted")
+        print("==================")
+        pprint(records)
+        print("==================")
+        return
 
+    query:str = "INSERT INTO course_records (prof_id, course_id, term, crn, enrollment, type) VALUES (%s, %s, %s, %s, %s, %s)"
+    for record in records:
+        #check if prof
+        prof = record['prof']
+        print("Pikachu has no clue for " + code + " taught by " + prof)
+
+        if prof not in prof_hash:
+            prof_id = db.get_profId(prof, conn, cur)
+            prof_hash[prof] = prof_id
+        else:
+            prof_id = prof_hash[prof]
+        try:
+            value = (prof_id, course_id, record['term'], record['crn'], record['enrol'], record['type'])
+            pprint(value)
+            cur.execute(query, value)
+            conn.commit()
+        except (psycopg2.IntegrityError, psycopg2.errors.UniqueViolation) as e:
+            print("Course is probably already in the database")
+        except (psycopg2.Error, psycopg2.Warning) as e:
+            print("Pikachu has no clue for " + code + " taught by " + prof)
+            print(e)
+
+def writeDB(courses_data:dict):
+    (conn, cur) = db.db_connect()
+    prof_hash = {}
+    for code in courses_data:
+        course_records = courses_data[code]
+        writeCourseRecord(course_records, code, conn, cur, prof_hash)
+    db.db_close(conn, cur)
 ###############################################################################
 #url = 'https://oirp.carleton.ca/course-inst/tables/2020w-course-inst_hpt.htm'
 #url = "http://127.0.0.1:4000/blog/assets/test.html"
@@ -194,5 +235,6 @@ for year in range(2015,2016):
             found_math = True
 
     pprint(courses_data)
+    writeDB(courses_data)
     print("{}COMPLETED{}".format("="*5, "="*5))
 

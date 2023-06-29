@@ -1,5 +1,8 @@
 import sys
+import hashlib
 
+def hash_string(str:str)->str:
+    return hashlib.md5(str.encode('utf-8')).hexdigest()
 
 def create_semester_url(year:int, sem:str)->str:
     """

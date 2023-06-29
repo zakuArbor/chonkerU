@@ -11,6 +11,8 @@ import db
 import unicodedata
 
 base_url:str = "https://calendar.carleton.ca/undergrad/courses/";
+#base_url:str = "https://calendar.carleton.ca/grad/courses/"; #grad courses cannot be collected, parser needs to be adapted i.e. MATH50001 [0.5 Credit] (MAT 5144) <- this course messes things up I think
+
 info_url:str = "https://calendar.carleton.ca/search/?=";
 
 
@@ -72,8 +74,8 @@ def getCourses(courses_html)->object:
         temp1 = temp.select(".courseblockcode")
         code = temp1[0].text.replace(u'\xa0', '')
         temp_code:str = temp1[0].text.replace(u'\xa0', '%20')
-        if (code[4] == '0'):
-            continue;
+        #if (code[4] == '0'):
+        #    continue;
         #fi
         course["code"] = code
         match = re.search("([0|1]\.[\d])", temp.text)
@@ -85,9 +87,12 @@ def getCourses(courses_html)->object:
         temp = course_html.get_text().strip().replace(u'\xa0', u'').split('\n');
         # Sample list
         # ['MATH4905 [0.5 credit]', 'Honours Project (Honours)', 'Consists of a written report on some approved topic or topics in the field of mathematics, together with a short lecture on the report.', 'Includes: Experiential Learning ActivityPrerequisite(s): B.Math.(Honours) students only.']
+        if len(temp) < 3:
+            continue #not enough information
         if len(temp) >= 3:
             course["name"] = temp[1]
             course["desc"] = temp[2]
+            course["additional"] = ''
         if len(temp) >= 4:
             course['additional'] = ". ".join(temp[4:])
         pprint(course)
@@ -140,4 +145,4 @@ data:dict = {}
 courses_html = html.select(".courseblock");
 courses:object = getCourses(courses_html)
 writeData(courses, subject)
-#writeDataDB(courses)
+writeDataDB(courses)
