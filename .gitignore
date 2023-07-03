@@ -3,3 +3,5 @@ web/node_modules/build/
 web/backend/.env
 web/backend/node_modules/
 .env
+utils/data
+data/
