@@ -1,5 +1,17 @@
 import sys
 import hashlib
+import time
+from calendar import timegm
+
+def date_to_epoch(date_str:str)->int:
+    '''
+    :param date_str: a date in the format: DD-Month-YYYY i.e. 12-Mar-2015
+    
+    >>> date_to_epoch("12-Mar-2015")
+    1426118400
+    '''
+    utc_time = time.strptime(date_str, "%d-%b-%Y")
+    return timegm(utc_time)
 
 def hash_string(str:str)->str:
     return hashlib.md5(str.encode('utf-8')).hexdigest()

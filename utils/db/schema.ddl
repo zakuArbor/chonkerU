@@ -37,5 +37,5 @@ CREATE TABLE course_records (
 );
 
 ALTER TABLE chonkeru.courses ADD CONSTRAINT courses_un UNIQUE (course_code);
-ALTER TABLE chonkeru.course_records ADD CONSTRAINT course_records_un UNIQUE (course_id, crn, term, enrollment);
+ALTER TABLE chonkeru.course_records ADD CONSTRAINT course_records_un UNIQUE (course_id, crn, term, enrollment, source_date);
 

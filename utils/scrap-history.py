@@ -50,7 +50,7 @@ import scrap_utils
 
 TAB = "div.TABDIV"
 
-def parseTable(data:dict={}, subjects_data:object = None, div:str=TAB, subject:str = "")->(dict, str):
+def parseTable(data:dict={}, subjects_data:object = None, div:str=TAB, subject:str = "", source_date:str="", source_term="")->(dict, str):
     '''
     The document that is of concern is:
     * first table has `class="TABDIV0"`
@@ -91,7 +91,7 @@ def parseTable(data:dict={}, subjects_data:object = None, div:str=TAB, subject:s
     for subject_data in subjects_data[1:]: #1st row is headers
         (tmp_data, subject) = scrap_utils.parseSubject(subject_data, subject)
         if tmp_data and subject == "MATH":
-            updateData(data, tmp_data)
+            updateData(data, tmp_data, source_date, source_term)
     return subject
 
 def writeData(data:dict, date:dict, skip_subject:str=""):
@@ -120,7 +120,7 @@ def writeData(data:dict, date:dict, skip_subject:str=""):
     #done
     assert(not subjects[0] in data)
 
-def updateData(data:dict, tmp_data:dict):
+def updateData(data:dict, tmp_data:dict, source_date:str, source_term:str):
     '''
     course data is added to the dictionary
     
@@ -132,7 +132,8 @@ def updateData(data:dict, tmp_data:dict):
                 "crn": ,
                 "term": "",
                 "type": "",
-                "enrol": 
+                "enrol": ,
+                "source_date": "" 
             },
             ...
             { ...}
@@ -154,6 +155,8 @@ def updateData(data:dict, tmp_data:dict):
         course_record['crn'] = tmp_data['crn'][i]
         course_record['type'] = tmp_data['type'][i]
         course_record['enrol'] = tmp_data['enrol'][i]
+        course_record['source_date'] = source_date
+        course_record['source_term'] = source_term #year courses have W term designation even if it's for fall term
         if course in data:
             data[course].append(course_record)
         else:
@@ -168,7 +171,7 @@ def writeCourseRecord(records:list[dict], code:str, conn:object, cur:object, pro
         print("==================")
         return
 
-    query:str = "INSERT INTO course_records (prof_id, course_id, term, crn, enrollment, type) VALUES (%s, %s, %s, %s, %s, %s)"
+    query:str = "INSERT INTO course_records (prof_id, course_id, term, crn, enrollment, type, source_date, source_term) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
     for record in records:
         #check if prof
         prof = record['prof']
@@ -180,7 +183,7 @@ def writeCourseRecord(records:list[dict], code:str, conn:object, cur:object, pro
         else:
             prof_id = prof_hash[prof]
         try:
-            value = (prof_id, course_id, record['term'], record['crn'], record['enrol'], record['type'])
+            value = (prof_id, course_id, record['term'], record['crn'], record['enrol'], record['type'], record['source_date'], record['source_term'])
             pprint(value)
             cur.execute(query, value)
             conn.commit()
@@ -210,8 +213,8 @@ semesters:list = ['f','w','s']
 
 for year in range(2015,2016):
     #url = "https://oirp.carleton.ca/course-inst/tables/2018f-course-inst_hpt.htm"
-    sem = 'w'
-    url:str = utils.create_semester_url(year, sem)
+    term = 'w'
+    url:str = utils.create_semester_url(year, term)
     if not url:
         print("failed to construct semester url")
         continue
@@ -228,7 +231,7 @@ for year in range(2015,2016):
     count = 0
     found_math:bool = False
     for table_data in tables_data:
-        subject = parseTable(data=courses_data, subjects_data=table_data, subject=subject)
+        subject = parseTable(data=courses_data, subjects_data=table_data, subject=subject, source_date = date['source'], source_term = term)
         if found_math and subject != "MATH":
             break
         if subject == "MATH":
