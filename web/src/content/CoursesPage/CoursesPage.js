@@ -53,24 +53,35 @@ const CoursesPage = () => {
   const [rows, setRows] = useState([]);
   const [error, setError] = useState(false);
 
-  const getData = () => {
+  const filterCourse = (query) => {
+    console.log(query.target.value)
+    return getData('/' + query.target.value);
+  }
+
+  const getData = (query) => {
+    //fetch("math_courses.json", {
     fetch("math_courses.json", {
+      mode: "cors",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
+        'Access-Control-Allow-Origin': '*',
       },
     })
       .then((res) => {
+        console.log("course" + query);
         if (!res.ok) {
           throw new Error(res.status);
         }
+        console.log(res);
         return res.json();
       })
       .then((res) => {
         //console.log(res);
+        console.log(res);
         setLoading(false);
-        setTotalItems(res["total"]);
-        setRows(getRowItems(res["courses"]));
+        setTotalItems(res['courses'].length);
+        setRows(getRowItems(res['courses']));
       })
       .catch((err) => {
         setError(true);
@@ -78,7 +89,7 @@ const CoursesPage = () => {
   };
   useEffect(() => {
     console.log("CoursesPage useEffect fired");
-    getData();
+    getData('');
   }, []);
 
   return (
@@ -102,6 +113,7 @@ const CoursesPage = () => {
           ) : (
             <>
               <CoursesTable
+                onInputChange={filterCourse}
                 headers={headers}
                 rows={rows.slice(
                   firstRowIndex,

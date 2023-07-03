@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ProgressBar, InlineNotification, AccordionItem } from "@carbon/react";
 import CourseLineGraph from "./CourseStudentLineGraph";
 import CourseProfBarGraph from "./CourseProfBarGraph";
-import { group_sem } from "../utility";
+import { group_sem, semester_sort3 } from "../utility";
 
 const getProfBarData = (profs) => {
   let data = [];
@@ -23,20 +23,19 @@ const getStudentLineData = (courses, isYearCredit) => {
   for (let i = 0; i < courses.length; i++) {
     let key = courses[i].year + "-" + courses[i].sem;
     if (!(key in sem)) {
-      sem[key] = 0;
+      sem[key] = {'val': 0, 'prof': courses[i].prof};
     }
-    sem[key] += parseInt(courses[i].enrol);
+    sem[key].val += parseInt(courses[i].enrol);
   }
-
+  
   for (const key in sem) {
     data.push({
-      "group": isYearCredit ? group_sem(key): 'main',
+      "group": isYearCredit ? group_sem(key, sem[key].prof): 'main',
       "key": key,
-      "value": sem[key],
+      "value": sem[key].val,
     });
   }
-  console.log(data);
-  return data;
+  return data.sort(semester_sort3);
 }
 
 const profBarOption = {
@@ -54,6 +53,7 @@ const profBarOption = {
   },
   "height": "600px"
 }
+
 
 const studentLineOption = {
 	"title": "# of Students Enrolled in the Course",

@@ -6,17 +6,17 @@ import MD5 from "crypto-js/md5";
 
 const getRowItems = (rows) =>
   rows.map((row) => {
-    const hash = MD5(row.prof).toString();
+    const hash = MD5(row.name).toString();
     return {
       ...row,
       key: hash,
       id: hash,
       prof: (
-        <Link to={"/prof/" + hash} state={{ code: row.prof }}>
-          {row.prof}
+        <Link to={"/prof/" + hash} state={{ code: row.name}}>
+          {row.name}
         </Link>
       ),
-      num: row.num_taught,
+      num: row.num,
       link: "/prof/" + hash,
     };
   });
@@ -48,8 +48,7 @@ const ProfsPage = () => {
   }
 
   const getData = (query) => {
-    //fetch("profs.json", {
-    fetch("http://68.233.123.145/api/profs"+query, {
+    fetch("profs.json", {
       mode: "cors",
       headers: {
         "Content-Type": "application/json",
@@ -69,9 +68,9 @@ const ProfsPage = () => {
       .then((res) => {
         console.log(res);
         setLoading(false);
-        setTotalItems(res["payload"].length);
+        setTotalItems(res["profs"].length);
         setCacheTotalItems(totalItems);
-        setRows(getRowItems(res["payload"]));
+        setRows(getRowItems(res["profs"]));
         setCacheRows(rows);
       });
   };

@@ -23,7 +23,7 @@ const action = (param) => {
   return () => alert(param);
 }
 
-const CoursesTable = ({rows, headers}) => {
+const CoursesTable = ({rows, headers, onInputChange}) => {
     const getRowDesc = (code) => {
       let row = rows.find(item => item.code == code);
       if (row === undefined || !('desc' in row)) {
@@ -43,7 +43,6 @@ const CoursesTable = ({rows, headers}) => {
         getRowProps,
         getTableProps,
         getToolbarProps,
-        onInputChange
       }) => (
         <TableContainer
           title="Courses"

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ProgressBar, InlineNotification, AccordionItem } from "@carbon/react";
 import ProfLineGraph from "./ProfStudentLineGraph";
 import ProfCourseBarGraph from "./ProfCourseBarGraph";
-import { semester_sort3 as semester_sort } from "../utility";
+import { semester_sort3 as semester_sort, semester_sort3 } from "../utility";
 
 const getEmptyData = (length) => {
   return {
@@ -35,29 +35,53 @@ const getEmptyData = (length) => {
   };
 };
 
-const getBarData = (dataObj) => {
-  const courses = Object.keys(dataObj).sort();
+const getLineData = (history) => {
   let data = [];
-  for (let i = 0; i < courses.length; i++) {
-    data.push({
-      group: courses[i],
-      value: dataObj[courses[i]],
-    });
+  let records = {};
+  for (let i = 0; i < history.length; i++) {
+    let record = history[i];
+    let key = record.year + '-' + record.sem.toUpperCase();
+    if (key in records) {
+        records[key] += record.enrol; 
+    }
+    else {
+      records[key] = record.enrol;
+    }
   }
-  return data;
-};
-
-const getLineData = (dataObj) => {
-  let data = [];
-  let semesters = Object.keys(dataObj).sort(semester_sort);
-  for (let i = 0; i < semesters.length; i++) {
+  const terms = Object.keys(records).sort();
+  for (let i = 0; i < terms.length; i++) {
     data.push({
-      sem: semesters[i],
-      value: dataObj[semesters[i]],
+      sem: terms[i],
+      key: terms[i],
+      value: records[terms[i]] 
     });
   }
   console.log(data);
-  return data;
+  return data.sort(semester_sort3);
+};
+
+const getBarData = (data) => {
+  let bar = [];
+  let courses = {};
+  for (let i = 0; i < data.length; i++) {
+    let record = data[i];
+    let code = record.code;
+    if (code in courses) {
+        courses[code] += record.enrol; 
+    }
+    else {
+      courses[code] = record.enrol;
+    }
+  }
+  const codes = Object.keys(courses).sort();
+  for (let i = 0; i < codes.length; i++) {
+    bar.push({
+      group: codes[i],
+      key: codes[i],
+      value: courses[codes[i]] 
+    });
+  }
+  return bar;
 };
 
 const barOption = {
@@ -99,7 +123,7 @@ const lineOption = {
   },
 };
 
-const ProfGraphs = ({ data: { bar, scatter, isLoaded } }) => {
+const ProfGraphs = ({ data: { data, isLoaded } }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [barData, setBarData] = useState({});
@@ -107,11 +131,11 @@ const ProfGraphs = ({ data: { bar, scatter, isLoaded } }) => {
 
   useEffect(() => {
     if (isLoaded) {
-      setBarData({ isLoaded: true, data: getBarData(bar) });
-      setLineData({ isLoaded: true, data: getLineData(scatter) });
+      setBarData({ isLoaded: true, data: getBarData(data) });
+      setLineData({ isLoaded: true, data: getLineData(data) });
       setLoading(false);
     }
-  }, [bar, scatter, isLoaded]);
+  }, [data, isLoaded]);
 
   return (
     <div className="bx--grid bx--grid--full-width bx--grid--no-gutter graphs">
@@ -133,7 +157,7 @@ const ProfGraphs = ({ data: { bar, scatter, isLoaded } }) => {
           <ProfCourseBarGraph data={barData.data} options={barOption} />
           </AccordionItem>
           <AccordionItem title="Figure 2: Number of Students Taught In Each Semester" open>
-          <ProfLineGraph data={lineData.data} options={lineOption} />
+          {<ProfLineGraph data={lineData['data']} options={lineOption} />}
           </AccordionItem>
         </div>
       )}

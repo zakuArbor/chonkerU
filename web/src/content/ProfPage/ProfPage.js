@@ -51,14 +51,14 @@ const parseData = (data) => {
   return obj;
 };
 
-const getRowItems = (rows, course_name) =>
-  rows.map((row) => ({
+const getRowItems = (rows) =>
+  rows.map((row, index) => ({
     ...row,
-    key: row.crn + row.sem,
-    id: row.crn + row.sem,
-    course_name: <Link to={"/course/" + row.course}>{course_name}</Link>,
+    key: row.course, 
+    id: row.course,
+    course_name: <Link to={"/course/" + row.course}>{row.course}</Link>,
     enrollment: row.enrol,
-    semester: row.sem,
+    semester: row.sem.toUpperCase() == 'F' ? "Fall" : row.sem.toUpperCase() == 'W' ? 'Winter' : '?',
     year: row.year,
     type: row.type,
   }));
@@ -71,11 +71,12 @@ const ProfPage = () => {
   const [loading, setLoading] = useState(true);
   const [rows, setRows] = useState([]);
   const [error, setError] = useState(false);
-  const [graphData, setGraphData] = useState({ isLoaded: false });
+  const [data, setData] = useState({ isLoaded: false });
   const [profData, setProfData] = useState({ isLoaded: false });
 
   const getData = (prof) => {
-    fetch("prof/" + prof + ".json", {
+        fetch("prof/" + prof + ".json", {
+//    fetch("http://68.233.123.145/api/prof/" + prof, {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -91,14 +92,13 @@ const ProfPage = () => {
       })
       .then((res) => {
         console.log(res);
-        const data = parseData(res);
-        data.rows = data.rows.sort(semester_sort).reverse(); //want latest semester first when displaying in a table
-        console.log(data);
-        setRows(data.rows);
-        setTotalItems(data.rows.length);
+        //const data = parseData(res);
+        setRows(getRowItems(res.history));
+        setTotalItems(res.history.length);
         setError(false);
         setProfData({ isLoaded: true, latest: res.latest, name: res.prof });
-        setGraphData({ isLoaded: true, bar: data.courses, scatter: res.stats });
+        setData({ isLoaded: true, data: res.history});
+        //setGraphData({ isLoaded: true, bar: data.courses, scatter: res.stats });
         setLoading(false);
       });
   };
@@ -136,25 +136,27 @@ const ProfPage = () => {
       ) : (
         <SkeletonText />
       )}
-        <Accordion>
-          {loading ? (
-            <DataTableSkeleton
-              columnCount={headers.length + 1}
-              rowCount={10}
-              headers={headers}
+      <Accordion>
+        {loading ? (
+          <DataTableSkeleton
+            columnCount={headers.length + 1}
+            rowCount={10}
+            headers={headers}
+          />
+        ) : error ? (
+          <>
+            <InlineNotification
+              title="Error"
+              subtitle="Failed to retrieve Data"
+              hideCloseButton={true}
             />
-          ) : error ? (
-            <>
-              <InlineNotification
-                title="Error"
-                subtitle="Failed to retrieve Data"
-                hideCloseButton={true}
-              />
-            </>
-          ) : (
-            <div className="course">
-              <ProfGraphs data={graphData} />
-              <AccordionItem title={"Data Table"} open>
+          </>
+        ) : (
+          <div className="course">
+            {<ProfGraphs data={data} />}
+            {console.log(rows)}
+
+            <AccordionItem title={"Data Table"} open>
               <ProfTable
                 headers={headers}
                 rows={rows.slice(
@@ -176,10 +178,10 @@ const ProfPage = () => {
                   setFirstRowIndex(pageSize * (page - 1));
                 }}
               />
-              </AccordionItem>
-            </div>
-          )}
-          </Accordion>
+            </AccordionItem>
+          </div>
+        )}
+      </Accordion>
     </div>
   );
 };

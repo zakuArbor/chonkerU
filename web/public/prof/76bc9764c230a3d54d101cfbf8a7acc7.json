@@ -1,1 +1,1 @@
-{"latest":1447650000,"prof":"Rasha I. Sakr","courses":{"MATH1104":{"history":[{"source":"16-NOV-2015","epoch":1447650000,"enrol":215,"prof":"Rasha I. Sakr","course":"MATH1104","crn":"33623","sem":"F","year":"2015","type":"Day"}],"name":"Linear Algebra for Engineering or Science","latest":1447650000}},"stats":{"2015-F":215}}
+{"latest": 1459123200, "prof": "Rasha I. Sakr", "history": [{"epoch": 1459123200, "code": "MATH1104", "course": "Linear Algebra for Engineering or Science", "sem": "F", "enrol": 209, "year": "2016", "type": "Day", "source_date": "2016-03-28"}]}

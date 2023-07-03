@@ -1,1 +1,1 @@
-{"courses":{"MATH4907":{"history":[{"enrol":5,"epoch":1576645200,"source":"18-DEC-2019","sem":"F","year":"2019","type":"Day","course":"MATH4907","crn":"15707","prof":"Dave  Campbell"}],"name":null,"latest":1576645200}},"stats":{"2019-F":5},"prof":"Dave  Campbell","latest":1576645200}
+{"latest": 1588204800, "prof": "Dave  Campbell", "history": [{"epoch": 1588204800, "code": "MATH4907", "course": "Directed Studies (Honours)", "sem": "W", "enrol": 3, "year": "2020", "type": "Day", "source_date": "2020-04-30"}]}

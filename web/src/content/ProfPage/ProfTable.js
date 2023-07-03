@@ -70,15 +70,19 @@ const CourseTable = ({ rows, headers }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
-                <React.Fragment key={row.id}>
+              {rows.map((row) => {
+                console.log(row);
+                 return (
+                <React.Fragment key={row._id}>
                   <TableRow {...getRowProps({ row })}>
                     {row.cells.map((cell) => (
                       <TableCell key={cell.id}>{cell.value}</TableCell>
                     ))}
                   </TableRow>
                 </React.Fragment>
-              ))}
+                 )
+              }
+              )}
             </TableBody>
           </Table>
         </TableContainer>

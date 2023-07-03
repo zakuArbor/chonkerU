@@ -23,6 +23,7 @@ def db_connect()->tuple[object, object]:
     if not conn:
         print("failed to connect to database")
         return (None, None)
+    conn.autocommit = True; #this allows sql statements to fail
     return (conn, conn.cursor())
 
 def db_close(conn, cur):
@@ -99,7 +100,43 @@ def getCourses(conn:object, cur:object)->list[object]:
             courses.append(course)
     return courses
 
-def getLatestCourseOffering(conn:object, cur:object, code:str)->int:
+def getProfsTeachCounts(conn:object, cur:object)->list[object]:
+    '''
+    returns: a list of profs and the number of courses they taught
+
+    returns:
+    [
+    {
+        prof_name: "",
+        prof_hash: "",
+    },
+    ...
+    ]
+    '''
+    query:str = "SELECT COUNT(prof_name), prof_name, prof_hash FROM profs INNER JOIN course_records ON course_records.prof_id = profs.prof_id WHERE source_term = 'w' GROUP BY profs.prof_id ORDER BY prof_name"
+    cur.execute(query, ())
+    rows = cur.fetchall()
+    profs = []
+    if rows:
+        for row in rows:
+            prof = {}
+            prof['count'] = row[0]
+            prof['prof_name'] = row[1]
+            prof['prof_hash'] = row[2]
+            profs.append(prof)
+    return profs
+
+def getProfLatestOffering(conn:object, cur:object, prof:str)->int:
+    query:str = "SELECT EXTRACT(epoch FROM MAX(source_date))::int AS latest from course_records INNER JOIN profs ON course_records.prof_id = profs.prof_id WHERE prof_name = %s"
+    cur.execute(query, (prof,))
+    epoch = cur.fetchone()
+    if epoch:
+        return epoch[0]
+    return 0
+
+
+
+def getCourseLatestOffering(conn:object, cur:object, code:str)->int:
     query:str = "SELECT EXTRACT(epoch FROM MAX(source_date))::int AS latest from course_records INNER JOIN courses ON course_records.course_id = courses.course_id WHERE course_code = %s"
     cur.execute(query, (code,))
     epoch = cur.fetchone()
@@ -108,12 +145,14 @@ def getLatestCourseOffering(conn:object, cur:object, code:str)->int:
     return 0
 
 def getProfTeachCount(conn, cur, code:str)->list[dict]:
-    query:str = "SELECT COUNT(prof_name), prof_name FROM profs INNER JOIN course_records ON course_records.prof_id = profs.prof_id INNER JOIN courses ON courses.course_id = course_records.course_id WHERE course_code = %s GROUP BY profs.prof_id"
+    '''
+    returns the number of times the prof taught a SPECIFIC course
+    '''
+    query:str = "SELECT COUNT(prof_name), prof_name FROM profs INNER JOIN course_records ON course_records.prof_id = profs.prof_id INNER JOIN courses ON courses.course_id = course_records.course_id WHERE course_code = %s AND source_term = 'w' GROUP BY profs.prof_id"
     cur.execute(query, (code,))
     rows = cur.fetchall()
     profs = []
     if rows:
-        print(rows)
         for row in rows:
             profs.append({'count': row[0], 'prof': row[1]})
     return profs
@@ -124,7 +163,7 @@ def getCourseHistory(conn:object, cur:object, code:str)->list[dict]:
         (epoch, prof, sem, enrol, year, type), ...
     ]
     '''
-    query:str = "SELECT EXTRACT(epoch FROM source_date)::int AS epoch, prof_name, source_term, enrollment, EXTRACT(year FROM source_date)::varchar,type FROM course_records INNER JOIN profs ON course_records.prof_id = profs.prof_id INNER JOIN courses ON courses.course_id = course_records.course_id WHERE course_code = %s"
+    query:str = "SELECT EXTRACT(epoch FROM source_date)::int AS epoch, prof_name, CASE WHEN course_credit = '0.5' then term ELSE source_term end as term, enrollment, case when term = 'F' AND source_term = 'W' then (source_year-1)::varchar else source_year::varchar end as source_year,type, source_date::varchar FROM course_records INNER JOIN profs ON course_records.prof_id = profs.prof_id INNER JOIN courses ON courses.course_id = course_records.course_id WHERE course_code = %s ORDER BY EXTRACT(year FROM source_date) DESC, source_term ASC"
     cur.execute(query, (code,))
     history_rows = cur.fetchall()
     history = []
@@ -137,8 +176,35 @@ def getCourseHistory(conn:object, cur:object, code:str)->list[dict]:
             record['enrol'] = row[3]
             record['year'] = row[4]
             record['type'] = row[5]
+            record['source_date'] = row[6]
             history.append(record)
     return history
+
+def getProfHistory(conn:object, cur:object, prof:str)->list[dict]:
+    '''
+    [
+        (epoch, prof, sem, enrol, year, type), ...
+    ]
+    '''
+    query:str = "SELECT EXTRACT(epoch FROM source_date)::int AS epoch, course_code, course_name, CASE WHEN course_credit = '0.5' then term ELSE source_term end as term, enrollment, case when term = 'F' AND source_term = 'W' then (source_year-1)::varchar else source_year::varchar end as source_year,type, source_date::varchar FROM course_records INNER JOIN profs ON course_records.prof_id = profs.prof_id INNER JOIN courses ON courses.course_id = course_records.course_id WHERE profs.prof_name = %s AND source_term = 'w' ORDER BY EXTRACT(year FROM source_date) DESC, source_term ASC"
+    cur.execute(query, (prof,))
+    rows = cur.fetchall()
+    history = []
+    if rows:
+        for row in rows:
+            record = {}
+            record['epoch'] = row[0]
+            record['code'] = row[1]
+            record['course'] = row[2]
+            record['sem'] = row[3]
+            record['enrol'] = row[4]
+            record['year'] = row[5]
+            record['type'] = row[6]
+            record['source_date'] = row[7]
+            history.append(record)
+    return history 
+
+
 
 # Create a cursor object to interact with the database
 #cur = conn.cursor()

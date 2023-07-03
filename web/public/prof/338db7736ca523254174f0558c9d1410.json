@@ -1,1 +1,1 @@
-{"courses":{"MATH1009":{"history":[{"prof":"Ali  Madankan","crn":"13543","course":"MATH1009","type":"Day","sem":"F","year":"2016","source":"07-DEC-2016","epoch":1481086800,"enrol":137}],"latest":1481086800,"name":"Mathematics for Business"}},"stats":{"2016-F":137},"latest":1481086800,"prof":"Ali  Madankan"}
+{"latest": 1493251200, "prof": "Ali  Madankan", "history": [{"epoch": 1493251200, "code": "MATH1009", "course": "Mathematics for Business", "sem": "W", "enrol": 116, "year": "2017", "type": "Day", "source_date": "2017-04-27"}]}
