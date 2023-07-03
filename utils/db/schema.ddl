@@ -25,17 +25,22 @@ CREATE TABLE courses (
 );
 
 CREATE TABLE course_records (
-  record_id SERIAL PRIMARY KEY,
-  prof_id INT NOT NULL,
-  course_id INT NOT NULL,
-  term CHAR(1) NOT NULL CHECK (term IN ('W', 'F', 'S')),
-  crn INTEGER NOT NULL,
-  enrollment INT NOT NULL,
-  type VARCHAR(20),
-  FOREIGN KEY (prof_id) REFERENCES Prof (prof_id),
-  FOREIGN KEY (course_id) REFERENCES Course (course_id)
+	record_id serial4 NOT NULL,
+	prof_id int4 NOT NULL,
+	course_id int4 NOT NULL,
+	term bpchar(1) NOT NULL,
+	crn int4 NOT NULL,
+	enrollment int4 NOT NULL,
+	"type" varchar(20) NULL,
+	source_date date NULL,
+	source_term bpchar(1) NULL,
+	CONSTRAINT course_records_pkey PRIMARY KEY (record_id),
+	CONSTRAINT course_records_term_check CHECK ((term = ANY (ARRAY['W'::bpchar, 'F'::bpchar, 'S'::bpchar]))),
+	CONSTRAINT course_records_un UNIQUE (course_id, crn, term, enrollment, source_date),
+	CONSTRAINT source_term CHECK ((term = ANY (ARRAY['W'::bpchar, 'F'::bpchar, 'S'::bpchar]))),
+	CONSTRAINT course_records_course_id_fkey FOREIGN KEY (course_id) REFERENCES chonkeru.courses(course_id),
+	CONSTRAINT course_records_prof_id_fkey FOREIGN KEY (prof_id) REFERENCES chonkeru.profs(prof_id)
 );
 
 ALTER TABLE chonkeru.courses ADD CONSTRAINT courses_un UNIQUE (course_code);
-ALTER TABLE chonkeru.course_records ADD CONSTRAINT course_records_un UNIQUE (course_id, crn, term, enrollment, source_date);
 

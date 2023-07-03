@@ -70,7 +70,75 @@ def get_courseId(code:str, conn:object, cur:object)->str:
     print("{} does not exist".format(code))
     return -1
 
+def getCourses(conn:object, cur:object)->list[object]:
+    '''
+    returns: a list of courses that are available such as their name and description
 
+    returns:
+    [
+    {
+        course_code: "",
+        course_name: "",
+        course_desc: "",
+        course_credit:
+    },
+    ...
+    ]
+    '''
+    query:str = "SELECT course_code, course_name, course_desc, course_credit FROM courses"
+    cur.execute(query, ())
+    courses_rows = cur.fetchall()
+    courses = []
+    if courses_rows:
+        for course_row in courses_rows:
+            course = {}
+            course['course_code'] = course_row[0]
+            course['course_name'] = course_row[1]
+            course['course_desc'] = course_row[2]
+            course['course_credit'] = course_row[3]
+            courses.append(course)
+    return courses
+
+def getLatestCourseOffering(conn:object, cur:object, code:str)->int:
+    query:str = "SELECT EXTRACT(epoch FROM MAX(source_date))::int AS latest from course_records INNER JOIN courses ON course_records.course_id = courses.course_id WHERE course_code = %s"
+    cur.execute(query, (code,))
+    epoch = cur.fetchone()
+    if epoch:
+        return epoch[0]
+    return 0
+
+def getProfTeachCount(conn, cur, code:str)->list[dict]:
+    query:str = "SELECT COUNT(prof_name), prof_name FROM profs INNER JOIN course_records ON course_records.prof_id = profs.prof_id INNER JOIN courses ON courses.course_id = course_records.course_id WHERE course_code = %s GROUP BY profs.prof_id"
+    cur.execute(query, (code,))
+    rows = cur.fetchall()
+    profs = []
+    if rows:
+        print(rows)
+        for row in rows:
+            profs.append({'count': row[0], 'prof': row[1]})
+    return profs
+
+def getCourseHistory(conn:object, cur:object, code:str)->list[dict]:
+    '''
+    [
+        (epoch, prof, sem, enrol, year, type), ...
+    ]
+    '''
+    query:str = "SELECT EXTRACT(epoch FROM source_date)::int AS epoch, prof_name, source_term, enrollment, EXTRACT(year FROM source_date)::varchar,type FROM course_records INNER JOIN profs ON course_records.prof_id = profs.prof_id INNER JOIN courses ON courses.course_id = course_records.course_id WHERE course_code = %s"
+    cur.execute(query, (code,))
+    history_rows = cur.fetchall()
+    history = []
+    if history_rows:
+        for row in history_rows:
+            record = {}
+            record['epoch'] = row[0]
+            record['prof'] = row[1]
+            record['sem'] = row[2]
+            record['enrol'] = row[3]
+            record['year'] = row[4]
+            record['type'] = row[5]
+            history.append(record)
+    return history
 
 # Create a cursor object to interact with the database
 #cur = conn.cursor()

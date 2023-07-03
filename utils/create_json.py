@@ -10,6 +10,8 @@ import db
 import unicodedata
 import utils
 
+dest_path = "data"
+
 def generate_course_json(conn:object, cur:object, course:dict)->dict:
     '''
     {
@@ -43,11 +45,12 @@ def generate_course_json(conn:object, cur:object, course:dict)->dict:
     data = {}
     data['latest'] = latest
     data['info'] = course
+    data['profs'] = db.getProfTeachCount(conn, cur, course['course_code'])
     data['history'] = db.getCourseHistory(conn, cur, course['course_code']) 
     return data
 
 def writeJSON(data, course_code):
-    json.dump(data, open("{}.json".format(course_code), 'w'))
+    json.dump(data, open("{}/{}.json".format(dest_path, course_code), 'w'))
 
 ## MAIN ##
 (conn, cur) = db.db_connect()
