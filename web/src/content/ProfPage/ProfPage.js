@@ -56,7 +56,7 @@ const getRowItems = (rows) =>
     ...row,
     key: row.course, 
     id: row.course,
-    course_name: <Link to={"/course/" + row.course}>{row.course}</Link>,
+    course_name: <Link to={"/course/" + row.code}>{row.course}</Link>,
     enrollment: row.enrol,
     semester: row.sem.toUpperCase() == 'F' ? "Fall" : row.sem.toUpperCase() == 'W' ? 'Winter' : '?',
     year: row.year,

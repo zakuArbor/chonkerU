@@ -42,7 +42,7 @@ const getRowItems = (rows) =>
     key: index,
     id: index,
     prof: (
-      <Link to={"/prof/" + MD5(row.prof_name).toString()} state={{ code: row.course }}>
+      <Link to={"/prof/" + MD5(row.prof).toString()} state={{ code: row.prof}}>
         {row.prof}
       </Link>
     ),
