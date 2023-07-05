@@ -12,16 +12,16 @@ let semester_sort = (x, y) => {
 };
 
 let term_sort = (term1, term2) => {
-  if (term1 == "W") {
-    return 1;
-  }
-  if (term1 == "S") {
-    if (term2 == "F") {
-      return 1;
-    }
-    if (term2 == "W") {
+  console.log("pika:" +  term1);
+  if (term1.toUpperCase() == "W") {
+    if (term2.toUpperCase() == 'F') {
       return -1;
     }
+  }
+  else if (term1.toUpperCase() == 'F') {
+    if (term2.toUpperCase() == 'W') {
+      return 1;
+    } 
   }
   return 0;
 }
@@ -30,15 +30,15 @@ let term_sort = (term1, term2) => {
 Sorts courses if given YYYY-T strings
 */
 let semester_sort3 = (x, y) => {
-  if (x.length < 6 && y.length < 6) {
+  if (x.key.length < 6 && y.key.length < 6) {
     return 0;
   }
 
-  const year1 = x.substr(0,4);
-  const year2 = y.substr(0,4);
+  const year1 = x.key.substr(0,4);
+  const year2 = y.key.substr(0,4);
   
-  const term1 = x[5];
-  const term2 = y[5];
+  const term1 = x.key[5];
+  const term2 = y.key[5];
 
   if (year1 < year2) {
     return -1;
@@ -49,6 +49,22 @@ let semester_sort3 = (x, y) => {
 
   return term_sort(term1, term2);
 };
+
+
+const sem_map = {
+  'F': "Fall",
+  'W': "Winter",
+  'S': "Summer"
+};
+
+/*
+Returns the full name of the semester from the term character
+*/
+let get_sem = (trm) => {
+  console.log("get sem data")
+  console.log(sem_map[trm]);
+  return sem_map[trm];
+}
 
 /*
 Sorts courses by semester and year 
@@ -63,6 +79,7 @@ let semester_sort2 = (x, y) => {
   else if (year1 > year2) {
     return 1;
   }
+  console.log(x);
 
   return term_sort(x.sem, y.sem);
 };
@@ -94,4 +111,5 @@ let group_sem = (sem) => {
   }
   return "Summer '" + year;
 };
-export { semester_sort, semester_sort2, semester_sort3, group_sem };
+
+export { semester_sort, semester_sort2, semester_sort3, group_sem, get_sem};

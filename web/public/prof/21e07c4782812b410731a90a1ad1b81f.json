@@ -1,1 +1,1 @@
-{"courses":{"MATH1107":{"name":"Linear Algebra I","latest":1610254800,"history":[{"prof":"Adele  Bourgeois","course":"MATH1107","crn":"13882","sem":"F","year":"2020","type":"Web","source":"10-JAN-2021","enrol":151,"epoch":1610254800}]}},"stats":{"2020-F":151},"prof":"Adele  Bourgeois","latest":1610254800}
+{"latest": 1618185600, "prof": "Adele  Bourgeois", "history": [{"epoch": 1618185600, "code": "MATH1107", "course": "Linear Algebra I", "sem": "W", "enrol": 148, "year": "2021", "type": "Web", "source_date": "2021-04-12"}]}

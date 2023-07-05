@@ -1,1 +1,1 @@
-{"prof":"Amna  Grgar","latest":null,"courses":{"MATH1004":{"latest":null,"name":"Calculus for Engineering or Physics","history":[{"prof":"Amna  Grgar","sem":"F","type":"Day","year":"2022","crn":"34070","course":"MATH1004","source":null,"epoch":null,"enrol":207}]}},"stats":{"2022-F":207}}
+{"latest": 1679961600, "prof": "Amna  Grgar", "history": [{"epoch": 1679961600, "code": "MATH1004", "course": "Calculus for Engineering or Physics", "sem": "F", "enrol": 207, "year": "2023", "type": "Day", "source_date": "2023-03-28"}]}

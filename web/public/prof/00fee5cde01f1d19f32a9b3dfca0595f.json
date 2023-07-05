@@ -1,1 +1,1 @@
-{"prof":"Zachary D. Welch","latest":null,"stats":{"2022-F":234},"courses":{"MATH1104":{"history":[{"enrol":234,"epoch":null,"source":null,"crn":"13914","course":"MATH1104","type":"Day","sem":"F","year":"2022","prof":"Zachary D. Welch"}],"latest":null,"name":"Linear Algebra for Engineering or Science"}}}
+{"latest": 1679961600, "prof": "Zachary D. Welch", "history": [{"epoch": 1679961600, "code": "MATH1104", "course": "Linear Algebra for Engineering or Science", "sem": "W", "enrol": 223, "year": "2023", "type": "Day", "source_date": "2023-03-28"}]}
