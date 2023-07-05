@@ -39,7 +39,7 @@ const TableFilter = ({ rows, headers, title, desc, onInputChange }) => {
         headers,
         getHeaderProps,
         getRowProps,
-        getTableProps,
+        getTableProps
       }) => (
         <TableContainer title={title} description={desc}>
           <TableToolbar>

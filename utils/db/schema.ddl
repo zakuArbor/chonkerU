@@ -24,7 +24,7 @@ CREATE TABLE courses (
   additional VARCHAR(500) NOT NULL
 );
 
-CREATE TABLE course_records (
+CREATE TABLE chonkeru.course_records (
 	record_id serial4 NOT NULL,
 	prof_id int4 NOT NULL,
 	course_id int4 NOT NULL,
@@ -34,6 +34,7 @@ CREATE TABLE course_records (
 	"type" varchar(20) NULL,
 	source_date date NULL,
 	source_term bpchar(1) NULL,
+	source_year int4 NULL DEFAULT 2999,
 	CONSTRAINT course_records_pkey PRIMARY KEY (record_id),
 	CONSTRAINT course_records_term_check CHECK ((term = ANY (ARRAY['W'::bpchar, 'F'::bpchar, 'S'::bpchar]))),
 	CONSTRAINT course_records_un UNIQUE (course_id, crn, term, enrollment, source_date),

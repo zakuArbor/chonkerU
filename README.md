@@ -40,3 +40,9 @@ A list of features that are not actively worked on and probably won't be worked 
 	* **ExtUtils::Manifest** `sudo dnf install 'perl(ExtUtils::Manifest)'`
 	* **ExtUtils::MakeMaker:** `sudo dnf install 'perl(ExtUtils::MakeMaker)'`
 	* `curl -L https://cpanmin.us | perl - -M https://cpan.metacpan.org -n Mojolicious`
+* **python-dotenv:**
+* **libpq-devel:**
+* postgres: 
+```
+sudo dnf install postgresql python-devel postgresql-devel 
+```

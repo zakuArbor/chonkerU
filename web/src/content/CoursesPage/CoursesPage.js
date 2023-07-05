@@ -45,6 +45,27 @@ const headers = [
   },
 ];
 
+/**
+ * The worst search I've written
+**/
+let filterCourse = (rows_unfiltered, rowsObj, query) => {
+  console.log("on filter course");
+  console.log(query.target.value);
+  console.log(rows_unfiltered);
+  let keyword = query.target.value.toLowerCase();
+  let results = [];
+  if (keyword.length > 0) {
+    results = rows_unfiltered.filter(function(obj) {
+      return obj['code'].toLowerCase().includes(keyword) || obj['name'].toLowerCase().includes(keyword) || obj['desc'].toLowerCase().includes(keyword);
+    });
+  }
+  else {
+    results = [...rows_unfiltered];
+  }
+  rowsObj.setRows(results);
+  rowsObj.setTotalItems(results.length);
+}
+
 const CoursesPage = () => {
   const [totalItems, setTotalItems] = useState(0);
   const [firstRowIndex, setFirstRowIndex] = useState(0);
@@ -52,11 +73,9 @@ const CoursesPage = () => {
   const [loading, setLoading] = useState(true);
   const [rows, setRows] = useState([]);
   const [error, setError] = useState(false);
+  const [inefficientSearch, setInefficientSearch] = useState(()=>{});
 
-  const filterCourse = (query) => {
-    console.log(query.target.value)
-    return getData('/' + query.target.value);
-  }
+  
 
   const getData = (query) => {
     //fetch("math_courses.json", {
@@ -78,10 +97,12 @@ const CoursesPage = () => {
       })
       .then((res) => {
         //console.log(res);
+        console.log("on getData");
         console.log(res);
         setLoading(false);
         setTotalItems(res['courses'].length);
-        setRows(getRowItems(res['courses']));
+        setRows(getRowItems(res['courses']));//.then(setInefficientSearch((query) => {filterCourse(rows, query)}));
+        setInefficientSearch(()=>(query) => {filterCourse(getRowItems(res['courses']), {'setRows': setRows, 'setTotalItems': setTotalItems, 'rows': rows}, query)});
       })
       .catch((err) => {
         setError(true);
@@ -113,7 +134,7 @@ const CoursesPage = () => {
           ) : (
             <>
               <CoursesTable
-                onInputChange={filterCourse}
+                onInputChange={inefficientSearch/*filterCourse*/}
                 headers={headers}
                 rows={rows.slice(
                   firstRowIndex,

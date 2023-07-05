@@ -34,17 +34,29 @@ const headers = [
 
 const ProfsPage = () => {
   const [totalItems, setTotalItems] = useState(0);
-  const [cacheTotalItems, setCacheTotalItems] = useState(0);
   const [firstRowIndex, setFirstRowIndex] = useState(0);
   const [currentPageSize, setCurrentPageSize] = useState(15);
   const [loading, setLoading] = useState(true);
   const [rows, setRows] = useState([]);
-  const [cacheRows, setCacheRows] = useState([]);
   const [error, setError] = useState(false);
+  const [filter, setFilter] = useState(() => {});
 
-  const filterProf = (query) => {
+  const filterProf = (rows_unfiltered, rowsObj, query) => {
     console.log(query.target.value)
-    return getData('/' + query.target.value);
+    console.log("pika on filter prof");
+    console.log(rows_unfiltered);
+    let keyword = query.target.value.toLowerCase();
+    let results = [];
+    if (keyword.length > 0) {
+      results = rows_unfiltered.filter(function(obj) {
+        return obj['name'].toLowerCase().includes(keyword);
+      });
+    }
+    else {
+      results = [...rows_unfiltered];
+    }
+    rowsObj.setRows(results);
+    rowsObj.setTotalItems(results.length);
   }
 
   const getData = (query) => {
@@ -57,7 +69,6 @@ const ProfsPage = () => {
       },
     })
       .then((res) => {
-        console.log("http://68.233.123.145/api/profs" + query)
         if (res.status != 200) {
           setError(true);
           setLoading(false);
@@ -69,9 +80,8 @@ const ProfsPage = () => {
         console.log(res);
         setLoading(false);
         setTotalItems(res["profs"].length);
-        setCacheTotalItems(totalItems);
         setRows(getRowItems(res["profs"]));
-        setCacheRows(rows);
+        setFilter(()=>(query) => {filterProf(getRowItems(res['profs']), {'setRows': setRows, 'setTotalItems': setTotalItems, 'rows': rows}, query)});
       });
   };
   useEffect(() => {
@@ -106,7 +116,7 @@ const ProfsPage = () => {
                 )}
                 title={"List of Professors"}
                 desc={""}
-                onInputChange={filterProf}
+                onInputChange={filter}
               />
               <Pagination
                 totalItems={totalItems}
