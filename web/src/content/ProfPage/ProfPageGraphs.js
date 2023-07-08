@@ -153,10 +153,10 @@ const ProfGraphs = ({ data: { data, isLoaded } }) => {
         </>
       ) : (
         <div className="graphs">
-          <AccordionItem title="Figure 1: Number of Times Taught Each Course" open>
+          <AccordionItem title="Figure 1: Number of Times Taught Each Course" key = "accordian-graph1" open>
           <ProfCourseBarGraph data={barData.data} options={barOption} />
           </AccordionItem>
-          <AccordionItem title="Figure 2: Number of Students Taught In Each Semester" open>
+          <AccordionItem title="Figure 2: Number of Students Taught In Each Semester" key = "accordian-graph2" open>
           {<ProfLineGraph data={lineData['data']} options={lineOption} />}
           </AccordionItem>
         </div>

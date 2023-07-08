@@ -10,8 +10,7 @@ import {
 } from "@carbon/react";
 import ProfTable from "./ProfTable";
 import ProfGraphs from "./ProfPageGraphs";
-import { semester_sort2 as semester_sort } from "../utility";
-import Test from "./Test";
+import { semester_sort2 as semester_sort, course_table_sort} from "../utility";
 
 const headers = [
   {
@@ -36,32 +35,17 @@ const headers = [
   },
 ];
 
-const parseData = (data) => {
-  let obj = { rows: [], courses: {} };
-  for (const course in data.courses) {
-    console.log(data.courses[course].history);
-    const rows = getRowItems(
-      data.courses[course].history,
-      data.courses[course].name
-    );
-    console.log(rows);
-    obj.rows = obj.rows.concat(rows);
-    obj.courses[course] = rows.length;
-  }
-  return obj;
-};
-
 const getRowItems = (rows) =>
   rows.map((row, index) => ({
     ...row,
-    key: row.course, 
-    id: row.course,
-    course_name: <Link to={"/course/" + row.code}>{row.course}</Link>,
+    key: index, 
+    id: "row-" + index,
+    course_name: <Link to={"/course/" + row.code} key ={row.course + index}>{row.course}</Link>,
     enrollment: row.enrol,
     semester: row.sem.toUpperCase() == 'F' ? "Fall" : row.sem.toUpperCase() == 'W' ? 'Winter' : '?',
     year: row.year,
     type: row.type,
-  }));
+  })).sort(course_table_sort);
 
 const ProfPage = () => {
   const { prof } = useParams();
@@ -83,7 +67,7 @@ const ProfPage = () => {
       },
     })
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         if (res.status != 200) {
           setError(true);
           setLoading(false);
@@ -91,13 +75,14 @@ const ProfPage = () => {
         return res.json();
       })
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         //const data = parseData(res);
+        setProfData({ isLoaded: true, latest: res.latest, name: res.prof });
+        setData({ isLoaded: true, data: res.history});
         setRows(getRowItems(res.history));
         setTotalItems(res.history.length);
         setError(false);
-        setProfData({ isLoaded: true, latest: res.latest, name: res.prof });
-        setData({ isLoaded: true, data: res.history});
+        
         //setGraphData({ isLoaded: true, bar: data.courses, scatter: res.stats });
         setLoading(false);
       });
@@ -136,7 +121,7 @@ const ProfPage = () => {
       ) : (
         <SkeletonText />
       )}
-      <Accordion>
+      <Accordion key = {"accordian-skele"}>
         {loading ? (
           <DataTableSkeleton
             columnCount={headers.length + 1}

@@ -24,10 +24,12 @@ const action = (param) => {
 };
 
 const CourseTable = ({ rows, headers }) => {
+  { console.log(rows) }
   return (
     <DataTable
       rows={rows}
       headers={headers}
+
       render={({
         rows,
         headers,
@@ -36,6 +38,7 @@ const CourseTable = ({ rows, headers }) => {
         getTableProps,
         getToolbarProps,
         onInputChange,
+        sortBy,
       }) => (
         <TableContainer>
           <TableToolbar {...getToolbarProps()} aria-label="data table toolbar">
@@ -55,32 +58,30 @@ const CourseTable = ({ rows, headers }) => {
               <Button onClick={action("Button click")}>Primary Button</Button>
             </TableToolbarContent>
           </TableToolbar>
-          <Table {...getTableProps()}>
+          <Table {...getTableProps()}> 
             <TableHead>
               <TableRow>
                 {headers.map((header) => (
                   //need to override default sorting algorithm because usually backend deals with it but we do everything in front end unfortunately
                   <TableHeader
                     {...getHeaderProps({ header })}
-                    isSortable={true}
+                    isSortable={true} 
                   >
                     {header.header}
+                    {console.log(sortBy)}
                   </TableHeader>
                 ))}
               </TableRow>
             </TableHead>
             <TableBody>
               {rows.map((row) => {
-                console.log(row);
-                 return (
-                <React.Fragment key={row._id}>
-                  <TableRow {...getRowProps({ row })}>
+                return (
+                  <TableRow key={row.id} {...getRowProps({ row })}>
                     {row.cells.map((cell) => (
                       <TableCell key={cell.id}>{cell.value}</TableCell>
                     ))}
                   </TableRow>
-                </React.Fragment>
-                 )
+                )
               }
               )}
             </TableBody>

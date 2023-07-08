@@ -1,0 +1,360 @@
+{
+  "Mathematics B. Math. Honours": {
+    "credits": 20.0,
+    "included": {
+      "credits": 11.5,
+      "items": [
+        {
+          "credits": 2.5,
+          "courses": [
+            {
+              "course_code": "MATH1052",
+              "course_name": "Calculus and Introductory Analysis I",
+              "credit": 0.5
+            },
+            {
+              "course_code": "MATH1152",
+              "course_name": "Introductory Algebra I",
+              "credit": 0.5
+            },
+            {
+              "course_code": "MATH1800",
+              "course_name": "Introduction to Mathematical Reasoning",
+              "credit": 0.5
+            },
+            {
+              "course_code": "MATH2052",
+              "course_name": "Calculus and Introductory Analysis II",
+              "credit": 0.5
+            },
+            {
+              "course_code": "MATH2152",
+              "course_name": "Introductory Algebra II",
+              "credit": 0.5
+            }
+          ]
+        },
+        {
+          "credits": 3.5,
+          "courses": [
+            {
+              "course_code": "MATH2000",
+              "course_name": "Multivariable Calculus and Fundamentals of Analysis",
+              "credit": 1.0
+            },
+            {
+              "course_code": "MATH2100",
+              "course_name": "Algebra",
+              "credit": 1.0
+            },
+            {
+              "course_code": "MATH2454",
+              "course_name": "Ordinary Differential Equations (Honours)",
+              "credit": 0.5
+            },
+            {
+              "course_code": "STAT2559",
+              "course_name": "Basics of Statistical Modeling (Honours)",
+              "credit": 0.5
+            },
+            {
+              "course_code": "STAT2655",
+              "course_name": "Introduction to Probability with Applications (Honours)",
+              "credit": 0.5
+            }
+          ]
+        },
+        {
+          "credits": 2.0,
+          "courses": [
+            {
+              "course_code": "MATH3001",
+              "course_name": "Real Analysis I (Honours)",
+              "credit": 0.5
+            },
+            {
+              "course_code": "MATH3057",
+              "course_name": "Functions of a Complex Variable (Honours)",
+              "credit": 0.5
+            },
+            {
+              "course_code": "MATH3106",
+              "course_name": "Introduction to Group Theory (Honours)",
+              "credit": 0.5
+            },
+            {
+              "course_code": "MATH3158",
+              "course_name": "Rings and Fields (Honours)",
+              "credit": 0.5
+            }
+          ]
+        },
+        {
+          "credits": 0.5,
+          "courses": [
+            {
+              "course_code": "MATH3002",
+              "course_name": "Real Analysis II (Honours)",
+              "credit": 0.5
+            },
+            {
+              "course_code": "MATH3003",
+              "course_name": "Advanced Differential Calculus (Honours)",
+              "credit": 0.5
+            },
+            {
+              "course_code": "MATH3008",
+              "course_name": "Ordinary Differential Equations (Honours)",
+              "credit": 0.5
+            }
+          ]
+        },
+        {
+          "credits": 1.0,
+          "req": "3000-level Honours Sequence"
+        },
+        {
+          "credits": 1.5,
+          "req": "MATH or STAT at the 4000-level or higher"
+        },
+        {
+          "credits": 0.5,
+          "courses": [
+            {
+              "course_code": "MATH4905",
+              "course_name": "Honours Project (Honours)"
+            }
+          ]
+        }
+      ]
+    },
+    "not-included": {
+      "credits": 8.5,
+      "items": [
+        {
+          "credits": 1.0,
+          "req": "Natural Science Electives"
+        },
+        {
+          "credits": 3.0,
+          "req": "Natural Science, or Approved Arts and Social Sciences electives"
+        },
+        {
+          "credits": 4.5,
+          "req": "Free Electives"
+        }
+      ]
+    }
+  },
+  "Computational and Applied Math and Stats with Concentration in Discrete": {
+    "credits": 20.0,
+    "included": {
+      "credits": 14.5,
+      "items": [
+        {
+          "credits": 2.5,
+          "courses": [
+            {
+              "course_code": "COMP1405",
+              "course_name": "Introduction to Computer Science I",
+              "credit": 0.5
+            },
+            {
+              "course_code": "COMP1406",
+              "course_name": "Introduction to Computer Science II",
+              "credit": 0.5
+            },
+            {
+              "course_code": "COMP2401",
+              "course_name": "Abstract Data Types and Algorithms",
+              "credit": 0.5
+            },
+            {
+              "course_code": "COMP2402",
+              "course_name": "Introduction to Systems Programming",
+              "credit": 0.5
+            },
+            {
+              "course_code": "MATH1152",
+              "course_name": "Introductory Algebra I",
+              "credit": 0.5
+            },
+            {
+              "course_code": "STAT 1500",
+              "course_name": "Introduction to Statistical Computing",
+              "credit": 0.5
+            },
+            {
+              "course_code": "MATH1800",
+              "course_name": "Introduction to Mathematical Reasoning",
+              "credit": 0.5
+            },
+            {
+              "course_code": "MATH2000",
+              "course_name": "Multivariable Calculus and Fundamentals of Analysis",
+              "credit": 1.0
+            },
+            {
+              "course_code": "MATH2052",
+              "course_name": "Calculus and Introductory Analysis II",
+              "credit": 0.5
+            },
+            {
+              "course_code": "MATH2152",
+              "course_name": "Introductory Algebra II",
+              "credit": 0.5
+            },
+            {
+              "course_code": "MATH2454",
+              "course_name": "Ordinary Differential Equations (Honours)",
+              "credit": 0.5
+            },
+            {
+              "course_code": "STAT2559",
+              "course_name": "Basics of Statistical Modeling (Honours)",
+              "credit": 0.5
+            },
+            {
+              "course_code": "STAT2655",
+              "course_name": "Introduction to Probability with Applications (Honours)",
+              "credit": 0.5
+            }
+          ]
+        },
+        {
+          "credits": 3.0,
+          "courses": [
+            {
+              "course_code": "MATH2100",
+              "course_name": "Algebra",
+              "credit": 1.0
+            },
+            {
+              "course_code": "MATH3801",
+              "course_name": "Linear Programming",
+              "credit": 0.5
+            },
+            {
+              "course_code": "MATH3802",
+              "course_name": "Combinatorial Optimization",
+              "credit": 0.5
+            },
+            {
+              "course_code": "MATH3806",
+              "course_name": "Numerical Analysis (Honours)",
+              "credit": 0.5
+            },
+            {
+              "course_code": "MATH3855",
+              "course_name": "Discrete Structures and Applications (Honours)",
+              "credit": 0.5
+            }
+          ]
+        },
+        {
+          "credits": 1.0,
+          "courses": [
+            {
+              "course_code": "MATH4109",
+              "course_name": "Fields and Coding Theory (Honours)",
+              "credit": 0.5
+            },
+            {
+              "course_code": "MATH4801",
+              "course_name": "Topics in Combinatorics (Honours)",
+              "credit": 0.5
+            },
+            {
+              "course_code": "MATH4802",
+              "course_name": "Introduction to Mathematical Logic (Honours)",
+              "credit": 0.5
+            },
+            {
+              "course_code": "MATH4803",
+              "course_name": "Computable Functions (Honours)",
+              "credit": 0.5
+            },
+            {
+              "course_code": "MATH4805",
+              "course_name": "Theory of Automata (Honours)",
+              "credit": 0.5
+            },
+            {
+              "course_code": "MATH4807",
+              "course_name": "Game Theory (Honours)",
+              "credit": 0.5
+            },
+            {
+              "course_code": "MATH4808",
+              "course_name": "Graph Theory and Algorithms (Honours)",
+              "credit": 0.5
+            },
+            {
+              "course_code": "MATH4811",
+              "course_name": "Combinatorial Design Theory (Honours)",
+              "credit": 0.5
+            }
+          ]
+        },
+        {
+          "credits": 0.5,
+          "courses": [
+            {
+              "course_code": "MAT",
+              "course_name": "Real Analysis II (Honours)",
+              "credit": 0.5
+            },
+            {
+              "course_code": "MATH3003",
+              "course_name": "Advanced Differential Calculus (Honours)",
+              "credit": 0.5
+            },
+            {
+              "course_code": "MATH3008",
+              "course_name": "Ordinary Differential Equations (Honours)",
+              "credit": 0.5
+            }
+          ]
+        },
+        {
+          "credits": 0.5,
+          "req": "MATH at the 4000 level"
+        },
+        {
+          "credits": 2.0,
+          "req": "MATH or STAT at the 3000 level or above"
+        },
+        {
+          "credits": 0.5,
+          "courses": [
+            {
+              "course_code": "MATH4905",
+              "course_name": "Honours Project (Honours)"
+            },
+            {
+              "course_code": "STAT4905",
+              "course_name": "Honours Project (Honours)"
+            }
+          ]
+        }
+      ]
+    },
+    "not-included": {
+      "credits": 5.5,
+      "items": [
+        {
+          "credits": 1.0,
+          "req": "Natural Science Electives"
+        },
+        {
+          "credits": 3.0,
+          "req": "Natural Science, or Approved Arts and Social Sciences electives"
+        },
+        {
+          "credits": 1.5,
+          "req": "Free Electives"
+        }
+      ]
+    }
+  }
+}

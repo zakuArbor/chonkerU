@@ -12,14 +12,14 @@ let semester_sort = (x, y) => {
 };
 
 let term_sort = (term1, term2) => {
-  console.log("pika:" +  term1);
+//  console.log("pika: term1-" +  term1 + " term2-" + term2);
   if (term1.toUpperCase() == "W") {
-    if (term2.toUpperCase() == 'F') {
+    if (term2.toUpperCase() == "F") {
       return -1;
     }
   }
-  else if (term1.toUpperCase() == 'F') {
-    if (term2.toUpperCase() == 'W') {
+  else if (term1.toUpperCase() == "F") {
+    if (term2.toUpperCase() == "W") {
       return 1;
     } 
   }
@@ -48,6 +48,36 @@ let semester_sort3 = (x, y) => {
   }
 
   return term_sort(term1, term2);
+};
+
+/*
+Sorts courses from prof page
+*/
+let course_table_sort = (x, y) => {
+  const year1 = parseInt(x.year);
+  const year2 = parseInt(y.year);
+  let ret = 0; 
+  const term1 = x.sem;
+  const term2 = y.sem;
+  if (year1 < year2) {
+    ret = 1;
+  }
+  else if (year1 > year2) {
+    ret = -1;
+  }
+  else {
+    if (term1.toUpperCase() == "W") {
+      if (term2.toUpperCase() == "F") {
+        ret = 1;
+      }
+    }
+    else if (term1.toUpperCase() == "F") {
+      if (term2.toUpperCase() == "W") {
+        ret = -1;
+      } 
+    }
+  }
+  return ret;
 };
 
 
@@ -112,4 +142,4 @@ let group_sem = (sem) => {
   return "Summer '" + year;
 };
 
-export { semester_sort, semester_sort2, semester_sort3, group_sem, get_sem};
+export { semester_sort, semester_sort2, semester_sort3, group_sem, get_sem, course_table_sort};

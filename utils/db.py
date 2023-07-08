@@ -163,7 +163,7 @@ def getCourseHistory(conn:object, cur:object, code:str)->list[dict]:
         (epoch, prof, sem, enrol, year, type), ...
     ]
     '''
-    query:str = "SELECT EXTRACT(epoch FROM source_date)::int AS epoch, prof_name, CASE WHEN course_credit = '0.5' then term ELSE source_term end as term, enrollment, case when term = 'F' AND source_term = 'W' then (source_year-1)::varchar else source_year::varchar end as source_year,type, source_date::varchar FROM course_records INNER JOIN profs ON course_records.prof_id = profs.prof_id INNER JOIN courses ON courses.course_id = course_records.course_id WHERE course_code = %s ORDER BY EXTRACT(year FROM source_date) DESC, source_term ASC"
+    query:str = "SELECT EXTRACT(epoch FROM source_date)::int AS epoch, prof_name, CASE WHEN course_credit = '0.5' then term ELSE source_term end as term, enrollment, case when lower(term) = 'f' AND lower(source_term) = 'w' then (source_year-1)::varchar else source_year::varchar end as source_year,type, source_date::varchar FROM course_records INNER JOIN profs ON course_records.prof_id = profs.prof_id INNER JOIN courses ON courses.course_id = course_records.course_id WHERE course_code = %s and case when course_credit = '0.5' then lower(source_term) = 'w' else course_credit = '1.0' end ORDER BY EXTRACT(year FROM source_date) DESC, source_term ASC"
     cur.execute(query, (code,))
     history_rows = cur.fetchall()
     history = []
@@ -186,7 +186,7 @@ def getProfHistory(conn:object, cur:object, prof:str)->list[dict]:
         (epoch, prof, sem, enrol, year, type), ...
     ]
     '''
-    query:str = "SELECT EXTRACT(epoch FROM source_date)::int AS epoch, course_code, course_name, CASE WHEN course_credit = '0.5' then term ELSE source_term end as term, enrollment, case when term = 'F' AND source_term = 'W' then (source_year-1)::varchar else source_year::varchar end as source_year,type, source_date::varchar FROM course_records INNER JOIN profs ON course_records.prof_id = profs.prof_id INNER JOIN courses ON courses.course_id = course_records.course_id WHERE profs.prof_name = %s AND source_term = 'w' ORDER BY EXTRACT(year FROM source_date) DESC, source_term ASC"
+    query:str = "SELECT EXTRACT(epoch FROM source_date)::int AS epoch, course_code, course_name, CASE WHEN course_credit = '0.5' then term ELSE source_term end as term, enrollment, case when lower(term) = 'f' AND lower(source_term) = 'w' then (source_year-1)::varchar else source_year::varchar end as source_year,type, source_date::varchar FROM course_records INNER JOIN profs ON course_records.prof_id = profs.prof_id INNER JOIN courses ON courses.course_id = course_records.course_id WHERE profs.prof_name = %s AND source_term = 'w' ORDER BY EXTRACT(year FROM source_date) DESC, source_term ASC"
     cur.execute(query, (prof,))
     rows = cur.fetchall()
     history = []

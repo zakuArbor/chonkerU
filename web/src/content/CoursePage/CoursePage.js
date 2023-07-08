@@ -9,9 +9,8 @@ import {
 } from "@carbon/react";
 import CourseTable from "./CourseTable";
 import CourseGraphs from "./CoursePageGraphs";
-import { semester_sort2 as semester_sort, get_sem } from "../utility";
+import { semester_sort2 as semester_sort, get_sem, course_table_sort } from "../utility";
 import MD5 from "crypto-js/md5";
-import Test from "./Test";
 
 const headers = [
   {
@@ -50,7 +49,7 @@ const getRowItems = (rows) =>
     semester: row.sem.toUpperCase() == 'F' ? 'Fall' : row.sem.toUpperCase() == 'W' ? 'Winter' : '?',
     year: row.year,
     type: row.type,
-  }));
+  })).sort(course_table_sort);
 
 const CoursePage = () => {
   const { code } = useParams();
