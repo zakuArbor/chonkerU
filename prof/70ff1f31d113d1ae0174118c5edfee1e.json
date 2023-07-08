@@ -1,1 +1,1 @@
-{"courses":{"MATH1007":{"name":"Elementary Calculus I","latest":1513746000,"history":[{"prof":"Yang  Song","crn":"33649","course":"MATH1007","type":"Day","sem":"F","year":"2017","source":"20-DEC-2017","epoch":1513746000,"enrol":114}]}},"stats":{"2017-F":114},"latest":1513746000,"prof":"Yang  Song"}
+{"latest": 1524614400, "prof": "Yang  Song", "history": [{"epoch": 1524614400, "code": "MATH1007", "course": "Elementary Calculus I", "sem": "F", "enrol": 114, "year": "2017", "type": "Day", "source_date": "2018-04-25"}]}

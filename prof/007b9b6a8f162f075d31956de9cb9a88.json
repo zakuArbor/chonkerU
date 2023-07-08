@@ -1,1 +1,1 @@
-{"prof":"Natalia  Stepanova","latest":1637730000,"stats":{"2021-F":98},"courses":{"MATH1107":{"history":[{"source":"24-NOV-2021","enrol":98,"epoch":1637730000,"prof":"Natalia  Stepanova","crn":"34208","course":"MATH1107","sem":"F","type":"Web","year":"2021"}],"name":"Linear Algebra I","latest":1637730000}}}
+{"latest": 1651708800, "prof": "Natalia  Stepanova", "history": [{"epoch": 1651708800, "code": "MATH1107", "course": "Linear Algebra I", "sem": "F", "enrol": 90, "year": "2021", "type": "Web", "source_date": "2022-05-05"}]}

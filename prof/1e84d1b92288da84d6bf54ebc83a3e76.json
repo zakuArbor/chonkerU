@@ -1,1 +1,1 @@
-{"prof":"Giovanni  Viglietta","latest":1447650000,"stats":{"2015-F":68},"courses":{"MATH3804":{"history":[{"prof":"Giovanni  Viglietta","type":"Day","sem":"F","year":"2015","crn":"33755","course":"MATH3804","source":"16-NOV-2015","enrol":68,"epoch":1447650000}],"latest":1447650000,"name":"Design and Analysis of Algorithms I"}}}
+{"latest": 1459123200, "prof": "Giovanni  Viglietta", "history": [{"epoch": 1459123200, "code": "MATH3804", "course": "Design and Analysis of Algorithms I", "sem": "F", "enrol": 50, "year": "2015", "type": "Day", "source_date": "2016-03-28"}]}

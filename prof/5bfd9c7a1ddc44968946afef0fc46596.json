@@ -1,1 +1,1 @@
-{"latest":1415336400,"prof":"Amin  Gheibi","courses":{"MATH3804":{"latest":1415336400,"name":"Design and Analysis of Algorithms I","history":[{"course":"MATH3804","crn":"33747","sem":"F","type":"Day","year":"2014","prof":"Amin  Gheibi","enrol":71,"epoch":1415336400,"source":"07-NOV-2014"}]}},"stats":{"2014-F":71}}
+{"latest": 1426118400, "prof": "Amin  Gheibi", "history": [{"epoch": 1426118400, "code": "MATH3804", "course": "Design and Analysis of Algorithms I", "sem": "F", "enrol": 64, "year": "2014", "type": "Day", "source_date": "2015-03-12"}]}

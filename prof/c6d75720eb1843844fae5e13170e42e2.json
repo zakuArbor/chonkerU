@@ -1,1 +1,1 @@
-{"latest":1513746000,"prof":"Ming M. Zhang","stats":{"2017-F":104},"courses":{"MATH2107":{"name":"Linear Algebra II","latest":1513746000,"history":[{"source":"20-DEC-2017","epoch":1513746000,"enrol":104,"prof":"Ming M. Zhang","crn":"33813","course":"MATH2107","year":"2017","sem":"F","type":"Day"}]}}}
+{"latest": 1524614400, "prof": "Ming M. Zhang", "history": [{"epoch": 1524614400, "code": "MATH2107", "course": "Linear Algebra II", "sem": "F", "enrol": 104, "year": "2017", "type": "Day", "source_date": "2018-04-25"}]}

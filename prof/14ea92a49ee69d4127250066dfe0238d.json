@@ -1,1 +1,1 @@
-{"stats":{"2018-F":1},"courses":{"MATH2907":{"history":[{"enrol":1,"epoch":1544677200,"source":"13-DEC-2018","sem":"F","type":"Unscheduled","year":"2018","course":"MATH2907","crn":"13712","prof":"Patrick  Farrell"}],"name":null,"latest":1544677200}},"latest":1544677200,"prof":"Patrick  Farrell"}
+{"latest": 1555372800, "prof": "Patrick  Farrell", "history": [{"epoch": 1555372800, "code": "MATH2907", "course": "Directed Studies (Honours)", "sem": "W", "enrol": 1, "year": "2019", "type": "Unscheduled", "source_date": "2019-04-16"}]}

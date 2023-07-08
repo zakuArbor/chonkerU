@@ -1,1 +1,1 @@
-{"stats":{"2022-F":123},"courses":{"MATH1007":{"latest":null,"name":"Elementary Calculus I","history":[{"epoch":null,"enrol":123,"source":null,"year":"2022","sem":"F","type":"Day","crn":"34159","course":"MATH1007","prof":"Tushar  Bag"}]}},"latest":null,"prof":"Tushar  Bag"}
+{"latest": 1679961600, "prof": "Tushar  Bag", "history": [{"epoch": 1679961600, "code": "MATH1007", "course": "Elementary Calculus I", "sem": "F", "enrol": 123, "year": "2022", "type": "Day", "source_date": "2023-03-28"}]}
