@@ -17,19 +17,21 @@
   font-size: medium;
 }
 
-@media (min-width: 640px) {
+@media (max-width: 640px) {
   .cds--accordion__content {
-  padding-right: 0%; //override default
-}
-}
-
-@media (max-width: 400px) {
+    padding: 0%; //override default
+    margin: 0;
+  }
   .cds--content {
-    padding: 10px;
+    padding: 3px;
   }
 
   .cds--accordion__content {
     padding: 0px;
     margin: 0 !important;
+  }
+
+  .graphs {
+    padding: 0px;
   }
 }
