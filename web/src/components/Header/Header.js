@@ -12,6 +12,7 @@ import {
   SideNav,
   SideNavItems,
   HeaderSideNavItems,
+  HeaderMenu,
 } from '@carbon/react';
 import { Link } from 'react-router-dom';
 import { Switcher, Notification, UserAvatar } from '@carbon/react/icons';
@@ -34,6 +35,7 @@ const CUHeader = () => (
           <HeaderMenuItem element={Link} to={"profs"}>Professors</HeaderMenuItem>
           <HeaderMenuItem element={Link} to={"programs"}>Programs</HeaderMenuItem>
           <HeaderMenuItem element={Link} to={"test/progression"}>Progression</HeaderMenuItem>
+          <HeaderMenuItem element={Link} to={"facts"}>Facts</HeaderMenuItem>
         </HeaderNavigation>
         <SideNav
           aria-label="Side navigation"
@@ -47,6 +49,7 @@ const CUHeader = () => (
               <HeaderMenuItem element={Link} to={"/profs"}>Professors</HeaderMenuItem>
               <HeaderMenuItem element={Link} to={"programs"}>Programs</HeaderMenuItem>
               <HeaderMenuItem element={Link} to={"test/progression"}>Progression</HeaderMenuItem>
+              <HeaderMenuItem element={Link} to={"facts"}>Facts</HeaderMenuItem>
             </HeaderSideNavItems>
           </SideNavItems>
         </SideNav>

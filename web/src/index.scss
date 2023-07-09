@@ -6,8 +6,11 @@
 @use './content/CoursePage/course-page';
 @use './content/exp/ProgressionPage/progression';
 @use './content/ProgPage/prog-page';
+@use './content/FactsPage/facts-page';
 
 .cds--content {
+  display: block;
+  margin: auto;
   margin-top: 0px;
   padding-top: 0px;
 }
