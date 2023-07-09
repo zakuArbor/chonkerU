@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/chonkerU/static/css/main.ddabee3a.css",
-    "main.js": "/chonkerU/static/js/main.f700b28f.js",
+    "main.css": "/chonkerU/static/css/main.dcd3a8cd.css",
+    "main.js": "/chonkerU/static/js/main.2ebcba70.js",
     "static/media/IBMPlexSerif-SemiBoldItalic-Cyrillic.woff": "/chonkerU/static/media/IBMPlexSerif-SemiBoldItalic-Cyrillic.d96e5a614e96c351c453.woff",
     "static/media/IBMPlexSerif-SemiBoldItalic-Latin1.woff": "/chonkerU/static/media/IBMPlexSerif-SemiBoldItalic-Latin1.b691d8c0c5110ea3659e.woff",
     "static/media/IBMPlexSerif-Italic-Cyrillic.woff": "/chonkerU/static/media/IBMPlexSerif-Italic-Cyrillic.452cc78a1baf50168631.woff",
@@ -183,11 +183,11 @@
     "static/media/IBMPlexMono-Light-Latin3.woff2": "/chonkerU/static/media/IBMPlexMono-Light-Latin3.8a014da16bb5df1e9830.woff2",
     "static/media/IBMPlexMono-Regular-Latin3.woff2": "/chonkerU/static/media/IBMPlexMono-Regular-Latin3.cacfd1d7dbd14067b970.woff2",
     "index.html": "/chonkerU/index.html",
-    "main.ddabee3a.css.map": "/chonkerU/static/css/main.ddabee3a.css.map",
-    "main.f700b28f.js.map": "/chonkerU/static/js/main.f700b28f.js.map"
+    "main.dcd3a8cd.css.map": "/chonkerU/static/css/main.dcd3a8cd.css.map",
+    "main.2ebcba70.js.map": "/chonkerU/static/js/main.2ebcba70.js.map"
   },
   "entrypoints": [
-    "static/css/main.ddabee3a.css",
-    "static/js/main.f700b28f.js"
+    "static/css/main.dcd3a8cd.css",
+    "static/js/main.2ebcba70.js"
   ]
 }

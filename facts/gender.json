@@ -1,0 +1,51 @@
+{
+  "source": "https://oirp.carleton.ca/databook/2022/students/tables/table-SD1-1_hpr.htm",
+  "source_year": "2022-2023",
+  "source_title": "Sex of Full-Time and Part-Time Students in Undergraduate Degree Programs by Year Level",
+  "honours": [
+    {
+      "year": 1,
+      "female": 25,
+      "male": 50,
+      "other": 1
+    },
+    {
+      "year": 2,
+      "female": 17,
+      "male": 54,
+      "other": 1
+    },
+    {
+      "year": 3,
+      "female": 11,
+      "male": 29,
+      "other": 2
+    },
+    {
+      "year": 4,
+      "female": 16,
+      "male": 19,
+      "other": 0
+    }
+  ],
+  "general":[
+    {
+      "year": 1,
+      "male": 30,
+      "female": 10,
+      "other": 1
+    },
+    {
+      "year": 2,
+      "male": 25,
+      "female": 7,
+      "other": 0
+    },
+    {
+      "year": 3,
+      "male": 53,
+      "female": 18,
+      "other": 0
+    }
+  ]
+}
