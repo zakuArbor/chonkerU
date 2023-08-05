@@ -11,7 +11,7 @@ import ProfsPage from './content/ProfsPage';
 import ProgressionPage from './content/exp/ProgressionPage';
 import ProgramsPage from "./content/ProgramsPage";
 import ProgPage from './content/ProgPage/ProgPage';
-import FactsPage from './content/FactsPage/FactsPage';
+import DashboardPage from './content/DashboardPage/DashboardPage';
 import {ActionableNotification} from '@carbon/react';
 
 
@@ -52,7 +52,7 @@ class App extends Component {
             <Route path={"/test/progression"} element={<ProgressionPage/>}/>
             <Route path={"/programs"} element={<ProgramsPage/>} />
             <Route path={"/program/:prog"} element={<ProgPage/>}/>
-            <Route path={"/facts"} element={<FactsPage/>}/>
+            <Route path={"/dashboard"} element={<DashboardPage/>}/>
           </Routes>
         </Content>
       </>

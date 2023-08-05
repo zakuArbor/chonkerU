@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import ELK from "elkjs/lib/elk.bundled";
 import { path as d3Path } from "d3-path";
-import ShapeNode from "@carbon/charts-react/diagrams/ShapeNode/ShapeNode";
-import CardNode from "@carbon/charts-react/diagrams/CardNode";
+import { ShapeNode } from "@carbon/charts-react";
+import { CardNode } from "@carbon/charts-react";
 import {
   CardNodeColumn,
   CardNodeTitle,
   CardNodeSubtitle,
-} from "@carbon/charts-react/diagrams/CardNode";
-import Edge from "@carbon/charts-react/diagrams/Edge/Edge";
-import { TeeMarker, CircleMarker } from "@carbon/charts-react/diagrams/Marker";
+} from "@carbon/charts-react";
+import { Edge } from "@carbon/charts-react";
+import { TeeMarker, CircleMarker } from "@carbon/charts-react";
 import {
   User,
   FunctionMath,
@@ -23,6 +23,7 @@ import {
   EarthFilled,
 } from "@carbon/icons-react";
 import "@carbon/charts/styles.css";
+import "@carbon/styles/css/styles.css";
 
 const height = 80;
 const width = 250;

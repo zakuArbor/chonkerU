@@ -9,7 +9,7 @@ import { DonutChart, GroupedBarChart } from "@carbon/charts-react";
 
 import { getGenderProgram, getOverallGender, getProgramCount, getProgYear, getGenderYear, getProgGenderYear } from "./ParseFacts";
 
-const FactsPage = () => {
+const DashboardPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [data, setData] = useState({});
@@ -92,7 +92,7 @@ const FactsPage = () => {
   };
 
   const getData = () => {
-    fetch("facts/gender.json", {
+    fetch("dashboard/gender.json", {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -131,6 +131,12 @@ const FactsPage = () => {
 
   return (
     <div className="bx--grid bx--grid--full-width bx--grid--no-gutter chart-page">
+      <script src="http://d3js.org/d3.v3.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+      <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/themes/smoothness/jquery-ui.css" />
+      <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/jquery.ui.touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+      <script src="js/dashboard.js"></script>
       <div className="bx--row repo-page__r1">
         <div className="bx--col-lg-16">
           {
@@ -155,6 +161,8 @@ const FactsPage = () => {
               </>
             ) : (
               <>
+                <h1 className="dashboard-title">ChonkerU Math Dashboard</h1>
+                <div id = "picto-pop"></div>
                 <div className="grid-pies">
                   <DonutChart data={data['program']} options={options['program']} />
                   <DonutChart data={data['overallGender']} options={options['overallGender']} />
@@ -168,13 +176,14 @@ const FactsPage = () => {
                 <GroupedBarChart data={data['honoursGenderYear']} options={options['honoursGenderYear']} />
                 <GroupedBarChart data={data['generalGenderYear']} options={options['generalGenderYear']} />
                 <span><b>Source:</b> <Link to={source['source']}>{source.source_title} - {source.source_year}</Link></span>
-              </>
+                </>
             )
           }
+        <script>drawGraph();</script>
         </div>
       </div>
     </div>
   );
 };
 
-export default FactsPage;
+export default DashboardPage;
