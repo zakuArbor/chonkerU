@@ -1,0 +1,146 @@
+{
+  "gender": {
+    "source": "https://oirp.carleton.ca/databook/2022/students/tables/table-SD1-1_hpr.htm",
+    "source_year": "2022-2023",
+    "source_title": "Sex of Full-Time and Part-Time Students in Undergraduate Degree Programs by Year Level",
+    "honours": [
+      {
+        "year": 1,
+        "female": 25,
+        "male": 50,
+        "other": 1
+      },
+      {
+        "year": 2,
+        "female": 17,
+        "male": 54,
+        "other": 1
+      },
+      {
+        "year": 3,
+        "female": 11,
+        "male": 29,
+        "other": 2
+      },
+      {
+        "year": 4,
+        "female": 16,
+        "male": 19,
+        "other": 0
+      }
+    ],
+    "general":[
+      {
+        "year": 1,
+        "male": 30,
+        "female": 10,
+        "other": 1
+      },
+      {
+        "year": 2,
+        "male": 25,
+        "female": 7,
+        "other": 0
+      },
+      {
+        "year": 3,
+        "male": 53,
+        "female": 18,
+        "other": 0
+      }
+    ]
+  },
+  "prog": {
+    "source": "https://oirp.carleton.ca/main/datacubes/",
+    "source_year": "20221-2022",
+    "source_title": "Program Breakdown in Math",
+    "progs": {
+      "CS": [
+        {
+          "name": "Num&Comp Theory",
+          "value": 11
+        },
+        {
+          "name": "Stats&Prob",
+          "value": 7
+        }
+      ],
+      "CAMS": [
+        {
+          "name": "CAMS",
+          "value": 1
+        },
+        {
+          "name": "CAMS: App Stats&Prob",
+          "value": 5
+        },
+        {
+          "name": "CAMS: App Analysis",
+          "value": 6
+        },
+        {
+          "name": "CAMS: Discrete",
+          "value": 5
+        }
+      ],
+      "COMBINED": [
+        {
+          "name": "Math&Econ",
+          "value": 9
+        },
+        {
+          "name": "Stats&Econ",
+          "value": 5
+        },
+        {
+          "name": "Math-Physics",
+          "value": 14 
+        }
+      ],
+      "MATH HONORS": [
+        {
+          "name": "Stochastics",
+          "value": 2
+        },
+        {
+          "name": "Honors Math",
+          "value": 53
+        }
+      ],
+      "STATS HONORS": [
+        {
+          "name": "Honors Stats",
+          "value": 36
+        },
+        {
+          "name": "Acturial Sci.",
+          "value": 44
+        }
+      ],
+      "MAJOR": [
+        {
+          "name": "Comp Math",
+          "value": 18
+        },
+        {
+          "name": "B. Math",
+          "value": 79
+        },
+        {
+          "name": "B. Stats",
+          "value": 21
+        }
+      ],
+      "FASTRACK": [
+        {
+          "name": "Stats BMath/MSc",
+          "value": 1
+        },
+        {
+          "name": "Math BMath/MSc",
+          "value": 4
+        }
+      ]
+    }
+  }
+}

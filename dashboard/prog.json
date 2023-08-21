@@ -1,0 +1,93 @@
+{
+  "source": "https://oirp.carleton.ca/main/datacubes/",
+  "source_year": "20221-2022",
+  "source_title": "Program Breakdown in Math",
+  "progs": {
+  "CS": [
+    {
+      "name": "Num&Comp Theory",
+      "count": 11
+    },
+    {
+      "name": "Stats&Prob",
+      "count": 7
+    }
+  ],
+  "CAMS": [
+    {
+      "name": "CAMS",
+      "count": 1
+    },
+    {
+      "name": "CAMS: App Stats&Prob",
+      "count": 5
+    },
+    {
+      "name": "CAMS: App Analysis",
+      "count": 6
+    },
+    {
+      "name": "CAMS: Discrete",
+      "count": 5
+    }
+  ],
+  "COMBINED": [
+    {
+      "name": "Math&Econ",
+      "count": 9
+    },
+    {
+      "name": "Stats&Econ",
+      "count": 5
+    },
+    {
+      "name": "Math-Physics",
+      "count": 14 
+    }
+  ],
+  "MATH HONORS": [
+    {
+      "name": "Stochastics",
+      "count": 2
+    },
+    {
+      "name": "Honors Math",
+      "count": 53
+    }
+  ],
+  "STATS HONORS": [
+    {
+      "name": "Honors Stats",
+      "count": 36
+    },
+    {
+      "name": "Acturial Sci.",
+      "count": 44
+    }
+  ],
+  "MAJOR":
+    {
+      "name": "Comp Math",
+      "count": 18
+    },
+    {
+      "name": "B. Math",
+      "count": 79
+    },
+    {
+      "name": "B. Stats",
+      "count": 21
+    }
+  ],
+  "FASTRACK": [
+    {
+      "name": "Stats BMath/MSc",
+      "count": 1
+    },
+    {
+      "name": "Math BMath/MSc",
+      "count": 4
+    }
+  ]
+  }
+}
