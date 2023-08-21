@@ -4,16 +4,19 @@ import {
   InlineNotification,
 } from "@carbon/react";
 import "@carbon/charts/styles.css";
+import {Helmet} from "react-helmet";
 
-import { DonutChart, GroupedBarChart } from "@carbon/charts-react";
+import { DonutChart, GroupedBarChart, StackedBarChart } from "@carbon/charts-react";
 
-import { getGenderProgram, getOverallGender, getProgramCount, getProgYear, getGenderYear, getProgGenderYear } from "./ParseFacts";
+import { getGenderProgram, getOverallGender, getProgramCount, getProgYear, getGenderYear, getProgGenderYear, getProgs } from "./ParseFacts";
 
 const DashboardPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [data, setData] = useState({});
-  const [source, setSource] = useState({});
+  const [genderSource, setGenderSource] = useState({});
+  const [progSource, setProgSource] = useState({});
+
 
 
   const pie_option_template = {
@@ -88,17 +91,21 @@ const DashboardPage = () => {
     'generalGenderYear': {
       ...bar_option_template,
       "title": "Genders in Math General By Year Standing"
+    },
+    'progs': {
+      ...bar_option_template,
+      "title": "Breakdown of Programs in Mathematics"
     }
   };
 
   const getData = () => {
-    fetch("dashboard/gender.json", {
+    fetch("dashboard/data.json", {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
     })
-      .then((res) => {
+    .then((res) => {
         if (!res.ok) {
           throw new Error(res.status);
         }
@@ -106,18 +113,22 @@ const DashboardPage = () => {
       })
       .then((res) => {
         setLoading(false);
+        let gender = res['gender'];
+        let prog = res['prog'];
         setData(
           {
-            honoursGender: getGenderProgram(res, 'honours'),
-            generalGender: getGenderProgram(res, 'general'),
-            overallGender: getOverallGender(res),
-            program: getProgramCount(res),
-            progYear: getProgYear(res),
-            genderYear: getGenderYear(res),
-            honoursGenderYear: getProgGenderYear(res, 'honours'),
-            generalGenderYear: getProgGenderYear(res, 'general'),
+            honoursGender: getGenderProgram(gender, 'honours'),
+            generalGender: getGenderProgram(gender, 'general'),
+            overallGender: getOverallGender(gender),
+            program: getProgramCount(gender),
+            progYear: getProgYear(gender),
+            genderYear: getGenderYear(gender),
+            honoursGenderYear: getProgGenderYear(gender, 'honours'),
+            generalGenderYear: getProgGenderYear(gender, 'general'),
+            progs: getProgs(prog['progs']),
           });
-        setSource({'source_title': res["source_title"], "source_year": res["source_year"], "source": res["source"]});
+        setGenderSource({'source_title': gender["source_title"], "source_year": gender["source_year"], "source": gender["source"]});
+        setProgSource({'source_title': prog["source_title"], "source_year": prog["source_year"], "source": prog["source"]});
       })
       .catch((err) => {
         console.log(err);
@@ -131,12 +142,9 @@ const DashboardPage = () => {
 
   return (
     <div className="bx--grid bx--grid--full-width bx--grid--no-gutter chart-page">
-      <script src="http://d3js.org/d3.v3.min.js"></script>
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-      <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/themes/smoothness/jquery-ui.css" />
-      <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/jquery.ui.touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
-      <script src="js/dashboard.js"></script>
+      {/*<Helmet>
+        <script src="http://d3js.org/d3.v4.js"></script>
+      </Helmet>*/}
       <div className="bx--row repo-page__r1">
         <div className="bx--col-lg-16">
           {
@@ -162,7 +170,7 @@ const DashboardPage = () => {
             ) : (
               <>
                 <h1 className="dashboard-title">ChonkerU Math Dashboard</h1>
-                <div id = "picto-pop"></div>
+                {/*<svg id='picto-pop'></svg>*/}
                 <div className="grid-pies">
                   <DonutChart data={data['program']} options={options['program']} />
                   <DonutChart data={data['overallGender']} options={options['overallGender']} />
@@ -175,11 +183,13 @@ const DashboardPage = () => {
                 <GroupedBarChart data={data['genderYear']} options={options['genderYear']} />
                 <GroupedBarChart data={data['honoursGenderYear']} options={options['honoursGenderYear']} />
                 <GroupedBarChart data={data['generalGenderYear']} options={options['generalGenderYear']} />
-                <span><b>Source:</b> <Link to={source['source']}>{source.source_title} - {source.source_year}</Link></span>
+                <span><b>Source:</b> <Link to={genderSource['source']}>{genderSource.source_title} - {genderSource.source_year}</Link></span>
+                <StackedBarChart data={data['progs']} options={options['progs']} />
+                <span><b>Source:</b> <Link to={progSource['source']}>{progSource.source_title} - {progSource.source_year}</Link></span>
+
                 </>
             )
           }
-        <script>drawGraph();</script>
         </div>
       </div>
     </div>

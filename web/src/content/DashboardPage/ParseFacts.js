@@ -125,8 +125,19 @@ const getProgGenderYear = (data, prog) => {
     return yearData;
 };
 
-const createPictoPop = () => {
-
+const getProgs = (data) => {
+  let progs = []
+  for (const key of Object.keys(data)) {
+    for (const prog of data[key]) {
+      progs.push({
+        group: prog.name,
+        key: key,
+        value: prog.value
+      });
+    }
+  }
+  console.log(progs);
+  return progs;
 }
 
-export { getGenderProgram, getOverallGender, getProgramCount, getProgYear, getGenderYear, getProgGenderYear };
+export { getGenderProgram, getOverallGender, getProgramCount, getProgYear, getGenderYear, getProgGenderYear, getProgs };

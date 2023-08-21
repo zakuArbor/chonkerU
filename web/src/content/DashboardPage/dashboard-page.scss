@@ -26,3 +26,21 @@
   //align-items: center;
  // grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
 }
+
+.dashboard-title {
+  font-weight: bold;
+}
+
+#picto-pop {
+  margin: auto;
+  width: 500px;
+  height: 500px;
+}
+
+@media screen and (max-width: 500px) {
+  #picto-pop {
+    margin: 0;
+    width: 350px;
+    height: 350px;
+  }
+}
