@@ -52,7 +52,7 @@
   },
   "prog": {
     "source": "https://oirp.carleton.ca/main/datacubes/",
-    "source_year": "20221-2022",
+    "source_year": "2021-2022",
     "source_title": "Program Breakdown in Math",
     "progs": {
       "CS": [
