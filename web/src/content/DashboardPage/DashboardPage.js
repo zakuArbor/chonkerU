@@ -8,7 +8,17 @@ import {Helmet} from "react-helmet";
 
 import { DonutChart, GroupedBarChart, StackedBarChart } from "@carbon/charts-react";
 
-import { getGenderProgram, getOverallGender, getProgramCount, getProgYear, getGenderYear, getProgGenderYear, getProgs } from "./ParseFacts";
+import { 
+  getGenderProgram, 
+  getOverallGender, 
+  getProgramCount, 
+  getProgYear, 
+  getGenderYear, 
+  getProgGenderYear, 
+  getProgs,
+  getResidency,
+  getOverallResidency,
+} from "./ParseFacts";
 
 const DashboardPage = () => {
   const [loading, setLoading] = useState(true);
@@ -16,8 +26,7 @@ const DashboardPage = () => {
   const [data, setData] = useState({});
   const [genderSource, setGenderSource] = useState({});
   const [progSource, setProgSource] = useState({});
-
-
+  const [residencySource, setResidencySource] = useState({});
 
   const pie_option_template = {
     "resizable": true,
@@ -95,6 +104,18 @@ const DashboardPage = () => {
     'progs': {
       ...bar_option_template,
       "title": "Breakdown of Programs in Mathematics"
+    },
+    'honoursResidency': {
+      ...pie_option_template,
+      "title": "Residency in Honors Math"
+    },
+    'generalResidency': {
+      ...pie_option_template,
+      "title": "Residency in General Math"
+    },
+    'overallResidency': {
+      ...pie_option_template,
+      "title": "Residency in Math"
     }
   };
 
@@ -115,6 +136,7 @@ const DashboardPage = () => {
         setLoading(false);
         let gender = res['gender'];
         let prog = res['prog'];
+        let residency = res['residency'];
         setData(
           {
             honoursGender: getGenderProgram(gender, 'honours'),
@@ -126,8 +148,12 @@ const DashboardPage = () => {
             honoursGenderYear: getProgGenderYear(gender, 'honours'),
             generalGenderYear: getProgGenderYear(gender, 'general'),
             progs: getProgs(prog['progs']),
+            honoursResidency: getResidency(residency, 'honours'),
+            generalResidency: getResidency(residency, 'general'),
+            overallResidency: getOverallResidency(residency),
           });
         setGenderSource({'source_title': gender["source_title"], "source_year": gender["source_year"], "source": gender["source"]});
+        setResidencySource({'source_title': residency["source_title"], "source_year": residency["source_year"], "source": residency["source"]});
         setProgSource({'source_title': prog["source_title"], "source_year": prog["source_year"], "source": prog["source"]});
       })
       .catch((err) => {
@@ -153,6 +179,7 @@ const DashboardPage = () => {
                 <div className="grid-pies">
                   <DonutChart data={[]} options={{ title: "Math Students By Program", "data": { 'loading': loading } }} />
                   <DonutChart data={[]} options={{ title: "Overall Math By Gender", "data": { 'loading': loading } }} />
+                  <DonutChart data={[]} options={{ title: "Overall Math By Residency", "data": { 'loading': loading } }} />
                 </div>
                 <div className="grid-pies">
                   <DonutChart data={[]} options={{ title: "Honors Math By Gender", "data": { 'loading': loading } }} />
@@ -174,19 +201,28 @@ const DashboardPage = () => {
                 <div className="grid-pies">
                   <DonutChart data={data['program']} options={options['program']} />
                   <DonutChart data={data['overallGender']} options={options['overallGender']} />
+                  <DonutChart data={data['overallResidency']} options={options['overallResidency']} />
                 </div>
                 <div className="grid-pies">
                   <DonutChart data={data['honoursGender']} options={options['honoursGender']} />
                   <DonutChart data={data['generalGender']} options={options['generalGender']} />
                 </div>
+                <div className="grid-pies">
+                  <DonutChart data={data['honoursResidency']} options={options['honoursResidency']} />
+                  <DonutChart data={data['generalResidency']} options={options['generalResidency']} />
+                </div>
                 <GroupedBarChart data={data['progYear']} options={options['progYear']} />
                 <GroupedBarChart data={data['genderYear']} options={options['genderYear']} />
                 <GroupedBarChart data={data['honoursGenderYear']} options={options['honoursGenderYear']} />
                 <GroupedBarChart data={data['generalGenderYear']} options={options['generalGenderYear']} />
-                <span><b>Source:</b> <Link to={genderSource['source']}>{genderSource.source_title} - {genderSource.source_year}</Link></span>
-                <StackedBarChart data={data['progs']} options={options['progs']} />
-                <span><b>Source:</b> <Link to={progSource['source']}>{progSource.source_title} - {progSource.source_year}</Link></span>
+                <br/>
+                <p><b>Source:</b> <Link to={genderSource['source']}>{genderSource.source_title} - {genderSource.source_year}</Link></p>
+                <p><b>Source:</b> <Link to={residencySource['source']}>{residencySource.source_title} - {residencySource.source_year}</Link></p>
 
+                <StackedBarChart data={data['progs']} options={options['progs']} />
+                <br/>
+                <p><b>Source:</b> <Link to={progSource['source']}>{progSource.source_title} - {progSource.source_year}</Link></p>
+              
                 </>
             )
           }

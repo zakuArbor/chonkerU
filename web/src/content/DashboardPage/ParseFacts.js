@@ -34,7 +34,6 @@ const getOverallGender = (data) => {
     const programs = ['honours', 'general'];
     for (let i = 0; i < programs.length; i++) {
         let prog = programs[i];
-        console.log(prog);
         data[prog].forEach((year) => {
             gender.male += year.male;
             gender.female += year.female;
@@ -136,8 +135,45 @@ const getProgs = (data) => {
       });
     }
   }
-  console.log(progs);
   return progs;
 }
 
-export { getGenderProgram, getOverallGender, getProgramCount, getProgYear, getGenderYear, getProgGenderYear, getProgs };
+const getResidency = (data, prog) => {
+  let res = []
+  for (const type of Object.keys(data[prog])) {
+    res.push({
+      group: type,
+      value: data[prog][type]
+    })
+  }
+  return res;
+}
+
+const getOverallResidency = (data) => {
+  let res = {
+    'canadian': 0,
+    'PR': 0,
+    'international': 0
+  };
+  const programs = ['honours', 'general'];
+  for (let i = 0; i < programs.length; i++) {
+    let prog = data[programs[i]];
+      console.log(prog);
+      res.canadian += prog.canadian;
+      res.PR += prog.PR;
+      res.international += prog.international;
+    }
+    return Object.keys(res).map(type => { return { 'group': type, 'value': res[type] } });
+}
+
+export { 
+  getGenderProgram, 
+  getOverallGender, 
+  getProgramCount, 
+  getProgYear, 
+  getGenderYear,
+  getProgGenderYear,
+  getProgs,
+  getResidency,
+  getOverallResidency
+};

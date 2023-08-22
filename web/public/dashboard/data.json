@@ -142,5 +142,20 @@
         }
       ]
     }
+  },
+  "residency": {
+    "source": "https://oirp.carleton.ca/databook/2022/students/tables/table-SD6-1_hpr.htm",
+    "source_year": "2022-2023",
+    "source_title": "Residency of Full-Time and Part-Time Students by Degree Program",
+    "honours": {
+      "canadian": 142,
+      "PR": 28,
+      "international": 55
+    },
+    "general": {
+      "canadian": 95,
+      "PR": 16,
+      "international": 33
+    }
   }
 }
