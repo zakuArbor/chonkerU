@@ -107,15 +107,15 @@ const DashboardPage = () => {
     },
     'honoursResidency': {
       ...pie_option_template,
-      "title": "Residency in Honors Math"
+      "title": "Residency Status in Honors Math"
     },
     'generalResidency': {
       ...pie_option_template,
-      "title": "Residency in General Math"
+      "title": "Residency Status in General Math"
     },
     'overallResidency': {
       ...pie_option_template,
-      "title": "Residency in Math"
+      "title": "Residency Status in Math"
     }
   };
 
