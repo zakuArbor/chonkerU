@@ -67,10 +67,10 @@ const getBarData = (data) => {
     let record = data[i];
     let code = record.code;
     if (code in courses) {
-        courses[code] += record.enrol; 
+        courses[code]+=1; 
     }
     else {
-      courses[code] = record.enrol;
+      courses[code] = 1;
     }
   }
   const codes = Object.keys(courses).sort();
