@@ -26,6 +26,7 @@ A list of features that are not actively worked on and probably won't be worked 
 * https://react.carbondesignsystem.com/?path=/story/getting-started-welcome--welcome
 
 **Public Data Sources:**
+* courses in a certain year and semester: https://oirp.carleton.ca/course-inst/tables/2018f-course-inst_hpt.htm
 * https://oirp.carleton.ca/university_stats/html/university_stats.htm
 * https://oirp.carleton.ca/specialized_reports/html/specialized_reports.htm
 * https://booking.carleton.ca/index.php?p=RoomSearch&r=1
