@@ -166,6 +166,40 @@ const getOverallResidency = (data) => {
     return Object.keys(res).map(type => { return { 'group': type, 'value': res[type] } });
 }
 
+const getGradProg = (data) => {
+  console.log(data);
+    let prog = {
+        'honours': data['honor'].num,
+        'major': data['major'].num,
+        'minor': data['minor'].num
+    }
+    return Object.keys(prog).map(type => { return { 'group': type, 'value': prog[type] } });
+}
+
+const getGradMinor = (data) => {
+  //only applies to math majors/honors
+    let minors = [];
+    Object.keys(data['honor']['minor']).map(minor => minors.push({ 'group': 'honour', 'key': minor, 'value': data['honor']['minor'][minor]}));
+    Object.keys(data['major']['minor']).map(minor => minors.push({ 'group': 'major', 'key': minor, 'value': data['major']['minor'][minor]}));
+    return minors;
+};
+
+const getGradMajor = (data) => {
+  //only applies to math minors
+    let majors = [];
+    Object.keys(data['minor']['major']).map(major => majors.push({ 'group': 'major', 'key': major, 'value': data['minor']['major'][major]}));
+    return majors;
+};
+
+const getGradDistinction = (data) => {
+  let distinctions = [];
+  let types = ['honor', 'major', 'minor'];
+  types.forEach(type => {distinctions.push({ 'group': type, 'key': 'Distinction', 'value': data[type]['d']})});
+  types.forEach(type => distinctions.push({ 'group': type, 'key': 'High Distinction', 'value': data[type]['hd']}));
+  types.forEach(type => distinctions.push({ 'group': type, 'key': 'NA', 'value': data[type]['num'] - data[type]['d'] - data[type]['hd']}));
+  return distinctions;
+}
+
 export { 
   getGenderProgram, 
   getOverallGender, 
@@ -175,5 +209,9 @@ export {
   getProgGenderYear,
   getProgs,
   getResidency,
-  getOverallResidency
+  getOverallResidency,
+  getGradProg,
+  getGradMajor,
+  getGradMinor,
+  getGradDistinction,
 };

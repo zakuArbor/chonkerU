@@ -6,7 +6,7 @@ import {
 import "@carbon/charts/styles.css";
 import {Helmet} from "react-helmet";
 
-import { DonutChart, GroupedBarChart, StackedBarChart } from "@carbon/charts-react";
+import { SimpleBarChart, DonutChart, GroupedBarChart, StackedBarChart } from "@carbon/charts-react";
 
 import { 
   getGenderProgram, 
@@ -18,10 +18,15 @@ import {
   getProgs,
   getResidency,
   getOverallResidency,
+  getGradProg,
+  getGradMajor,
+  getGradMinor,
+  getGradDistinction,
 } from "./ParseFacts";
 
 const DashboardPage = () => {
   const [loading, setLoading] = useState(true);
+  const [loading2, setLoading2] = useState(true);
   const [error, setError] = useState(false);
   const [data, setData] = useState({});
   const [genderSource, setGenderSource] = useState({});
@@ -43,6 +48,22 @@ const DashboardPage = () => {
     "theme": "white"
   };
 
+  const pie_option_template_grad = {
+    "resizable": true,
+    "data": {
+      "loading": false
+    },
+    "donut": {
+      "center": {
+        "label": "Math Students"
+      }
+    },
+    "height": "400px",
+    "width": "400px",
+    "theme": "white"
+  };
+
+
   const bar_option_template = {
     "axes": {
       "left": {
@@ -57,6 +78,38 @@ const DashboardPage = () => {
     },
     "height": "400px"
   };
+
+  const bar_option_template_minor = {
+    "axes": {
+      "left": {
+        "mapsTo": "value",
+        "title": "# of Students"
+      },
+      "bottom": {
+        "scaleType": "labels",
+        "mapsTo": "key",
+        "title": "Minors"
+      }
+    },
+    "height": "400px"
+  };
+
+  const bar_option_template_major = {
+    "axes": {
+      "left": {
+        "mapsTo": "value",
+        "title": "# of Students"
+      },
+      "bottom": {
+        "scaleType": "labels",
+        "mapsTo": "key",
+        "title": "Majors"
+      }
+    },
+    "height": "400px"
+  };
+
+
 
   const options = {
     'honoursGender': {
@@ -116,6 +169,23 @@ const DashboardPage = () => {
     'overallResidency': {
       ...pie_option_template,
       "title": "Residency Status in Math"
+    },
+    'gradProg': {
+      ...pie_option_template_grad,
+      "title": "Graduation: Program Breakdown in Summer '23, Fall '23, Winter '23"
+    },
+    'gradMinor': {
+      ...bar_option_template_minor,
+      "title": "Graduation: Minors Completed by Math Students in Summer '23, Fall '23, Winter '23"
+    },
+    'gradMajor': {
+      ...bar_option_template_major,
+      "title": "Graduation: Majors of Math Minors in Summer '23, Fall '23, Winter '23"
+    },
+    'gradDistinction': {
+      ...bar_option_template_minor,
+      "title": "Graduation: Distinctions in Summer '23, Fall '23, Winter '23",
+      "width": "600px",
     }
   };
 
@@ -137,6 +207,7 @@ const DashboardPage = () => {
         let gender = res['gender'];
         let prog = res['prog'];
         let residency = res['residency'];
+        let grad = res['grad'];
         setData(
           {
             honoursGender: getGenderProgram(gender, 'honours'),
@@ -151,10 +222,15 @@ const DashboardPage = () => {
             honoursResidency: getResidency(residency, 'honours'),
             generalResidency: getResidency(residency, 'general'),
             overallResidency: getOverallResidency(residency),
+            gradProg: getGradProg(grad),
+            gradMajor: getGradMajor(grad),
+            gradMinor: getGradMinor(grad),
+            gradDistinction: getGradDistinction(grad),
           });
         setGenderSource({'source_title': gender["source_title"], "source_year": gender["source_year"], "source": gender["source"]});
         setResidencySource({'source_title': residency["source_title"], "source_year": residency["source_year"], "source": residency["source"]});
         setProgSource({'source_title': prog["source_title"], "source_year": prog["source_year"], "source": prog["source"]});
+
       })
       .catch((err) => {
         console.log(err);
@@ -222,7 +298,13 @@ const DashboardPage = () => {
                 <StackedBarChart data={data['progs']} options={options['progs']} />
                 <br/>
                 <p><b>Source:</b> <Link to={progSource['source']}>{progSource.source_title} - {progSource.source_year}</Link></p>
-              
+
+                <div className="grid-pies">
+                  <DonutChart data={data['gradProg']} options={options['gradProg']} />
+                  <GroupedBarChart data={data['gradDistinction']} options={options['gradDistinction']} />
+                </div>
+                <GroupedBarChart data={data['gradMinor']} options={options['gradMinor']} />
+                <SimpleBarChart data={data['gradMajor']} options={options['gradMajor']} />
                 </>
             )
           }
