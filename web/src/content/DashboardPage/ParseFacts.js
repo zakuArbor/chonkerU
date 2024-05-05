@@ -169,8 +169,10 @@ const getOverallResidency = (data) => {
 const getGradProg = (data) => {
   console.log(data);
     let prog = {
-        'honours': data['honor'].num,
-        'major': data['major'].num,
+        'Math Hon.': data['honor']['Mathematics'].num,
+        'Math Gen.': data['major']['Mathematics'].num,
+        'Stat Hon.': data['honor']['Statistics'].num,
+        'Stat Gen.': data['major']['Statistics'].num,
         'minor': data['minor'].num
     }
     return Object.keys(prog).map(type => { return { 'group': type, 'value': prog[type] } });
@@ -179,8 +181,11 @@ const getGradProg = (data) => {
 const getGradMinor = (data) => {
   //only applies to math majors/honors
     let minors = [];
-    Object.keys(data['honor']['minor']).map(minor => minors.push({ 'group': 'honour', 'key': minor, 'value': data['honor']['minor'][minor]}));
-    Object.keys(data['major']['minor']).map(minor => minors.push({ 'group': 'major', 'key': minor, 'value': data['major']['minor'][minor]}));
+    Object.keys(data['honor']['Mathematics']['minor']).map(minor => minors.push({ 'group': 'Math Hon.', 'key': minor, 'value': data['honor']['Mathematics']['minor'][minor]}));
+    Object.keys(data['honor']['Statistics']['minor']).map(minor => minors.push({ 'group': 'Stats Hon.', 'key': minor, 'value': data['honor']['Statistics']['minor'][minor]}));
+    Object.keys(data['major']['Mathematics']['minor']).map(minor => minors.push({ 'group': 'Math Gen.', 'key': minor, 'value': data['major']['Mathematics']['minor'][minor]}));
+    Object.keys(data['major']['Statistics']['minor']).map(minor => minors.push({ 'group': 'Stats Gen.', 'key': minor, 'value': data['major']['Statistics']['minor'][minor]}));
+
     return minors;
 };
 
@@ -194,9 +199,30 @@ const getGradMajor = (data) => {
 const getGradDistinction = (data) => {
   let distinctions = [];
   let types = ['honor', 'major', 'minor'];
-  types.forEach(type => {distinctions.push({ 'group': type, 'key': 'Distinction', 'value': data[type]['d']})});
-  types.forEach(type => distinctions.push({ 'group': type, 'key': 'High Distinction', 'value': data[type]['hd']}));
-  types.forEach(type => distinctions.push({ 'group': type, 'key': 'NA', 'value': data[type]['num'] - data[type]['d'] - data[type]['hd']}));
+  let progs = ['Mathematics', 'Statistics']
+  distinctions.push({ 'group': "Math-" + "Hon.", 'key': 'Distinction', 'value': data['honor']['Mathematics']['d']});
+  distinctions.push({ 'group': "Stats-" + "Hon.", 'key': 'Distinction', 'value': data['honor']['Statistics']['d']});
+  distinctions.push({ 'group': "Math-" + "Gen.", 'key': 'Distinction', 'value': data['major']['Mathematics']['d']});
+  distinctions.push({ 'group': "Stats-" + "Gen.", 'key': 'Distinction', 'value': data['major']['Statistics']['d']});
+  distinctions.push({ 'group': "Minor", 'key': 'Distinction', 'value': data['minor']['d']});
+
+  distinctions.push({ 'group': "Math-" + "Hon.", 'key': 'High Distinction', 'value': data['honor']['Mathematics']['hd']});
+  distinctions.push({ 'group': "Stats-" + "Hon.", 'key': 'High Distinction', 'value': data['honor']['Statistics']['hd']});
+  distinctions.push({ 'group': "Math-" + "Gen.", 'key': 'High Distinction', 'value': data['major']['Mathematics']['hd']});
+  distinctions.push({ 'group': "Stats-" + "Gen.", 'key': 'High Distinction', 'value': data['major']['Statistics']['hd']});
+  distinctions.push({ 'group': "Minor", 'key': 'High Distinction', 'value': data['minor']['hd']});
+  
+  var val = data['honor']['Mathematics'];
+  distinctions.push({ 'group': "Math-" + "Hon.", 'key': 'NA', 'value': val['num'] - val['d'] - val['hd']});
+  val = data['honor']['Statistics'];
+  distinctions.push({ 'group': "Stats-" + "Hon.", 'key': 'NA', 'value': val['num'] - val['d'] - val['hd']});
+  val = data['major']['Mathematics'];
+  distinctions.push({ 'group': "Math-" + "Gen.", 'key': 'NA', 'value': val['num'] - val['d'] - val['hd']});
+  val = data['major']['Statistics'];
+  distinctions.push({ 'group': "Stats-" + "Gen.", 'key': 'NA', 'value': val['num'] - val['d'] - val['hd']});
+  val = data['minor'];
+  distinctions.push({ 'group': "Minor", 'key': 'NA', 'value': val['num'] - val['d'] - val['hd']});
+
   return distinctions;
 }
 

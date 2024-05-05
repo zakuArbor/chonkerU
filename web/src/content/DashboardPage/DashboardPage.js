@@ -172,6 +172,11 @@ const DashboardPage = () => {
     },
     'gradProg': {
       ...pie_option_template_grad,
+      "donut": {
+        "center": {
+          "label": "Students"
+        }
+      },
       "title": "Graduation: Program Breakdown in Summer '23, Fall '23, Winter '23"
     },
     'gradMinor': {

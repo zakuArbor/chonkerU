@@ -50,14 +50,11 @@ foreach(@{$data_arr}) {
   #if ($_->{'major'} =~ m/Math/i) {
   #  push(@math, $_);
   #}
-  if ($_->{'degDesc'} =~ m/Math/i) {
+  if ($_->{'degDesc'} =~ m/Math|Stat/i) {
     push(@math, $_);
   }
   elsif (defined $_->{'minor'} && length $_->{'minor'} != 0 && $_->{'minor'} =~ m/Math/i) {
     push(@math, $_);
-  }
-  else {
-    print "Ignored: " . $_->{'major'} . "-" . $_->{'minor'} . "\n";
   }
 }
 
@@ -69,18 +66,36 @@ foreach(@{$data_arr}) {
 
 my $data = {
   'honor' => {
-    'num' => 0,
-    'hd' => 0,
-    'd' => 0,
-    'coop' => 0,
-    'minor' => {}
+      'Mathematics' => {
+        'num' => 0,
+        'hd' => 0,
+        'd' => 0,
+        'coop' => 0,
+        'minor' => {}
+      },
+      'Statistics' => {
+        'num' => 0,
+        'hd' => 0,
+        'd' => 0,
+        'coop' => 0,
+        'minor' => {}
+      },
   },
-  'major' => {
-    'num' => 0,
-    'hd' => 0,
-    'd' => 0,
-    'coop' => 0,
-    'minor' => {}
+  'major' => { 
+    'Mathematics' => {
+      'num' => 0,
+      'hd' => 0,
+      'd' => 0,
+      'coop' => 0,
+      'minor' => {}
+    },
+    'Statistics' => {
+      'num' => 0,
+      'hd' => 0,
+      'd' => 0,
+      'coop' => 0,
+      'minor' => {}
+    },
   },
   'minor' => {
     'num' => 0,
@@ -94,15 +109,20 @@ my $data = {
 my $type;
 
 foreach(@math) {
-  if ($_->{'major'} =~ m/math/i) {
+  my $is_minor = 1;
+  my $major = $_->{'major'};
+  if (defined $major && $major =~ m/math|stat/i) {
+    $is_minor = 0;
+  }
+  if (!$is_minor) {
     if ($_->{'degDesc'} =~ m/Honours/) {
-      $type = $data->{'honor'};
+      $type = $data->{'honor'}->{$major};
     }
     else {
-      $type = $data->{'major'};
+      $type = $data->{'major'}->{$major};
     }
 
-    my $minor= $_->{'minor'};
+    my $minor = $_->{'minor'};
     if (length $minor != 0) {
       (undef, $minor) = split('Minor in ', $minor);
       my $hash_minor = $type->{'minor'};
@@ -116,8 +136,7 @@ foreach(@math) {
   }
   else { #minor
     $type = $data->{'minor'};
-    my $major = $_->{'major'};
-    if (length $major == 0) {
+    if (!defined $major || length $major == 0) {
       $_->{'degDesc'} =~ /^Bachelor of (\w+\s?\w+)/;
       $major = $1;
     }
