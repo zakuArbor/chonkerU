@@ -39,20 +39,25 @@ foreach(@{$data_arr}) {
 #undergrad data only
 my @math = ();
 foreach(@{$data_arr}) {
-  #  if ($_->{'year'} !~ m/2023/) {
-  # next;
-  #}
   if ($_->{'level'} !~ m/UG/) {
     next;
   }
-  if (!defined $_->{'major'} || $_->{'major'} eq '' || length $_->{'major'} == 0) {
-    next;
-  }
-  if ($_->{'major'} =~ m/Math/i) {
+  # apparently the dataset doesn't set a major for every student like CS students
+  #if (!defined $_->{'major'} || length $_->{'major'} == 0) {
+  #  print "Skipped" . "$_->{'major'}" . "-" . "$_->{'minor'}" . "\n";
+  #  next;
+  #}
+  #if ($_->{'major'} =~ m/Math/i) {
+  #  push(@math, $_);
+  #}
+  if ($_->{'degDesc'} =~ m/Math/i) {
     push(@math, $_);
   }
   elsif (defined $_->{'minor'} && length $_->{'minor'} != 0 && $_->{'minor'} =~ m/Math/i) {
     push(@math, $_);
+  }
+  else {
+    print "Ignored: " . $_->{'major'} . "-" . $_->{'minor'} . "\n";
   }
 }
 
@@ -112,6 +117,10 @@ foreach(@math) {
   else { #minor
     $type = $data->{'minor'};
     my $major = $_->{'major'};
+    if (length $major == 0) {
+      $_->{'degDesc'} =~ /^Bachelor of (\w+\s?\w+)/;
+      $major = $1;
+    }
     my $hash_major = $type->{'major'};
     if (exists $hash_major->{$major}) {
       $hash_major->{$major}++;
