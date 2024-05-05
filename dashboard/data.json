@@ -158,5 +158,5 @@
       "international": 33
     }
   },
-  "grad": {"honor":{"num":9,"hd":5,"coop":2,"d":3,"minor":{}},"major":{"minor":{"History":1,"Physics":1,"Philosophy":1,"Economics":1},"d":1,"hd":4,"num":22,"coop":0},"minor":{"d":1,"coop":0,"hd":4,"num":18,"major":{"Chemistry":1,"Earth Sciences":1,"Anthropology":1,"Mechanical":1,"Interdisciplinary Science and Practice":1,"Electrical":1,"Aerospace":2,"Political Science":1,"Cognitive Science":1,"Physics":8}}}
+  "grad": {"major":{"coop":0,"minor":{"Economics":1,"Physics":1,"History":1,"Philosophy":1},"hd":4,"num":22,"d":1},"minor":{"d":9,"major":{"Chemistry":1,"Political Science":1,"Statistics":23,"Science":1,"Statistics and Economics":1,"Economics":1,"Anthropology":1,"Mechanical":1,"Cognitive Science":1,"Economics Honours":1,"Physics":8,"Electrical":1,"Interdisciplinary Science and Practice":1,"Earth Sciences":1,"Computer Science":44,"Aerospace":2},"num":89,"hd":34,"coop":24},"honor":{"d":2,"minor":{},"hd":5,"num":8,"coop":2}}
 }
